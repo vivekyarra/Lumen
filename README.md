@@ -8,7 +8,7 @@
 
 ![Lumen in the Lens Studio preview: pick up furosemide, every port turns green or red, the Midazolam line lights to its pump](devpost/demo/lumen-teaser.gif)
 
-- ▶ **Demo film (2:23, with voice-over):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4). The demo is
+- ▶ **Demo film (2:28, with voice-over):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4). The demo is
   **real Lens Studio 5.24.1 footage** of this repo's project: the whole app first, then a zoom into the SPECS view, with the
   pinches driven by a LEAF scenario through the Lens's real SIK interactables. The 3D opening shots use the Lens's own bedside
   models. How it was made: [`devpost/VIDEO.md`](devpost/VIDEO.md). YouTube: _link after upload_.
@@ -24,7 +24,7 @@
 | **Design** — a complete, coherent product | One real user (an ICU nurse) and one real workflow, done end to end: quiet → pick up → check → trace → redirect → push → quiet, plus an out-of-view pump alarm and a one-pinch shift-handoff line check. Pinch only, big targets, information on the thing it's about, silent when not needed. | Demo video · [story mode](https://vivekyarra.github.io/Lumen/?story) |
 | **Technical implementation** | A real Lens Studio 5.24.1 SPECS project, wired and tested through the **Lens Studio MCP** with Snap's **CLAD** plugin. **10/10 LEAF scenarios pass in the Lens Studio preview**: they pinch the Lens's real SIK interactables. One shared TypeScript core (the only data file, state machine, layout, meshes, sounds) drives the Lens, a browser twin and the tests. The same DC1–DC10 run on three runners, with fuzzing (≈100k random inputs), real-click and stress tests, and CI on every PR. | [`leaf-results.md`](devpost/leaf-results.md) · [`clad-verification.md`](devpost/clad-verification.md) · [`build-log.md`](devpost/build-log.md) · Actions tab |
 | **Innovation** | Clinical line safety on glasses: answers *which tube is this* by lighting the real tube, and *is it safe* by marking the real port — using all three SPECS strengths (shares your view, draws in the world, keeps hands free). Fail-safe by design. | [Why glasses](#why-glasses) |
-| **Presentation** | 10-second hook, one nurse's story, the real app on screen, the design reasons, proof (LEAF run), 2:23. | [`devpost/VIDEO.md`](devpost/VIDEO.md) |
+| **Presentation** | 10-second hook, one nurse's story, the real app on screen, the design reasons, proof (LEAF run), 2:28. | [`devpost/VIDEO.md`](devpost/VIDEO.md) |
 
 ## The problem
 
@@ -84,6 +84,8 @@ On a phone you'd need a free hand, you'd hold it up, and you'd see a *picture* o
 real one lighting up.
 
 ## How it was built
+
+**Built by [Claude Code](https://claude.com/claude-code)** with Snap's CLAD plugin and the Lens Studio MCP: the code, the Lens Studio scene, the tests, the docs and the demo film. Directed by Yarra Vivek.
 
 ```
 Assets/Lumen/Core/   engine-agnostic: LumenData (the ONLY data file) · CompatibilityEngine · LumenState

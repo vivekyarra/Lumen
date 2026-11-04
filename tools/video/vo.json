@@ -1,30 +1,114 @@
 [
- ["v01", "This is furosemide."],
- ["v02", "In one second, every I.V. line on this patient tells me if it's safe for it."],
- ["v03", "This is Lumen."],
- ["v04", "Meet Maya. She's an I.C.U. nurse."],
- ["v05", "Her patient has four drugs, running through four tubes, into one tangle."],
- ["v06", "Before every push, she has to answer two questions."],
- ["v07", "Which line is this?"],
- ["v08", "And will my drug react with what's already in it?"],
- ["v09", "Today, she traces tubes with gloved fingers, and checks a chart across the room. Many times a shift. Every shift."],
- ["v10", "So we built Lumen. A Lens for Snap Specs, running right here, in Lens Studio."],
- ["v11", "At the bedside, Lumen is quiet. Just faint dots on the ports."],
- ["v12", "She picks up furosemide, and every port answers."],
- ["v13", "Green: safe. Red: and it tells her why."],
- ["v14", "She pinches the red one. Lumen lights that exact tube, through the tangle, all the way to its pump."],
- ["v15", "Midazolam. Don't push here. And it points to the port that is safe."],
- ["v16", "Distal. Push here."],
- ["v17", "Done. Logged. And the Lens goes quiet."],
- ["v18", "One more thing."],
- ["v19", "Behind her, out of view, a pump alarms. A chime and an arrow turn her head."],
- ["v20", "The line glows amber, right to the kink. She fixes it. Resolved."],
- ["v21", "And at shift change, one pinch on the I.V. pole walks every line. Bag, to pump, to port."],
- ["v22", "This only works on glasses."],
- ["v23", "It sees what she sees. It draws on the real tube, not on a screen. And her hands never leave the syringe."],
- ["v24", "We designed Lumen to stay silent until it matters, and to put every answer on the thing it's about."],
- ["v25", "Our coding agent built it in Lens Studio, through the Lens Studio M.C.P. And Snap's LEAF tests pinch every control, for real."],
- ["v26", "Ten of ten pass in the preview."],
- ["v27", "Next: barcode scanning, real line tracking, live pump data."],
- ["v28", "Lumen. The right line. The safe port. Where you look."]
+ [
+  "v01",
+  "This is furosemide."
+ ],
+ [
+  "v02",
+  "In one second, every I.V. line on this patient tells me if it's safe for it."
+ ],
+ [
+  "v03",
+  "This is Lumen."
+ ],
+ [
+  "v04",
+  "Meet Maya. She's an I.C.U. nurse."
+ ],
+ [
+  "v05",
+  "Her patient has four drugs, running through four tubes, into one tangle."
+ ],
+ [
+  "v06",
+  "Before every push, she has to answer two questions."
+ ],
+ [
+  "v07",
+  "Which line is this?"
+ ],
+ [
+  "v08",
+  "And will my drug react with what's already in it?"
+ ],
+ [
+  "v09",
+  "Today, she traces tubes with gloved fingers, and checks a chart across the room. Many times a shift. Every shift."
+ ],
+ [
+  "v10",
+  "So we built Lumen. A Lens for Snap Specs, running right here, in Lens Studio."
+ ],
+ [
+  "v11",
+  "At the bedside, Lumen is quiet. Just faint dots on the ports."
+ ],
+ [
+  "v12",
+  "She picks up furosemide, and every port answers."
+ ],
+ [
+  "v13",
+  "Green: safe. Red: and it tells her why."
+ ],
+ [
+  "v14",
+  "She pinches the red one. Lumen lights that exact tube, through the tangle, all the way to its pump."
+ ],
+ [
+  "v15",
+  "Midazolam. Don't push here. And it points to the port that is safe."
+ ],
+ [
+  "v16",
+  "Distal. Push here."
+ ],
+ [
+  "v17",
+  "Done. Logged. And the Lens goes quiet."
+ ],
+ [
+  "v18",
+  "One more thing."
+ ],
+ [
+  "v19",
+  "Behind her, out of view, a pump alarms. A chime and an arrow turn her head."
+ ],
+ [
+  "v20",
+  "The line glows amber, right to the kink. She fixes it. Resolved."
+ ],
+ [
+  "v21",
+  "And at shift change, one pinch on the I.V. pole walks every line. Bag, to pump, to port."
+ ],
+ [
+  "v22",
+  "This only works on glasses."
+ ],
+ [
+  "v23",
+  "It sees what she sees. It draws on the real tube, not on a screen. And her hands never leave the syringe."
+ ],
+ [
+  "v24",
+  "Lumen stays silent until it matters, and puts every answer on the thing it's about."
+ ],
+ [
+  "v25",
+  "Claude Code built it, end to end: the scene, the logic, the tests. Through Snap's CLAD and the Lens Studio M.C.P., right inside Lens Studio. And Snap's LEAF tests pinch every control, for real."
+ ],
+ [
+  "v26",
+  "Ten of ten pass in the preview."
+ ],
+ [
+  "v27",
+  "Next: barcode scanning, real line tracking, live pump data."
+ ],
+ [
+  "v28",
+  "Lumen. The right line. The safe port. Where you look."
+ ]
 ]

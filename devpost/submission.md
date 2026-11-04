@@ -20,8 +20,8 @@ It uses what you see (the port you look at), draws on the real equipment (the li
 is), and keeps your hands free (gloves on, syringe in hand).
 
 **How I built it:**
-I planned the Lens with the Devpost Learn `plan-lens` skill, which wrote my design brief. My coding agent (Claude Code
-with Snap's CLAD plugin) built it as a real Lens Studio 5.24.1 SPECS project through the Lens Studio MCP. It created
+I planned the Lens with the Devpost Learn `plan-lens` skill, which wrote my design brief. Claude Code, with Snap's
+CLAD plugin, built it end to end as a real Lens Studio 5.24.1 SPECS project through the Lens Studio MCP. It created
 the project, installed LEAF, wired the scene, set the materials, lights and sounds, compiled, and ran the tests. The
 Lens is generated at runtime from one shared TypeScript core (data, state machine, layout, meshes, sounds) by a single
 component. Snap's LEAF tests pinch the Lens's real SIK interactables: all 10 scenarios pass in the Lens Studio preview.
