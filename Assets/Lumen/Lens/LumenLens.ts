@@ -12,7 +12,7 @@ import { LINE_IDS, LineId, PORT_IDS, PortId, SyringeId } from "../Core/LumenData
 import { LumenStateMachine } from "../Core/LumenState";
 import { distance } from "../Core/Vec";
 import { Pose } from "../Core/ViewMath";
-import { SpecFrame, faceCamera } from "./LensAdapters";
+import { SpecFrame, faceCamera, safe } from "./LensAdapters";
 import { LensContext } from "./LensContext";
 import { SceneBuilder } from "./SceneBuilder";
 import { PortMarker } from "./PortMarker";
@@ -79,7 +79,10 @@ export class LumenLens extends BaseScriptComponent {
   private started = false;
 
   onAwake(): void {
-    this.createEvent("OnStartEvent").bind(() => this.start());
+    // Build on a short delay so device tracking has settled before the start pose anchors the bedside.
+    const delayed = this.createEvent("DelayedCallbackEvent");
+    delayed.bind(() => this.start());
+    delayed.reset(0.3);
     this.createEvent("UpdateEvent").bind(() => this.update());
   }
 
@@ -110,6 +113,10 @@ export class LumenLens extends BaseScriptComponent {
     this.push = new PushButton(this.ctx, "PushHereButton", S.PUSH_TEXT, HEX.green, L.PUSH_BUTTON_POS.A, function () { self.sm.pinchPush(); });
     this.redirect = new RedirectArrow(this.ctx);
     this.alarm = new AlarmController(this.ctx, this.camera, function () { self.sm.pinchResolved(); });
+    // Spatial audio needs a listener on the camera.
+    safe(() => {
+      if (!this.camera.getComponent("Component.AudioListenerComponent")) this.camera.createComponent("Component.AudioListenerComponent");
+    });
     this.audio = new AudioCues(this.ctx, {
       tick: this.soundTick, markers: this.soundMarkers, red: this.soundRed, green: this.soundGreen,
       confirm: this.soundConfirm, alarm: this.soundAlarm, resolved: this.soundResolved,

@@ -10,6 +10,7 @@ import { SPECS_FOV, labelScreenBox, labelSizeCm, lookAt, overlappingPairs, Label
 import { distance } from "../Core/Vec";
 import { DEMO_DATA_LABEL } from "../Core/LumenData";
 import type { LumenLens } from "./LumenLens";
+import * as S from "../Core/Strings";
 import { darkPaletteEntries } from "./Palette";
 
 function on(o: SceneObject): boolean {
@@ -77,7 +78,7 @@ function makeProbe(lens: LumenLens): SceneProbe {
       boxes.push(labelBox("hint", lens.tray.raw.hint, L.CART_TEXT.hint.anchor, "center", L.TEXT_CAP.small));
       boxes.push(labelBox("demo", DEMO_DATA_LABEL, L.CART_TEXT.demoLabel.anchor, "center", L.TEXT_CAP.small));
       const v = lens.sm.view();
-      if (v.pushButtonPort) boxes.push(labelBox("push", "Push here!", L.PUSH_BUTTON_POS[v.pushButtonPort], "center", L.TEXT_CAP.small));
+      if (v.pushButtonPort) boxes.push(labelBox("push", S.PUSH_TEXT, L.PUSH_BUTTON_POS[v.pushButtonPort], "center", L.TEXT_CAP.small));
       const real: LabelBox[] = [];
       for (let i = 0; i < boxes.length; i++) { const b = boxes[i]; if (b) real.push(b); }
       return overlappingPairs(real);

@@ -33,13 +33,13 @@ export class PortMarker {
     addMeshVisual(this.dot, buildMesh(M.discXY(L.IDLE_DOT_DIAMETER, 24), "billboard"), makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.white, 0.3), onTop: true }), 20);
 
     this.ring = placeAt(ctx, "Port_" + port + "_Marker", pos, true);
-    this.ringMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.green, 1), onTop: true });
+    this.ringMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.green, 1), onTop: true, fade: true });
     addMeshVisual(this.ring, buildMesh(M.ringXY(L.MARKER_RING_DIAMETER, 0.45, 48), "billboard"), this.ringMat, 25);
     this.check = child(this.ring, "Check");
-    this.checkMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.green, 1), onTop: true });
+    this.checkMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.green, 1), onTop: true, fade: true });
     addMeshVisual(this.check, buildMesh(M.checkXY(1.8, 0.4), "billboard"), this.checkMat, 25);
     this.cross = child(this.ring, "Cross");
-    this.crossMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.red, 1), onTop: true });
+    this.crossMat = makeMaterial(ctx.unlitMaterial, { color: rgba(HEX.red, 1), onTop: true, fade: true });
     addMeshVisual(this.cross, buildMesh(M.crossXY(1.9, 0.4), "billboard"), this.crossMat, 25);
     this.ring.enabled = false;
 

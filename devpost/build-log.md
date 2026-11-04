@@ -20,6 +20,16 @@ Every change went through its own branch and pull request, CI green before a squ
 | #7 | `claude/e2e-tests` | Playwright: DC1–DC8 on the rendered scene, real clicks, stress |
 | #8 | `claude/lens-components` | Lens Studio components (`LumenLens` + one class per role), self-test, setup guide |
 | #9 | `claude/docs-devpost` | README, LEAF results, screenshots, Devpost text, kink-area layout fix |
+| #10 | `claude/peaceful-ritchie-lrq0fj` | independent Lens Studio API review fixes, license, `npm run verify` |
+
+## Independent review of the Lens Studio code (it can't run in CI)
+
+A separate review pass checked every Lens Studio / SIK call against Snap's docs. No blockers; fixed:
+`Text.depthTest` defaults to false (printed scene text showed through objects) → set explicitly;
+world-text layout rect pinned to the anchor; fading markers now always get a blending pass;
+`fitVisual` set before the collider shape; an Audio Listener is added to the camera if missing;
+the scene is built 0.3 s after start so device tracking settles; the edge chevron's angle is computed
+in centimetres, not skewed NDC.
 
 ## Layout decisions (where the build deviates from the spec's example numbers, and why)
 

@@ -85,7 +85,8 @@ declare class MeshBuilder {
   getMesh(): RenderMesh;
 }
 
-declare class Visual extends Component { setRenderOrder(order: number): void; }
+declare class Visual extends Component { setRenderOrder(order: number): void; renderOrder: number; }
+declare class Rect { static create(left: number, right: number, bottom: number, top: number): Rect; }
 declare class RenderMeshVisual extends Visual { mesh: RenderMesh; mainMaterial: Material; }
 declare class TextFill { color: vec4; }
 declare class Text extends Visual {
@@ -95,7 +96,9 @@ declare class Text extends Visual {
   horizontalAlignment: HorizontalAlignment;
   verticalAlignment: VerticalAlignment;
   textFill: TextFill;
+  /** Defaults to false in Lens Studio. */
   depthTest: boolean;
+  layoutRect: Rect;
 }
 
 declare class Shape {

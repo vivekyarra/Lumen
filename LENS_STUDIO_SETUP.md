@@ -79,5 +79,7 @@ Record what CLAD changed in `devpost/build-log.md`.
 | `Cannot find module SpectaclesInteractionKit.lspkg/...` | The SIK package path differs in your template version: fix the import at the top of `Assets/Lumen/Lens/LensAdapters.ts` to match `Packages/`. |
 | Nothing appears | Check the Logger for `[Lumen] ready`. Check the Camera input points at the template camera. |
 | Everything is offset / tilted | Lumen places the scene relative to the camera's start pose; reset the preview while looking straight ahead. |
+| No sound | Lumen adds an Audio Listener to the camera if it has none; check the 7 Sound inputs are assigned. |
+| Labels start beside, not at, their port | Your Lens Studio version ignored the zero layout rect: set the Text's Layout Rect to 0,0,0,0 in `makeText` (`LensAdapters.ts`). |
 | Clicks do nothing | Make sure the template's SIK `InteractionManager` / hand or mouse interactor is enabled. |
 | Text renders as boxes for ✓ ✕ → | Pick a font that has these glyphs in the **Font** input. Marker ✓/✕ icons are geometry and are unaffected. |
