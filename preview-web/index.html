@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lumen — web preview</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #2b3138; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    #app, #app canvas { position: absolute; inset: 0; display: block; }
+    #specs-frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border: 1px dashed rgba(255,255,255,0.28); border-radius: 10px; pointer-events: none; }
+    #specs-frame span { position: absolute; top: -20px; left: 0; font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: .04em; }
+    #help { position: absolute; left: 16px; bottom: 14px; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; background: rgba(20,24,28,0.55); padding: 8px 12px; border-radius: 8px; pointer-events: none; }
+    #help b { color: #3FE0FF; font-weight: 600; }
+    body.clean #help, body.clean #specs-frame { display: none; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="specs-frame"><span>SPECS view (37° × 32°)</span></div>
+  <div id="help"><b>Lumen</b> web preview · drag to look · WASD move · Q/E down/up · <b>click = pinch</b> · F SPECS FOV · M mute · R reset · H hide</div>
+  <script type="module" src="./dist/app.js"></script>
+</body>
+</html>

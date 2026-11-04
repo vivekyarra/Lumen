@@ -135,12 +135,15 @@ export const CART_TEXT = {
 export const BUTTON_SIZE = { w: 9, h: 4 };
 export const BUTTON_HIT = { w: 12, h: 6 };
 
-/** "Push here" sits beside the focused port, on the outside of the hub so it never covers a port. */
+/**
+ * "Push here" sits just in front of the focused port (toward the user, slightly lower), so from the
+ * start position it appears right under the port and never covers a port, a label or the redirect arrow.
+ */
 export const PUSH_BUTTON_POS: { [K in PortId]: V3 } = {
-  A: v3(-42, 54, 83),
-  B: v3(-12, 54, 83),
-  C: v3(-12, 54, 83),
-  D: v3(26, 93, 79),
+  A: v3(-31, 45, 80),
+  B: v3(-27, 45, 80),
+  C: v3(-23, 45, 80),
+  D: v3(15, 84, 76),
 };
 
 // ---------- Lines ----------
@@ -203,9 +206,24 @@ export const CURVE_SAMPLES_PER_SEGMENT = 12;
 
 // ---------- Alarm ----------
 export const KINK_RING_DIAMETER = 6;
-export const RESOLVED_BUTTON_POS: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 6);
-export const KINK_TEXT_ANCHOR: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 10);
-export const PUMP_ALARM_TEXT_ANCHOR: V3 = v3(-78, 94, 130 + 8);
+export const RESOLVED_BUTTON_POS: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 8);
+export const KINK_TEXT_ANCHOR: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 12);
+/** Alarm text sits to the left of Pump 2 (right-aligned) so it never collides with a trace label. */
+export const PUMP_ALARM_TEXT_ANCHOR: V3 = v3(-89.5, 94, 127);
+
+/** Trace label for each pump, to the right of the pump front (left-aligned). */
+export const PUMP_LABEL_ANCHOR: { [K in PumpId]: V3 } = {
+  1: v3(-66.5, 94, 141),
+  2: v3(-66.5, 94, 127),
+  3: v3(-66.5, 94, 113),
+  4: v3(-66.5, 94, 99),
+};
+
+/** Printed syringe barrel labels, at the user-side end of each syringe. */
+export const SYRINGE_LABEL_ANCHOR: { [K in SyringeId]: V3 } = {
+  S1: v3(-33, -6, 95.5),
+  S2: v3(-33, 9, 95.5),
+};
 
 /**
  * Two natural look targets from the start position (SPECS sees only ~37° × 32°, so the hub and

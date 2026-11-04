@@ -6,13 +6,19 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.web.json --noEmit",
     "test:unit": "node --import tsx --test \"tests/unit/**/*.test.ts\"",
     "test": "npm run typecheck && npm run test:unit",
-    "gen:audio": "tsx tools/gen-audio.ts"
+    "gen:audio": "tsx tools/gen-audio.ts",
+    "build:web": "esbuild preview-web/src/main.ts --bundle --format=esm --target=es2020 --minify --sourcemap --outfile=preview-web/dist/app.js",
+    "serve:web": "npm run build:web && http-server preview-web -p 5173 -c-1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.20.5",
+    "@types/three": "^0.187.0",
+    "esbuild": "^0.28.2",
+    "three": "^0.187.0",
     "tsx": "4.23.15",
     "typescript": "~5.9.3"
   },
