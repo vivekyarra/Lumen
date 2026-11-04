@@ -1,0 +1,20 @@
+{
+  "name": "lumen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lumen: an AR Lens for SPECS that shows ICU nurses which IV port is safe for the drug in their hand.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:unit": "node --import tsx --test \"tests/unit/**/*.test.ts\"",
+    "test": "npm run typecheck && npm run test:unit"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
