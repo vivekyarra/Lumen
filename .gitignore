@@ -1,0 +1,16 @@
+# Lens Studio cache / temp
+Cache/
+Temp/
+*.lsproj.bak
+Support/
+Workspaces/
+# OS
+.DS_Store
+Thumbs.db
+# Node / tooling
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+*.log
