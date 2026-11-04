@@ -20,7 +20,7 @@ type Word = [number, number, string];
 type Voice = Record<string, { text: string; duration: number; words: Word[] }>;
 interface Take { t0: number; length: number; cues: [number, string][] }
 const W = 1920, H = 1080, FPS = 30;
-const BOX = { x: 795, y: 185, w: 707, h: 708 };        // SPECS display area inside the story take (window px)
+const BOX = { x: 865, y: 185, w: 620, h: 708 };        // SPECS display area inside the story take (window px)
 const WIN = { w: 1920, h: 974 };
 const STORY_FROM = -2.2;                                 // first extracted story frame, in story seconds
 const HOLD = 1.2;                                        // before this story time the preview camera is still settling

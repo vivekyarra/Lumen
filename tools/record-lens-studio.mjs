@@ -37,11 +37,11 @@ async function session(name) {
 // ---- layout (spec space r/f/u cm, Assets/Lumen/Core/LumenLayout.ts) → preview world, camera reset at origin facing −Z
 const EYE = 165;
 const W = (r, f, u) => ({ x: r, y: u - EYE, z: -f });
-const HUB = W(-33, 56, 86), CART = W(-46, 2, 107), PUMPS = W(-96, 102, 122), KINK = W(-9, 22.5, 104), POLE = W(-60, 104, 140);
+const HUB = W(-33, 56, 86), CART = W(-46, 2, 107), PUMPS = W(-96, 102, 122), PUMPS_TRACE = W(-66, 102, 128), KINK = W(-9, 22.5, 104), POLE = W(-60, 104, 140);
 
 // Camera timeline (seconds after the scenario's first frame). Pinch times live in Demo_Story.ts.
 const SHOTS = [
-  [0, HUB], [3.2, CART], [10.6, HUB], [16.4, PUMPS], [19.4, HUB], [27.8, CART], [30.6, HUB], [35.2, PUMPS],
+  [0, HUB], [3.2, CART], [10.6, HUB], [16.4, PUMPS_TRACE], [19.4, HUB], [27.8, CART], [30.6, HUB], [35.2, PUMPS],
   [38.8, KINK], [44.0, POLE], [54.0, CART],
 ];
 // Sound cues as the Lens plays them (AudioCues.ts) — mixed by the video tools.
