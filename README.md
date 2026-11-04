@@ -114,9 +114,10 @@ devpost/             spec, LEAF results, build log, screenshots
 
 ## LEAF results
 
-See [`devpost/leaf-results.md`](devpost/leaf-results.md). DC1–DC8 pass on the state machine and in the
-rendered web preview in CI (plus fuzzing and real-click stress tests). The Lens Studio preview column is
-filled by running the in-preview self-test (setup step 5).
+See [`devpost/leaf-results.md`](devpost/leaf-results.md). **10 / 10 scenarios** — the spec's DC1–DC8 plus
+DC9 (handoff) and DC10 (fail-safe) — pass on the state machine and in the rendered web preview on every PR,
+alongside ~100k fuzzed inputs, real-click and stress tests and a full story-mode playthrough (65 unit +
+21 browser tests). The Lens Studio preview column is filled by running the in-preview self-test (setup step 5).
 
 ## How to open
 

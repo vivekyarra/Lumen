@@ -45,13 +45,13 @@ smaller, change **Text Cm Per Point** proportionally (e.g. text twice too big �
 
 ## 5. Run DC1–DC8 inside the preview (self-test / LEAF hook)
 
-Tick **Run Self Test On Start** and reset the preview. The **Logger** prints:
+Tick **Run Self Test On Start** and reset the preview. The **Logger** prints (DC1–DC8 from the spec, plus DC9 handoff and DC10 fail-safe):
 
 ```
 | # | Criterion | LEAF test name | Result |
 | DC1 | Quiet idle | test_idle_is_quiet | PASS |
 ...
-[Lumen self-test] 8/8 pass
+[Lumen self-test] 10/10 pass
 ```
 
 The same scenarios (`Assets/Lumen/Core/Scenarios.ts`) also run in CI against the pure state machine
