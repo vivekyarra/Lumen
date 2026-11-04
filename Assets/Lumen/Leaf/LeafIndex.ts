@@ -11,6 +11,7 @@ import { DC7_PumpAlarm } from "./DC7_PumpAlarm";
 import { DC9_HandoffLineCheck } from "./DC9_HandoffLineCheck";
 import { IK_ReachTheControls } from "./IK_ReachTheControls";
 import { SelfTest_AllCriteria } from "./SelfTest_AllCriteria";
+import { Demo_Story } from "./Demo_Story";
 
 @component
 export class LeafIndex extends BaseScriptComponent {
@@ -26,5 +27,7 @@ export class LeafIndex extends BaseScriptComponent {
     { id: "test_handoff_line_check", typename: DC9_HandoffLineCheck.getTypeName() },
     { id: "test_ik_reach_controls", typename: IK_ReachTheControls.getTypeName() },
     { id: "test_self_test_dc1_dc10", typename: SelfTest_AllCriteria.getTypeName() },
+    // Not a test: the demo-video walkthrough (tools/record-lens-studio.mjs).
+    { id: "demo_story", typename: Demo_Story.getTypeName() },
   ];
 }

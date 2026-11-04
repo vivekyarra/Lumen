@@ -202,6 +202,13 @@ export function makeText(obj: SceneObject, o: TextOptions): Text {
   safe(function () { t.horizontalOverflow = HorizontalOverflow.Overflow; });
   safe(function () { t.verticalOverflow = VerticalOverflow.Overflow; });
   t.textFill.color = o.color;
+  // Near-black outline: on the additive SPECS display black is transparent, so on glasses it vanishes; in the
+  // Lens Studio preview (and on screen recordings) it keeps white text readable against the white bedside.
+  safe(function () {
+    t.outlineSettings.enabled = true;
+    t.outlineSettings.size = 0.32;
+    t.outlineSettings.fill.color = new vec4(0.05, 0.07, 0.09, 1);
+  });
   // Text.depthTest defaults to false: set it explicitly so printed scene text is hidden by geometry.
   safe(function () { t.depthTest = !o.onTop; });
   if (o.onTop) safe(function () { t.setRenderOrder(30); });

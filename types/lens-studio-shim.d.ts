@@ -91,8 +91,10 @@ declare class Visual extends Component { setRenderOrder(order: number): void; re
 declare class Rect { static create(left: number, right: number, bottom: number, top: number): Rect; }
 declare class RenderMeshVisual extends Visual { mesh: RenderMesh; mainMaterial: Material; }
 declare class TextFill { color: vec4; }
+declare class OutlineSettings { enabled: boolean; size: number; fill: TextFill; }
 declare class Text extends Visual {
   text: string;
+  outlineSettings: OutlineSettings;
   size: number;
   font: Font;
   horizontalAlignment: HorizontalAlignment;

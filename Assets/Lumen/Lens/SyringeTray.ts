@@ -1,10 +1,10 @@
 /**
  * SyringeTray — the cart's Lens content: pinch targets for the two syringes (stand-in for a barcode scan),
- * printed barrel labels, the "Holding: …" chip (pinch = put down), the push log line, the first-time hint,
- * and the always-on "Demo data — not for clinical use" label (LUMEN_SPEC.md §8.4, §8.5).
+ * printed barrel labels, the "Holding: …" chip (pinch = put down), the push log line and the first-time hint
+ * (LUMEN_SPEC.md §8.4, §8.5).
  */
 import * as L from "../Core/LumenLayout";
-import { DEMO_DATA_LABEL, SYRINGE_IDS, SYRINGES, SyringeId } from "../Core/LumenData";
+import { SYRINGE_IDS, SYRINGES, SyringeId } from "../Core/LumenData";
 import { LumenView } from "../Core/LumenState";
 import { wrapLabel } from "../Core/ViewMath";
 import { LensContext, placeAt } from "./LensContext";
@@ -15,7 +15,6 @@ export class SyringeTray {
   readonly chip: Text;
   readonly log: Text;
   readonly hint: Text;
-  readonly demo: Text;
   readonly raw: { chip: string | null; log: string | null; hint: string | null; notice: string | null } = { chip: null, log: null, hint: null, notice: null };
 
   constructor(ctx: LensContext, onSyringe: (id: SyringeId) => void, onChip: () => void) {
@@ -39,8 +38,6 @@ export class SyringeTray {
     makePinchTarget(chipHit, { box: new vec3(28, 5, 2) }, onChip);
     this.log = makeText(placeAt(ctx, "Cart_LogLine", L.CART_TEXT.log.anchor, true), opts("center", HEX.green));
     this.hint = makeText(placeAt(ctx, "Cart_Hint", L.CART_TEXT.hint.anchor, true), opts("center", HEX.white));
-    this.demo = makeText(placeAt(ctx, "Cart_DemoDataLabel", L.CART_TEXT.demoLabel.anchor, true), opts("center", HEX.amber));
-    setText(this.demo, wrapLabel(DEMO_DATA_LABEL, L.LABEL_WRAP_CHARS).join("\n"));
     setText(this.chip, null);
     setText(this.log, null);
   }

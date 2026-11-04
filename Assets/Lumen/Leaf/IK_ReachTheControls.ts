@@ -1,13 +1,15 @@
 /**
- * Reachability — the LEAF IK avatar pinches the syringe, a port and "Push here" the way a standing nurse would.
- * Lumen's ports sit about 1 m from the eyes, so SIK may route them far-field (ray pinch); that is by design.
+ * Reachability — the LEAF IK avatar (arm + head) pinches the hub controls the way a standing nurse would:
+ * the green port, then "Push here". The syringe is picked up with the scripted interactor first: the cart
+ * sits at the head of the bed, ~94° left of the start view, which needs a body turn the IK avatar (head-only
+ * aim) does not model — LEAF reported exactly that ("out_of_fov … 94.1° off-axis") when the IK hand tried it.
  */
 import { Scenario } from "Leaf.lspkg/Scenarios/scenario/Scenario";
 import { expect } from "Leaf.lspkg/Utils/common/Expect";
 import { sleep } from "Leaf.lspkg/Utils/common/Utils";
 import { findInteractableByName } from "Leaf.lspkg/Interactors/InteractableUtils";
 import { createIKInteractor } from "Leaf.lspkg/Interactors/interactor/ik/visualizer/BitmojiAvatar";
-import { freshSession, HIT, view } from "./LumenLeaf";
+import { freshSession, HIT, LumenLeafInteractor, view } from "./LumenLeaf";
 
 @component
 export class IK_ReachTheControls extends Scenario {
@@ -15,8 +17,7 @@ export class IK_ReachTheControls extends Scenario {
 
   async run(): Promise<void> {
     await freshSession();
-    await this.ik.trigger(findInteractableByName(HIT.syringe("S1")));
-    await sleep(500);
+    await new LumenLeafInteractor().pinch(HIT.syringe("S1"));
     expect(view().held).toBe("S1");
     await this.ik.trigger(findInteractableByName(HIT.port("A")));
     await sleep(500);

@@ -2,7 +2,7 @@
  * LumenData — the ONLY place in Lumen that holds demo data (LUMEN_SPEC.md §8.3).
  *
  * All data below is invented demo data for a hackathon prototype.
- * It is NOT checked for clinical use. The Lens always shows DEMO_DATA_LABEL on the cart.
+ * It is NOT checked for clinical use (README → Disclaimer).
  *
  * Positions live in LumenLayout.ts (scene geometry); this file holds the clinical demo facts.
  */
@@ -61,8 +61,6 @@ export interface AlarmSpec {
 }
 
 export type Compatibility = "compatible" | "incompatible";
-
-export const DEMO_DATA_LABEL = "Demo data — not for clinical use";
 
 export const DRUGS: { [K in DrugId]: Drug } = {
   midazolam: { id: "midazolam", shortName: "Midazolam" },

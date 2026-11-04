@@ -24,8 +24,7 @@ export type ProbeKey =
   | "redirect.arrow"
   | "edgeArrow"
   | "chip"
-  | "log"
-  | "demoLabel";
+  | "log";
 
 export interface SceneProbe {
   /** Is the object visible (enabled and not fully transparent)? `index` selects the port / line. */
@@ -99,7 +98,6 @@ function quietIdle(d: Driver, where: string): void {
     }
     ok(!pr.visible("button.push"), where + ": Push hidden");
     ok(!pr.visible("redirect.arrow"), where + ": arrow hidden");
-    ok(pr.visible("demoLabel"), where + ": demo-data label visible");
   }
 }
 

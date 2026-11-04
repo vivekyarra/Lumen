@@ -130,7 +130,6 @@ export const PORT_LABEL_SLOT: { [K in PortId]: LabelSlot } = {
 export const LABEL_WRAP_CHARS = 20;
 
 export const CART_TEXT = {
-  demoLabel: { anchor: v3(-46, 2, 122), align: "center" as Align },
   hint: { anchor: v3(-46, 2, 110), align: "center" as Align },
   chip: { anchor: v3(-46, 2, 99.5), align: "center" as Align },
   log: { anchor: v3(-46, 2, 110), align: "center" as Align },

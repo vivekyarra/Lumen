@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  COMPATIBILITY, DEMO_DATA_LABEL, LINES, LINE_IDS, PORTS, PORT_IDS, SYRINGES, lineForPort, lineForPump,
+  COMPATIBILITY, LINES, LINE_IDS, PORTS, PORT_IDS, SYRINGES, lineForPort, lineForPump,
 } from "../../Assets/Lumen/Core/LumenData";
 import * as S from "../../Assets/Lumen/Core/Strings";
 import { check, checkAll, nearestCompatible } from "../../Assets/Lumen/Core/CompatibilityEngine";
@@ -12,7 +12,6 @@ const SPEC_STRINGS = [
   "Pick up a syringe to check ports.",
   "Holding: Furosemide 40 mg",
   "Holding: Morphine 2 mg",
-  "Demo data — not for clinical use",
   "✕ Midazolam — do not push here",
   "✕ Dobutamine — do not push here",
   "✓ Compatible",
@@ -42,7 +41,7 @@ test("line table matches spec §8.3", () => {
 
 test("every exact spec string is produced by Strings.ts", () => {
   const produced = new Set<string>([
-    S.HINT_TEXT, S.holdingText("S1"), S.holdingText("S2"), DEMO_DATA_LABEL,
+    S.HINT_TEXT, S.holdingText("S1"), S.holdingText("S2"),
     S.redFocusText("B"), S.redFocusText("C"), S.COMPATIBLE_TEXT, S.useText("A"), S.PUSH_TEXT,
     "Downstream occlusion", "Check here: kinked line", S.RESOLVED_TEXT,
     ...PORT_IDS.map(S.portLabel), ...LINE_IDS.map(S.pumpLabel),
@@ -57,7 +56,7 @@ test("log line format", () => {
 
 test("labels respect the 6-word limit (the spec's own 7-word hint is the one exemption)", () => {
   assert.equal(S.wordCount(S.HINT_TEXT), 7);
-  const all = [S.NO_SAFE_PORT_TEXT, S.handoffLogText(4, 4, "10:42"), DEMO_DATA_LABEL, S.COMPATIBLE_TEXT, S.NOT_IN_TABLE_TEXT, S.PUSH_TEXT, S.RESOLVED_TEXT,
+  const all = [S.NO_SAFE_PORT_TEXT, S.handoffLogText(4, 4, "10:42"), S.COMPATIBLE_TEXT, S.NOT_IN_TABLE_TEXT, S.PUSH_TEXT, S.RESOLVED_TEXT,
     ...PORT_IDS.map(S.redFocusText), ...PORT_IDS.map(S.useText), ...PORT_IDS.map(S.portLabel),
     ...LINE_IDS.map(S.pumpLabel), "Downstream occlusion", "Check here: kinked line",
     S.holdingText("S1"), S.holdingText("S2"), S.logText("S1", "A", "10:42")];

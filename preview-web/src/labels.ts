@@ -63,8 +63,14 @@ export function makeLabel(capCm: number, align: Align, wrapChars: number, plate?
       ctx.textBaseline = "alphabetic";
       ctx.textAlign = align === "right" ? "right" : align === "left" ? "left" : "center";
       const x = align === "right" ? canvas.width - padPx : align === "left" ? padPx : canvas.width / 2;
+      // Near-black outline, as in the Lens (LensAdapters.makeText): invisible on the additive display,
+      // keeps white text readable against the white bedside in the preview and in recordings.
+      ctx.lineJoin = "round";
+      ctx.lineWidth = Math.max(2, fontPx * 0.16);
+      ctx.strokeStyle = "rgba(13,18,23,0.92)";
       for (let i = 0; i < lines.length; i++) {
         const baseline = padPx / 2 + (i + 0.8) * lineCm * PX_PER_CM;
+        ctx.strokeText(lines[i], x, baseline);
         ctx.fillText(lines[i], x, baseline);
       }
       // WebGL2 textures are immutable in size: make a fresh texture whenever the text changes.

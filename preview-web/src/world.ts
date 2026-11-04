@@ -3,7 +3,7 @@ import * as THREE from "three";
 import * as L from "../../Assets/Lumen/Core/LumenLayout";
 import * as M from "../../Assets/Lumen/Core/MeshGen";
 import {
-  DEMO_DATA_LABEL, LINE_IDS, LINES, LineId, PORT_IDS, PortId, PumpId, SYRINGE_IDS, SyringeId, SYRINGES, TIMING,
+  LINE_IDS, LINES, LineId, PORT_IDS, PortId, PumpId, SYRINGE_IDS, SyringeId, SYRINGES, TIMING,
 } from "../../Assets/Lumen/Core/LumenData";
 import * as S from "../../Assets/Lumen/Core/Strings";
 import { LumenView } from "../../Assets/Lumen/Core/LumenState";
@@ -86,7 +86,6 @@ export class LumenWorld {
   readonly chip: Label;
   readonly log: Label;
   readonly hint: Label;
-  readonly demo: Label;
   readonly push = new THREE.Group();
   readonly pushLabel: Label;
   readonly redirect = new THREE.Group();
@@ -114,8 +113,6 @@ export class LumenWorld {
     this.chip = this.textAt(L.CART_TEXT.chip.anchor, L.TEXT_CAP.small, "center", "chip");
     this.log = this.textAt(L.CART_TEXT.log.anchor, L.TEXT_CAP.small, "center", "log");
     this.hint = this.textAt(L.CART_TEXT.hint.anchor, L.TEXT_CAP.small, "center", "hint");
-    this.demo = this.textAt(L.CART_TEXT.demoLabel.anchor, L.TEXT_CAP.small, "center", "demoLabel");
-    this.demo.setText(DEMO_DATA_LABEL, CSS.amber);
     this.addHit(this.chip.object as THREE.Mesh, { kind: "chip" }, false);
     for (const p of [1, 2, 3, 4] as PumpId[]) {
       this.pumpLabels[p] = this.textAt(L.PUMP_LABEL_ANCHOR[p], L.TEXT_CAP.large, "left", "pump." + p);
