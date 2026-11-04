@@ -27,7 +27,7 @@ Everything Lumen shows is built **at runtime** by one component, `LumenLens`, fr
 | Unlit Material | Asset Browser **+ → Material → Unlit** (any colour; Lumen recolours clones) |
 | Lit Material | Asset Browser **+ → Material → PBR** (or Simple PBR) |
 | Font | optional — leave empty for the default font |
-| Text Cm Per Point | `0.05` (see step 4 if text looks too big or small) |
+| Text Cm Per Point | `0.0228` (= 1 / 43.886, Lens Studio's em-square cm per Text.size point; see step 4 if text looks too big or small) |
 | Eye Height Cm | `165` |
 | Sound Tick … Sound Resolved | drag `Assets/Lumen/Audio/lumen_tick.wav`, `lumen_markers`, `lumen_red`, `lumen_green`, `lumen_confirm`, `lumen_alarm`, `lumen_resolved` |
 | Run Self Test On Start | off (turn on to run DC1–DC8, see step 5) |
@@ -41,7 +41,7 @@ Press **Preview** (Spectacles, interactive). Controls: **WASD** move, **Q/E** do
 
 World-space text size in Lens Studio depends on the font. The hub labels should have capitals about
 **1.8 cm** tall (about the height of the 4 cm marker ring's inner hole). If they are clearly bigger or
-smaller, change **Text Cm Per Point** proportionally (e.g. text twice too big → `0.1`).
+smaller, change **Text Cm Per Point** proportionally (e.g. text twice too big → `0.0456`).
 
 ## 5. Run DC1–DC8 inside the preview (self-test / LEAF hook)
 

@@ -74,6 +74,8 @@ declare enum MeshTopology { Triangles, Lines, Points }
 declare enum MeshIndexType { UInt16, None }
 declare enum HorizontalAlignment { Left, Center, Right }
 declare enum VerticalAlignment { Top, Center, Bottom }
+declare enum HorizontalOverflow { Overflow, Truncate, Wrap, Shrink }
+declare enum VerticalOverflow { Overflow, Truncate, Shrink }
 
 declare class MeshBuilder {
   constructor(layout: { name: string; components: number; normalized?: boolean }[]);
@@ -95,10 +97,13 @@ declare class Text extends Visual {
   font: Font;
   horizontalAlignment: HorizontalAlignment;
   verticalAlignment: VerticalAlignment;
+  horizontalOverflow: HorizontalOverflow;
+  verticalOverflow: VerticalOverflow;
   textFill: TextFill;
   /** Defaults to false in Lens Studio. */
   depthTest: boolean;
   layoutRect: Rect;
+  worldSpaceRect: Rect;
 }
 
 declare class Shape {
@@ -107,11 +112,16 @@ declare class Shape {
 }
 declare class SphereShape extends Shape { radius: number; }
 declare class BoxShape extends Shape { size: vec3; }
-declare class ColliderComponent extends Component { shape: Shape; fitVisual: boolean; }
+/** Assigning `shape` resets `fitVisual` to true. */
+declare class ColliderComponent extends Component { shape: Shape; fitVisual: boolean; debugDrawEnabled: boolean; }
 
 declare class SpatialAudio { enabled: boolean; positionEffect: { enabled: boolean }; }
+declare namespace Audio { enum PlaybackMode { LowPower, LowLatency } }
 declare class AudioComponent extends Component {
   audioTrack: AudioTrackAsset;
+  /** Specs default: LowPower (adds latency). */
+  playbackMode: Audio.PlaybackMode;
+  volume: number;
   spatialAudio: SpatialAudio;
   play(loops: number): void;
   stop(fade: boolean): void;

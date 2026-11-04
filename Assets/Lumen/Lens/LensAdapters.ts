@@ -198,6 +198,9 @@ export function makeText(obj: SceneObject, o: TextOptions): Text {
   // World-space text aligns against its layout rect: pin it to the origin so "left"/"right" start/end at the anchor.
   safe(function () { (t as any).layoutRect = Rect.create(0, 0, 0, 0); });
   safe(function () { (t as any).worldSpaceRect = Rect.create(0, 0, 0, 0); });
+  // A zero-width rect with the default (wrapping) overflow would wrap one glyph per line: let text overflow it.
+  safe(function () { t.horizontalOverflow = HorizontalOverflow.Overflow; });
+  safe(function () { t.verticalOverflow = VerticalOverflow.Overflow; });
   t.textFill.color = o.color;
   // Text.depthTest defaults to false: set it explicitly so printed scene text is hidden by geometry.
   safe(function () { t.depthTest = !o.onTop; });
@@ -224,7 +227,6 @@ export function makePinchTarget(
   onPinch: (hitWorld: vec3 | null) => void,
 ): Interactable {
   const col = obj.createComponent("Physics.ColliderComponent") as ColliderComponent;
-  safe(function () { col.fitVisual = false; });
   if ("sphere" in shape) {
     const s = Shape.createSphereShape();
     s.radius = shape.sphere;
@@ -234,12 +236,16 @@ export function makePinchTarget(
     b.size = shape.box;
     col.shape = b;
   }
+  // Assigning `shape` resets fitVisual to true, so turn it off afterwards (explicit sizes, never the visual's AABB).
+  safe(function () { col.fitVisual = false; });
   const it = obj.createComponent(Interactable.getTypeName()) as Interactable;
   it.onTriggerEnd.add(function (e: any) {
     let hit: vec3 | null = null;
     safe(function () {
-      const info = e && e.interactor && e.interactor.targetHitInfo;
+      const it = e && e.interactor;
+      const info = it && it.targetHitInfo;
       if (info && info.hit && info.hit.position) hit = info.hit.position;
+      else if (it && it.targetHitPosition) hit = it.targetHitPosition;
     });
     onPinch(hit);
   });
@@ -250,6 +256,8 @@ export function makeAudio(obj: SceneObject, track: AudioTrackAsset | undefined):
   if (!track) return null;
   const a = obj.createComponent("Component.AudioComponent") as AudioComponent;
   a.audioTrack = track;
+  // Specs defaults every AudioComponent to LowPower, which audibly lags input-reactive cues.
+  safe(function () { a.playbackMode = Audio.PlaybackMode.LowLatency; });
   safe(function () {
     a.spatialAudio.enabled = true;
     a.spatialAudio.positionEffect.enabled = true;

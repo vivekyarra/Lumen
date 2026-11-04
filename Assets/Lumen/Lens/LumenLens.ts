@@ -45,10 +45,11 @@ export class LumenLens extends BaseScriptComponent {
   font: Font;
 
   @input
-  @hint("World-space text calibration: centimetres per text point. Tune once if text looks too big/small.")
-  textCmPerPoint: number = 0.05;
+  @hint("World-space text calibration: centimetres per text point (Text.size em-square cm = size / 43.886). Tune once if text looks too big/small.")
+  textCmPerPoint: number = 0.0228;
 
   @input
+  @hint("Height of the wearer's eyes above the floor at start (cm).")
   eyeHeightCm: number = 165;
 
   @input @allowUndefined soundTick: AudioTrackAsset;
