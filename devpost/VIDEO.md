@@ -1,6 +1,6 @@
 # Demo film
 
-[`devpost/demo/lumen-demo.mp4`](demo/lumen-demo.mp4): 2:23, 1920×1080, 30 fps. AI voice-over (Microsoft neural voice
+[`devpost/demo/lumen-demo.mp4`](demo/lumen-demo.mp4): 2:28, 1920×1080, 30 fps. AI voice-over (Microsoft neural voice
 "Andrew"), word-synced captions, an original score synthesized in code, and the Lens's own sound cues.
 
 **What is real:** every shot of the Lens working is a **screen recording of the Lens Studio 5.24.1 preview** of this repo's
@@ -19,8 +19,8 @@ web twin) with cinematic lighting.
 | 0:38–0:46 | **Reveal**: the **whole Lens Studio window** flies in (tagged REAL APP), then an eased zoom into the SPECS view | "So we built Lumen. A Lens for Snap Specs, running right here, in Lens Studio." |
 | 0:46–1:38 | **Demo** (real footage): quiet → pick up → check → trace to the pump → redirect → push → log → "One more thing": pump alarm, edge arrow, amber line to the kink → Resolved → shift handoff. The side panels show the workflow step and the Lens state | 11 lines, each timed to its pinch |
 | 1:38–1:55 | **Why glasses**: three pillars, two design principles (real footage thumbnails) | "This only works on glasses…" |
-| 1:55–2:09 | **Under the hood**: animated hub diagram (coding agent · Lens Studio MCP · Lens Studio · LEAF · one TypeScript core), then the **real LEAF run**, then the 10/10 board | "Our coding agent built it in Lens Studio, through the Lens Studio MCP… Ten of ten pass in the preview." |
-| 2:09–2:23 | **Close**: what's next, logo, tagline, repo link | "Next: barcode scanning, real line tracking, live pump data. Lumen. The right line. The safe port. Where you look." |
+| 1:55–2:15 | **Under the hood**: "Built by Claude Code, inside Lens Studio": animated hub diagram (Claude Code · Snap CLAD · Lens Studio MCP · Lens Studio · LEAF), then the **real LEAF run**, then the 10/10 board | "Claude Code built it, end to end: the scene, the logic, the tests. Through Snap's CLAD and the Lens Studio MCP… Ten of ten pass in the preview." |
+| 2:15–2:28 | **Close**: what's next, logo, tagline, credits (Claude Code + Snap CLAD; directed by Yarra Vivek), repo link | "Next: barcode scanning, real line tracking, live pump data. Lumen. The right line. The safe port. Where you look." |
 
 ## Rebuild it
 

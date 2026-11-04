@@ -31,14 +31,14 @@ const VO_AT: Record<string, number> = {
   v04: 11.8, v05: 14.9, v06: 20.9, v07: 24.8, v08: 26.5, v09: 29.8,
   v10: 38.5,
   v11: 0.3, v12: 5.0, v13: 8.8, v14: 12.8, v15: 19.8, v16: 25.0, v17: 27.2, v18: 30.8, v19: 33.0, v20: 39.0, v21: 44.4, // story time
-  v22: 98.6, v23: 101.0, v24: 108.8, v25: 115.6, v26: 125.4, v27: 129.9, v28: 135.2,
+  v22: 98.6, v23: 101.0, v24: 108.8, v25: 115.6, v26: 130.9, v27: 135.4, v28: 140.7,
 };
 const DEMO0 = 45.6;                                      // global time of story t = 0
 const STORY_VO = new Set(["v11", "v12", "v13", "v14", "v15", "v16", "v17", "v18", "v19", "v20", "v21"]);
-export const DURATION = 142.6;
+export const DURATION = 148.1;
 const T = {
   hook: [0, 11.4], problem: [11.4, 38.2], reveal: [38.2, DEMO0 + 0.2], demo: [DEMO0, DEMO0 + 52.8],
-  why: [98.4, 115.4], built: [115.4, 129.6], close: [129.6, DURATION],
+  why: [98.4, 115.4], built: [115.4, 135.1], close: [135.1, DURATION],
 } as const;
 function voStart(id: string): number { return STORY_VO.has(id) ? DEMO0 + VO_AT[id] : VO_AT[id]; }
 
@@ -376,13 +376,13 @@ const princ = PRINC.map((p, i) => {
 
 // BUILT
 const built = layer();
-const bHead = el("div", "abs", built, `<div class="eyebrow">Under the hood</div><div class="h2" style="margin-top:14px">Built in <span class="accent">Lens Studio</span>, by a coding agent</div>`, { left: "0", width: W + "px", top: "84px", textAlign: "center" });
+const bHead = el("div", "abs", built, `<div class="eyebrow">Under the hood</div><div class="h2" style="margin-top:14px">Built by <span class="accent">Claude Code</span>, inside Lens Studio</div>`, { left: "0", width: W + "px", top: "84px", textAlign: "center" });
 const NODES = [
-  ["agent", "Coding agent", "Claude Code", -560, -150, "coding"],
-  ["plug", "Lens Studio MCP", "wires the scene, runs tests", -560, 150, "mcp"],
-  ["ls", "Lens Studio 5.24.1", "SPECS 27 · SIK", 560, -150, "lens"],
+  ["agent", "Claude Code", "built the scene, logic & tests", -560, -150, "claude"],
+  ["code", "Snap CLAD", "Lens Studio agent toolkit", -560, 150, "clad"],
+  ["plug", "Lens Studio MCP", "wires the scene, runs tests", 0, 300, "mcp"],
+  ["ls", "Lens Studio 5.24.1", "SPECS 27 · SIK", 560, -150, "inside"],
   ["flask", "LEAF", "pinches every control", 560, 150, "leaf"],
-  ["code", "One TypeScript core", "data · state · layout", 0, 300, "built"],
 ] as const;
 const CX = 960, CY = 560;
 const hubDiv = el("div", "abs", built, `<div style="font-weight:800;font-size:54px">Lumen</div><div class="eyebrow" style="font-size:14px;margin-top:6px">the Lens</div>`,
@@ -426,7 +426,8 @@ const nHead = el("div", "abs", close, `<div class="eyebrow">Next</div>`, { left:
 const nCards = NEXT.map((n, i) => el("div", "abs glass", close, `<div style="display:flex;align-items:center;gap:22px">${icon(n[0], "#3fe0ff", 62)}<div><div style="font-weight:700;font-size:32px">${n[1]}</div><div style="font-size:20px;color:#8b97a6;margin-top:4px">${n[2]}</div></div></div>`,
   { left: 210 + i * 520 + "px", top: "400px", width: "460px", padding: "30px 34px", boxSizing: "border-box" }));
 const endMeta = el("div", "abs", close, `<div class="h3" style="font-size:30px;color:#c4ccd6">github.com/<span class="accent">vivekyarra/Lumen</span></div>
-  <div style="margin-top:14px;font-size:21px;color:#8b97a6">Lens Studio 5.24.1 · SPECS 27 · Lens Studio MCP · LEAF 10/10 · try the web twin: vivekyarra.github.io/Lumen</div>`, { left: "0", width: W + "px", top: "840px", textAlign: "center" });
+  <div style="margin-top:14px;font-size:24px;color:#f4f7fa;font-weight:600">Built with <span class="accent">Claude Code</span> + Snap CLAD · Lens Studio MCP · LEAF 10/10</div>
+  <div style="margin-top:10px;font-size:19px;color:#8b97a6">Directed by Yarra Vivek · Lens Studio 5.24.1 · SPECS 27 · web twin: vivekyarra.github.io/Lumen</div>`, { left: "0", width: W + "px", top: "840px", textAlign: "center" });
 
 // ------------------------------------------------------------------ per-frame
 function hideAll(): void { for (const c of Array.from(layers.children) as HTMLElement[]) c.style.display = "none"; }
@@ -619,10 +620,11 @@ async function seek(t: number): Promise<void> {
   // ---------------- BUILT
   if (inWin(t, T.built)) {
     on(built);
-    const dg = win(t, 115.4, 121.3, 0.5, 0.5);
+    const LEAF0 = wordAt("v25", "leaf") - 0.6;           // the real LEAF run takes over at "LEAF tests"
+    const dg = win(t, 115.4, LEAF0 + 0.2, 0.5, 0.5);
     show(bHead, dg, 0, (1 - eOut(prog(t, 115.4, 116))) * -20);
     show(hubDiv, dg, 0, 0, lerp(0.6, 1, eBack(prog(t, 115.5, 116.3))));
-    const when = [wordAt("v25", "coding"), wordAt("v25", "mcp") - 0.2, wordAt("v25", "lens"), wordAt("v25", "leaf"), wordAt("v25", "built") + 0.2];
+    const when = NODES.map((n) => wordAt("v25", n[5]) - (n[5] === "claude" ? 0.1 : 0.2));
     nodeEls.forEach((n, i) => {
       const k = eOut(prog(t, when[i] - 0.2, when[i] + 0.4));
       show(n.e, Math.min(k, dg), 0, (1 - k) * 24);
@@ -635,23 +637,24 @@ async function seek(t: number): Promise<void> {
     });
     wires.style.display = dg > 0 ? "" : "none";
     // real LEAF run footage
-    const lf = win(t, 121.2, 125.5, 0.5, 0.4);
+    const lf = win(t, LEAF0, LEAF0 + 4.6, 0.5, 0.4);
     if (lf > 0) {
       on(fl);
-      const src = 4.6 + (t - 121.2) * 5;
+      const src = 4.6 + (t - LEAF0) * 5;
       await setFootage(leafFrame(src));
       footWrap.style.perspective = ""; footWrap.style.opacity = String(lf); footWrap.style.clipPath = "";
-      const zk = eInOut(prog(t, 122.0, 123.2));
+      const zk = eInOut(prog(t, LEAF0 + 0.8, LEAF0 + 2.0));
       const s = lerp(FULL.s, 1.55, zk), x = lerp(FULL.x, 960 - 1150 * 1.55, zk), y = lerp(FULL.y, 300 - 230 * 1.55, zk);
       placeWin(s, x, y);
       footImg.style.filter = ""; footImg.style.boxShadow = "0 40px 120px rgba(0,0,0,.6)";
       show(boxFrame, 0); show(boxTag, 0);
       show(leafTag, lf);
     } else show(leafTag, 0);
-    const tk = prog(t, 125.4, 128.0);
-    show(tests, win(t, 125.3, 129.6, 0.4, 0.4));
+    const T26 = voStart("v26");
+    const tk = prog(t, T26, T26 + 2.6);
+    show(tests, win(t, T26 - 0.1, T.built[1], 0.4, 0.4));
     let n = 0;
-    trows.forEach((r, i) => { const k = eOut(prog(t, 125.5 + i * 0.22, 125.85 + i * 0.22)); if (k > 0.5) n++; show(r, k, (1 - k) * 40); });
+    trows.forEach((r, i) => { const k = eOut(prog(t, T26 + 0.1 + i * 0.22, T26 + 0.45 + i * 0.22)); if (k > 0.5) n++; show(r, k, (1 - k) * 40); });
     cnt.textContent = String(n);
     void tk;
   }
@@ -659,26 +662,26 @@ async function seek(t: number): Promise<void> {
   // ---------------- CLOSE
   if (inWin(t, T.close)) {
     on(close);
-    show(nHead, win(t, 129.7, 135.0, 0.4, 0.4));
+    show(nHead, win(t, 135.2, 140.5, 0.4, 0.4));
     const wt = [wordAt("v27", "barcode"), wordAt("v27", "real"), wordAt("v27", "live")];
-    nCards.forEach((c, i) => { const k = eOut(prog(t, wt[i] - 0.2, wt[i] + 0.4)); show(c, Math.min(k, 1 - eOut(prog(t, 134.6, 135.1))), 0, (1 - k) * 40); drawSvg(c, prog(t, wt[i] - 0.1, wt[i] + 0.9)); });
-    if (t > 134.9) {
+    nCards.forEach((c, i) => { const k = eOut(prog(t, wt[i] - 0.2, wt[i] + 0.4)); show(c, Math.min(k, 1 - eOut(prog(t, 140.1, 140.6))), 0, (1 - k) * 40); drawSvg(c, prog(t, wt[i] - 0.1, wt[i] + 0.9)); });
+    if (t > 140.4) {
       on(logo);
-      const a = eOut(prog(t, 135.0, 135.9));
+      const a = eOut(prog(t, 140.5, 141.4));
       show(logoWrap, a, 0, -40, lerp(0.94, 1, a));
-      drawSvg(logoRing, prog(t, 135.0, 136.2));
-      logoWord.style.backgroundPosition = `${lerp(100, 0, eInOut(prog(t, 135.4, 137.2)))}% 0`;
+      drawSvg(logoRing, prog(t, 140.5, 141.7));
+      logoWord.style.backgroundPosition = `${lerp(100, 0, eInOut(prog(t, 140.9, 142.7)))}% 0`;
       // tagline lands phrase by phrase with the voice
       const tw = [wordAt("v28", "right"), wordAt("v28", "safe"), wordAt("v28", "where")];
       const parts = ["The right line.", "The safe port.", "Where you look."];
       logoTag.innerHTML = parts.map((p, i) => `<span style="opacity:${eOut(prog(t, tw[i] - 0.2, tw[i] + 0.3))};${i === 2 ? "color:#3fe0ff" : ""}">${p}</span>`).join(" ");
       show(logoTag, 1);
       show(logoGlow, a * (0.7 + 0.3 * Math.sin(t * 2)));
-      show(endMeta, eOut(prog(t, 138.6, 139.4)));
+      show(endMeta, eOut(prog(t, 144.1, 144.9)));
       show(logo, 1 - eOut(prog(t, DURATION - 1.2, DURATION)));
       show(close, 1);
     }
-    show(endMeta, Math.min(eOut(prog(t, 138.6, 139.4)), 1 - eOut(prog(t, DURATION - 1.2, DURATION))));
+    show(endMeta, Math.min(eOut(prog(t, 144.1, 144.9)), 1 - eOut(prog(t, DURATION - 1.2, DURATION))));
   }
 }
 

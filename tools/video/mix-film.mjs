@@ -13,7 +13,7 @@ const take = JSON.parse(fs.readFileSync(path.join(ROOT, "story", "take.json"), "
 
 const music = path.join(ROOT, "music.wav");
 execFileSync("node", ["tools/video/make_music.mjs", music, String(tl.duration), JSON.stringify({
-  reveal: 38.2, zoom: 43.5, demo0: tl.demo0, demoEnd: tl.demo0 + 52, omt: tl.demo0 + 30.8, logo1: 8.4, logo2: 135.0,
+  reveal: 38.2, zoom: 43.5, demo0: tl.demo0, demoEnd: tl.demo0 + 52, omt: tl.demo0 + 30.8, logo1: 8.4, logo2: 140.5,
 })], { stdio: "inherit" });
 
 const inputs = ["-i", path.join(ROOT, "film-picture.mp4"), "-i", music];
@@ -36,8 +36,8 @@ for (const [t, name] of cues) {
 f.push(`${vo.join("")}amix=inputs=${vo.length}:normalize=0,apad,atrim=0:${tl.duration}[vo]`);
 f.push(`[vo]asplit=2[vomix][vokey]`);
 f.push(`${cu.join("")}amix=inputs=${cu.length}:normalize=0,apad,atrim=0:${tl.duration}[cues]`);
-f.push(`[1:a]volume=0.9[mus]`);
-f.push(`[mus][vokey]sidechaincompress=threshold=0.02:ratio=5:attack=30:release=500:makeup=1[duck]`);
+f.push(`[1:a]volume=0.45[mus]`);  // score sits ~6 dB under the old mix
+f.push(`[mus][vokey]sidechaincompress=threshold=0.012:ratio=9:attack=25:release=600:makeup=1[duck]`);
 f.push(`[vomix][cues][duck]amix=inputs=3:normalize=0,loudnorm=I=-14:TP=-1.2:LRA=9[aout]`);
 execFileSync(FF, ["-hide_banner", "-loglevel", "error", "-y", ...inputs, "-filter_complex", f.join(";"),
   "-map", "0:v", "-map", "[aout]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest", "-movflags", "+faststart", OUT], { stdio: "inherit" });
