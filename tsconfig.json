@@ -10,7 +10,7 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "lib": ["ES2019"],
-    "types": []
+    "types": ["node"]
   },
-  "include": ["Assets/Lumen/Core/**/*.ts"]
+  "include": ["Assets/Lumen/Core/**/*.ts", "tests/unit/**/*.ts"]
 }
