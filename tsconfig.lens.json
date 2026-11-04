@@ -7,5 +7,5 @@
     "lib": ["ES2019"],
     "types": []
   },
-  "include": ["Assets/Lumen/**/*.ts", "types/lens-studio-shim.d.ts"]
+  "include": ["Assets/Lumen/**/*.ts", "types/lens-studio-shim.d.ts", "types/leaf-shim.d.ts"]
 }

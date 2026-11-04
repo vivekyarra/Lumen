@@ -13,7 +13,7 @@
 - ▶ **Full demo (1:44, with sound):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4) — rendered frame-by-frame from the
   web preview's story mode (`npm run record:demo`). Public YouTube link: _add after upload_.
 - 🌐 **Try it in your browser:** https://vivekyarra.github.io/Lumen/ — press **▶ Play the story**, or click around yourself
-  (click = pinch). *(Live once GitHub Pages is enabled — see [`.github/workflows/pages.yml`](.github/workflows/pages.yml).)*
+  (click = pinch). Deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every merge to `main`.
 
 ![Holding furosemide: the Medial port is red because Midazolam runs in it; Lumen lights that line to its pump and points to the safe Distal port](devpost/screenshots/03-red-port-redirect.png)
 
@@ -117,7 +117,9 @@ devpost/             spec, LEAF results, build log, screenshots
 See [`devpost/leaf-results.md`](devpost/leaf-results.md). **10 / 10 scenarios** — the spec's DC1–DC8 plus
 DC9 (handoff) and DC10 (fail-safe) — pass on the state machine and in the rendered web preview on every PR,
 alongside ~100k fuzzed inputs, real-click and stress tests and a full story-mode playthrough (65 unit +
-21 browser tests). The Lens Studio preview column is filled by running the in-preview self-test (setup step 5).
+21 browser tests). For Lens Studio there is a real **LEAF** suite in [`Assets/Lumen/Leaf/`](Assets/Lumen/Leaf/): one scenario per
+done criterion that pinches the Lens's actual SIK interactables (`Syringe_S1_Hit`, `Port_B_Hit`, `PushHereButton`, …),
+an IK reachability scenario, and one that runs all ten shared scenarios inside the preview.
 
 ## How to open
 
@@ -184,5 +186,5 @@ All drug data in this repo is invented for a demo and has not been checked for c
 | Lens Studio project files (`.esproj`, scene) + scene wiring | ⏳ you — [LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md) steps 1–2 (or via CLAD, step 6) |
 | DC1–DC8 in the Lens Studio preview | ⏳ you — setup step 5, paste the table into `devpost/leaf-results.md` |
 | Demo video | ✅ 1:44 cut rendered ([`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4)) · ⏳ you — add voice-over + 20 s of plan-lens/CLAD/LEAF footage, upload public ([`devpost/VIDEO.md`](devpost/VIDEO.md)) |
-| Web preview link for judges | ⏳ you — Settings → Pages → Source: GitHub Actions; Settings → Default branch: `main` |
+| Web preview link for judges | ✅ live at https://vivekyarra.github.io/Lumen/ |
 | Devpost form | ⏳ you — text in [`devpost/submission.md`](devpost/submission.md) |
