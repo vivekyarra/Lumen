@@ -1,31 +1,61 @@
-# Making the final video (< 3:00)
+# Demo film
 
-`devpost/demo/lumen-demo.mp4` is a finished **1:44** cut of the spatial moment, rendered frame by frame
-from the web preview's story mode, with the Lens's own sound cues mixed in (spatialised as the camera
-hears them) and captions burned in. Re-render any time: `npm run record:demo`.
+[`devpost/demo/lumen-demo.mp4`](demo/lumen-demo.mp4): 2:23, 1920×1080, 30 fps. AI voice-over (Microsoft neural voice
+"Andrew"), word-synced captions, an original score synthesized in code, and the Lens's own sound cues.
 
-What the rules still need from you:
+**What is real:** every shot of the Lens working is a **screen recording of the Lens Studio 5.24.1 preview** of this repo's
+project. The recorder captures only the Lens Studio window. The pinches are a LEAF scenario (`Assets/Lumen/Leaf/Demo_Story.ts`)
+pressing the Lens's real SIK interactables, exactly as a mouse pinch would. The film shows the whole app first, then zooms
+into the SPECS 27 display area. The "LEAF run" shot is a real run of the 10 LEAF scenarios at 5× speed, with LEAF's own
+PASSED banners. The 3D shots in the opening use the Lens's own bedside models (Core `MeshGen` + `LumenLayout`, via the
+web twin) with cinematic lighting.
 
-1. **Lens Studio footage.** The rules say the demo runs in the Lens Studio preview. Screen-record the same
-   beats in the Lens Studio preview (the manual test script in the spec, §12) and use them instead of — or cut
-   between — the web-preview shots. The story's beats and timings below are the shot list.
-2. **Voice-over.** Read the caption lines (they are the spec's §13 script, tightened) — or keep the
-   captions and add music.
-3. **Insert ~20 s at 1:35 (before the title card):** plan-lens interview → `devpost/design-brief.md` →
-   CLAD building in Lens Studio → LEAF / self-test table "10 / 10 pass". Say: *"I planned Lumen with the
-   Devpost Learn skill pack, and Snap's CLAD agents built it in Lens Studio. LEAF tests check every done
-   criterion."*
-4. Upload to YouTube as **Public**; check the link in a private window; paste it in the README and Devpost.
+## Structure
 
-| Time | Picture (story mode) | Caption / voice-over |
+| Time | Scene | Voice-over |
 |---|---|---|
-| 0:00–0:14 | Pan across the bed, pole, pumps, then the tangle over the head | "This is an ICU bed. Four drugs, four pumps, one tangle." · "Before every push, a nurse must answer: which line is this — and will my drug react with what's in it?" |
-| 0:14–0:21 | Turn to the cart | "Today they trace tubes by hand and check a chart away from the bed. Lumen answers both, right where they look." |
-| 0:21–0:31 | Pinch furosemide → markers | "Pick up furosemide — a pinch stands in for the barcode scan. Every port turns green or red, with the reason on the port." |
-| 0:32–0:44 | Pinch red Port B → line lights to Pump 1 → arrow to A | "This port carries midazolam. Its whole line lights up, through the tangle, to its pump — and Lumen points to the nearest safe port." |
-| 0:44–0:51 | Pinch A → Push here → log → quiet | "Distal port, heparin: compatible. Push here. Logged — and the Lens goes quiet." |
-| 0:51–1:08 | Alarm: edge arrow, turn to Pump 2, follow amber line to the kink, Resolved | "A pump alarms out of view. A sound and an edge arrow turn me to it, and the line glows amber to the exact kink." · "Resolved." |
-| 1:10–1:19 | Morphine → all green | "Different drug, different answer: with morphine every port is green. The colours come from data, not fixed art." |
-| 1:21–1:35 | Pinch the pole → every line walks, bag to port | "Shift handoff: one pinch on the pole walks every line, bag to port — then logs it." |
-| *(insert)* | plan-lens · brief · CLAD · LEAF | *see step 3* |
-| 1:35–1:44 | Title card | "Lumen — the right line, the safe port, where you look." · *Demo data — not for clinical use.* |
+| 0:00–0:11 | **Hook** (3D): the camera glides to the hub; furosemide is picked up and every port lights ✓/✕. Then the logo | "This is furosemide. In one second, every IV line on this patient tells me if it's safe for it. This is Lumen." |
+| 0:11–0:38 | **Problem** (3D + kinetic type): four tubes draw themselves on with their drugs, the two questions, a slow trace "by hand", the chart sliding away, shift tally | "Meet Maya… Many times a shift. Every shift." |
+| 0:38–0:46 | **Reveal**: the **whole Lens Studio window** flies in (tagged REAL APP), then an eased zoom into the SPECS view | "So we built Lumen. A Lens for Snap Specs, running right here, in Lens Studio." |
+| 0:46–1:38 | **Demo** (real footage): quiet → pick up → check → trace to the pump → redirect → push → log → "One more thing": pump alarm, edge arrow, amber line to the kink → Resolved → shift handoff. The side panels show the workflow step and the Lens state | 11 lines, each timed to its pinch |
+| 1:38–1:55 | **Why glasses**: three pillars, two design principles (real footage thumbnails) | "This only works on glasses…" |
+| 1:55–2:09 | **Under the hood**: animated hub diagram (coding agent · Lens Studio MCP · Lens Studio · LEAF · one TypeScript core), then the **real LEAF run**, then the 10/10 board | "Our coding agent built it in Lens Studio, through the Lens Studio MCP… Ten of ten pass in the preview." |
+| 2:09–2:23 | **Close**: what's next, logo, tagline, repo link | "Next: barcode scanning, real line tracking, live pump data. Lumen. The right line. The safe port. Where you look." |
+
+## Rebuild it
+
+Lens Studio must be open on `Lumen.esproj` and not minimized. You also need ffmpeg, Python with `edge-tts`, and Node.
+
+```bash
+python tools/video/make_voice.py
+```
+
+```bash
+node tools/record-lens-studio.mjs
+```
+
+```bash
+node tools/record-leaf-run.mjs
+```
+
+```bash
+node tools/video/render-film.mjs
+```
+
+```bash
+node tools/video/mix-film.mjs
+```
+
+Set `LUMEN_VIDEO` (working folder), `TMPDIR_LS` (`$LUMEN_VIDEO/story` for the story take, `$LUMEN_VIDEO/leaf` for the LEAF run)
+and `FFMPEG` if ffmpeg is not on PATH. Extract the footage frames before rendering:
+- `frames/story`: 30 fps, starting 2.2 s before the take's `t0`;
+- `frames/leaf`: 6 fps.
+
+The voice lines live in `tools/video/vo.json`; the timeline and every animation are in `tools/video/film/film.ts`.
+Each frame is a pure function of time, so renders are deterministic and resumable.
+
+## Upload
+
+YouTube → Visibility **Public**, "No, it's not made for kids". Title: *Lumen — AR IV line safety for ICU nurses (Learn AR
+with SPECS)*. Put the repo link in the description. Check that the link works in a private window, then paste it into
+the README and Devpost.

@@ -37,20 +37,20 @@ async function session(name) {
 // ---- layout (spec space r/f/u cm, Assets/Lumen/Core/LumenLayout.ts) → preview world, camera reset at origin facing −Z
 const EYE = 165;
 const W = (r, f, u) => ({ x: r, y: u - EYE, z: -f });
-const HUB = W(-33, 56, 86), CART = W(-46, 2, 107), PUMPS = W(-78, 102, 125), KINK = W(-9, 22.5, 104), POLE = W(-60, 104, 140);
+const HUB = W(-33, 56, 86), CART = W(-46, 2, 107), PUMPS = W(-96, 102, 122), KINK = W(-9, 22.5, 104), POLE = W(-60, 104, 140);
 
 // Camera timeline (seconds after the scenario's first frame). Pinch times live in Demo_Story.ts.
 const SHOTS = [
-  [0, HUB], [3.6, CART], [8.2, HUB], [12.6, PUMPS], [15.0, HUB], [22.8, CART], [25.6, HUB], [27.4, PUMPS],
-  [30.2, KINK], [35.2, POLE], [49.2, CART],
+  [0, HUB], [3.2, CART], [10.6, HUB], [16.4, PUMPS], [19.4, HUB], [27.8, CART], [30.6, HUB], [35.2, PUMPS],
+  [38.8, KINK], [44.0, POLE], [54.0, CART],
 ];
-// Sound cues as the Lens plays them (AudioCues.ts) — mixed after recording.
+// Sound cues as the Lens plays them (AudioCues.ts) — mixed by the video tools.
 const CUES = [
-  [5.0, "tick"], [5.05, "markers"], [11.0, "red"], [17.0, "green"], [21.0, "confirm"],
-  [25.0, "alarm"], [26.2, "alarm"], [27.4, "alarm"], [28.6, "alarm"], [29.8, "alarm"], [31.0, "alarm"], [32.2, "alarm"],
-  [33.0, "resolved"], [38.0, "tick"], [40.5, "tick"], [43.0, "tick"], [45.5, "tick"], [48.0, "markers"],
+  [5.0, "tick"], [5.05, "markers"], [13.6, "red"], [25.0, "green"], [27.3, "confirm"],
+  ...[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => [31.3 + i * 1.2, "alarm"]),
+  [42.5, "resolved"], [45.0, "tick"], [47.5, "tick"], [50.0, "tick"], [52.5, "tick"], [55.0, "markers"],
 ];
-const LENGTH = 52;
+const LENGTH = 57;
 
 const cam = await session("lumen-rec-camera");
 const runner = await session("lumen-rec-runner");

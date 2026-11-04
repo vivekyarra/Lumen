@@ -20,11 +20,13 @@ It uses what you see (the port you look at), draws on the real equipment (the li
 is), and keeps your hands free (gloves on, syringe in hand).
 
 **How I built it:**
-I planned the Lens with the Devpost Learn `plan-lens` skill, which wrote my design brief. The Lens is
-generated at runtime from one shared TypeScript core (data, state machine, layout, meshes, sounds) by a
-single Lens Studio component; CLAD wired and tested it in Lens Studio through the Lens Studio MCP. The
-same eight done-criteria tests run on the state machine, on a browser twin of the preview, and inside
-the Lens Studio preview. Barcode scanning, line recognition and pump data are stand-ins in the preview.
+I planned the Lens with the Devpost Learn `plan-lens` skill, which wrote my design brief. My coding agent (Claude Code
+with Snap's CLAD plugin) built it as a real Lens Studio 5.24.1 SPECS project through the Lens Studio MCP. It created
+the project, installed LEAF, wired the scene, set the materials, lights and sounds, compiled, and ran the tests. The
+Lens is generated at runtime from one shared TypeScript core (data, state machine, layout, meshes, sounds) by a single
+component. Snap's LEAF tests pinch the Lens's real SIK interactables: all 10 scenarios pass in the Lens Studio preview.
+The same done criteria also run on the state machine and on a browser twin in CI. Barcode scanning, line recognition and
+pump data are stand-ins in the preview.
 
 **What I learned:** (rewrite as your own three)
 - The hard part is not the code; it is deciding when the Lens should be quiet.
@@ -34,6 +36,5 @@ the Lens Studio preview. Barcode scanning, line recognition and pump data are st
 **Built with:** Lens Studio, SPECS, CLAD, Lens Studio MCP, LEAF, Spectacles Interaction Kit, TypeScript,
 Claude Code, Three.js, Playwright.
 
-**Links:** GitHub repo (public) · YouTube video (public)
+**Links:** https://github.com/vivekyarra/Lumen · web twin https://vivekyarra.github.io/Lumen/ · YouTube video (public, add after upload)
 
-> Demo data — not for clinical use.
