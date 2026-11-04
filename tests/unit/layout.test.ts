@@ -164,7 +164,7 @@ test("hit areas do not overlap: ports, push buttons and syringes", () => {
 });
 
 test("label wrapping keeps exact words and splits at the dash", () => {
-  assert.deepEqual(wrapLabel(S.redFocusText("B"), 20), ["✕ Midazolam", "— do not push here"]);
+  assert.deepEqual(wrapLabel(S.redFocusText("B"), L.LABEL_WRAP_CHARS), ["✕ Midazolam", "— do not push here"]);
   assert.deepEqual(wrapLabel("short", 20), ["short"]);
   assert.deepEqual(wrapLabel(S.logText("S1", "A", "10:42"), 20), ["Furosemide 40 mg", "→ CVC Distal · 10:42"]);
   for (const t of [S.useText("A"), S.HINT_TEXT, DEMO_DATA_LABEL, S.logText("S1", "A", "10:42")]) {
@@ -180,4 +180,17 @@ test("view math basics", () => {
   const edge = toView(pose, v3(Math.tan((18.5 * Math.PI) / 180) * 100, 100, 0), SPECS_FOV);
   assert.ok(Math.abs(edge.ndcX - 1) < 1e-9);
   assert.equal(isInView(pose, v3(0, -100, 0), SPECS_FOV), false);
+});
+
+test("DC7/DC8: kink ring, reason and Resolved button never overlap when you look at the kink", () => {
+  for (const eye of [L.START_EYE, v3(-30, 0, 165), v3(20, 0, 165)]) {
+    const pose = lookAt(eye, L.KINK_POS);
+    const ringR = (L.KINK_RING_DIAMETER / 2) * 1.18; // pulse peak
+    const ring = labelScreenBox("ring", pose, v3(L.KINK_POS.r, L.KINK_POS.f, L.KINK_POS.u - ringR), ringR * 2, ringR * 2, "center", SPECS_FOV);
+    const btn = labelScreenBox("resolved", pose, v3(L.RESOLVED_BUTTON_POS.r, L.RESOLVED_BUTTON_POS.f, L.RESOLVED_BUTTON_POS.u - L.BUTTON_SIZE.h / 2), L.BUTTON_SIZE.w, L.BUTTON_SIZE.h, "center", SPECS_FOV);
+    const z = labelSizeCm("Check here: kinked line", L.TEXT_CAP.small, L.LABEL_WRAP_CHARS);
+    const text = labelScreenBox("text", pose, L.KINK_TEXT_ANCHOR, z.w, z.h, "center", SPECS_FOV);
+    assert.deepEqual(overlappingPairs([ring, btn, text]), [], JSON.stringify(eye));
+    assert.ok(distance(L.RESOLVED_BUTTON_POS, L.KINK_POS) >= ringR + L.BUTTON_HIT.w / 2 - 1);
+  }
 });
