@@ -12,8 +12,8 @@ import { LINE_IDS, LineId, PORT_IDS, PortId, SyringeId } from "../Core/LumenData
 import { LumenStateMachine } from "../Core/LumenState";
 import { distance } from "../Core/Vec";
 import { Pose } from "../Core/ViewMath";
-import { SpecFrame, faceCamera, safe } from "./LensAdapters";
-import { LensContext } from "./LensContext";
+import { SpecFrame, faceCamera, makePinchTarget, safe } from "./LensAdapters";
+import { LensContext, local } from "./LensContext";
 import { SceneBuilder } from "./SceneBuilder";
 import { PortMarker } from "./PortMarker";
 import { LineTracer } from "./LineTracer";
@@ -112,6 +112,11 @@ export class LumenLens extends BaseScriptComponent {
     this.tray = new SyringeTray(this.ctx, function (s: SyringeId) { self.sm.pinchSyringe(s); }, function () { self.sm.pinchChip(); });
     this.push = new PushButton(this.ctx, "PushHereButton", S.PUSH_TEXT, HEX.green, L.PUSH_BUTTON_POS.A, function () { self.sm.pinchPush(); });
     this.redirect = new RedirectArrow(this.ctx);
+    // Shift-handoff line check: pinch the pole above the pumps.
+    const pole = global.scene.createSceneObject("IV_Pole_Hit");
+    pole.setParent(this.ctx.specRoot);
+    pole.getTransform().setLocalPosition(local(L.POLE_HIT.center));
+    makePinchTarget(pole, { box: new vec3(L.POLE_HIT.size.r, L.POLE_HIT.size.u, L.POLE_HIT.size.f) }, function () { self.sm.pinchPole(); });
     this.alarm = new AlarmController(this.ctx, this.camera, function () { self.sm.pinchResolved(); });
     // Spatial audio needs a listener on the camera.
     safe(() => {

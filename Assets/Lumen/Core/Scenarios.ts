@@ -7,7 +7,7 @@
  * A runner supplies a Driver. When the driver also has a SceneProbe, the scenario checks the
  * rendered scene (visibility, texts, screen-space overlaps), not only the state.
  */
-import { LINE_IDS, LineId, PORT_IDS, PortId, SyringeId, LINES, TIMING } from "./LumenData";
+import { COMPATIBILITY, LINE_IDS, LineId, PORT_IDS, PortId, SyringeId, LINES, TIMING } from "./LumenData";
 import { LumenView } from "./LumenState";
 import * as S from "./Strings";
 
@@ -30,7 +30,7 @@ export type ProbeKey =
 export interface SceneProbe {
   /** Is the object visible (enabled and not fully transparent)? `index` selects the port / line. */
   visible(key: ProbeKey, index?: string): boolean;
-  /** Text shown on a label, or null when hidden. Keys: "port.A", "pump.1", "chip", "log", "redirect", "kink", "pumpAlarm". */
+  /** Text shown on a label, or null when hidden. Keys: "port.A", "pump.1", "chip", "log", "notice", "redirect", "kink", "pumpAlarm". */
   text(key: string): string | null;
   /** Aim the camera at the CVC hub from the start position. */
   lookAtHub(): Promise<void> | void;
@@ -51,6 +51,8 @@ export interface Driver {
   pinchPush(): Promise<void> | void;
   pinchResolved(): Promise<void> | void;
   pinchEmpty(): Promise<void> | void;
+  /** Pinch the IV pole above the pumps (shift-handoff line check). */
+  pinchPole(): Promise<void> | void;
   triggerAlarm(): Promise<void> | void;
   /** Let `sec` seconds of Lens time pass. */
   wait(sec: number): Promise<void> | void;
@@ -370,6 +372,77 @@ export const SCENARIOS: Scenario[] = [
     },
   },
 ];
+
+/** Extensions beyond the spec's DC1–DC8, written and tested the same way. */
+SCENARIOS.push(
+  {
+    id: "DC9",
+    title: "Shift-handoff line check",
+    leafName: "test_handoff_line_check",
+    run: async function (d) {
+      await freshQuiet(d);
+      await d.pinchPole();
+      for (let i = 0; i < LINE_IDS.length; i++) {
+        const v = d.view();
+        const l = LINE_IDS[i];
+        eq(v.mode, "HANDOFF", "step " + (i + 1) + ": mode");
+        eq(v.glowLine, l, "step " + (i + 1) + " lights line " + l);
+        eq(v.ports[LINES[l].port].label, S.portLabel(LINES[l].port), "port name on step " + (i + 1));
+        eq(v.pumpLabel, S.pumpLabel(l), "pump label on step " + (i + 1));
+        if (d.probe) {
+          for (let j = 0; j < LINE_IDS.length; j++) {
+            eq(d.probe.visible("line.glow", String(LINE_IDS[j])), LINE_IDS[j] === l, "only line " + l + " glows");
+          }
+        }
+        await d.wait(TIMING.handoffStep);
+      }
+      quietIdle(d, "after the handoff check");
+      const log = d.view().logText;
+      ok(log !== null && /^Lines checked · 4 of 4 · \d\d:\d\d$/.test(log), "handoff log: " + log);
+      // Pinch the pole again to stop early; a syringe pick-up also stops it.
+      await d.pinchPole();
+      await d.wait(TIMING.handoffStep + 0.1);
+      eq(d.view().glowLine, 2, "second line after one step");
+      await d.pinchPole();
+      quietIdle(d, "pole pinched again stops the check");
+      await d.pinchPole();
+      await d.pinchSyringe("S1");
+      eq(d.view().mode, "HOLDING", "pick-up interrupts the check");
+      await d.pinchPole();
+      eq(d.view().mode, "HOLDING", "no handoff while holding a syringe");
+    },
+  },
+  {
+    id: "DC10",
+    title: "Fail-safe: no safe port",
+    leafName: "test_no_safe_port_fail_safe",
+    run: async function (d) {
+      const row = COMPATIBILITY.furosemide;
+      const saved = { heparin: row.heparin, nacl: row.nacl };
+      row.heparin = "incompatible";
+      delete (row as { [k: string]: string }).nacl; // missing entry must never be green either
+      try {
+        await freshQuiet(d);
+        await d.pinchSyringe("S1");
+        const v0 = d.view();
+        eq(markers(v0), "incompatible,incompatible,incompatible,unknown", "nothing is green");
+        eq(v0.ports.D.label, "✕ Not in table — check chart", "missing entry explains itself");
+        await d.pinchPort("B");
+        const v = d.view();
+        eq(v.redirect, null, "no arrow to nowhere");
+        eq(v.pushButtonPort, null, "no Push");
+        eq(v.noticeText, "No safe port — ask pharmacy", "notice on the cart");
+        if (d.probe) eq(d.probe.text("notice"), "No safe port — ask pharmacy", "rendered notice");
+        await d.pinchPush();
+        eq(d.view().mode, "PORT_FOCUS", "push impossible");
+      } finally {
+        row.heparin = saved.heparin;
+        row.nacl = saved.nacl;
+        await d.reset();
+      }
+    },
+  },
+);
 
 export interface ScenarioResult {
   id: string;

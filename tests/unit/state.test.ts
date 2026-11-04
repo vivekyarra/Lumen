@@ -17,6 +17,7 @@ function makeDriver(): Driver & { sm: () => LumenStateMachine } {
     pinchPush: () => sm.pinchPush(),
     pinchResolved: () => sm.pinchResolved(),
     pinchEmpty: () => sm.pinchEmpty(),
+    pinchPole: () => sm.pinchPole(),
     triggerAlarm: () => sm.debugTriggerAlarm(),
     wait: (s) => sm.advance(s),
     view: () => sm.view(),
@@ -162,6 +163,7 @@ test("fuzz: 200 sessions × 400 random inputs never break an invariant", () => {
       else if (k < 0.7) { sm.pinchChip(); action = "chip"; }
       else if (k < 0.72) { sm.debugTriggerAlarm(); action = "alarm"; }
       else if (k < 0.74) { sm.pinchEmpty(); action = "empty"; }
+      else if (k < 0.78) { sm.pinchPole(); action = "pole"; }
       else { const dt = r() < 0.8 ? r() * 0.5 : r() * 12; sm.advance(dt); action = "wait " + dt.toFixed(2); }
       trail.push(action);
       const bad = invariantViolations(sm.view());
@@ -198,4 +200,55 @@ test("timing table is the spec's", () => {
     [TIMING.markerFadeIn, TIMING.traceAutoEnd, TIMING.firstHint, TIMING.confirmToIdle, TIMING.logLineStays, TIMING.alarmAfterFirstPush, TIMING.alarmBeepInterval],
     [0.3, 8, 6, 1.5, 10, 4, 1.2],
   );
+});
+
+test("handoff: one line at a time, 2.5 s each, ordered events, then a log line", () => {
+  const sm = new LumenStateMachine(PORT_POS, fixedClock);
+  const ev = record(sm);
+  sm.pinchPole();
+  for (let i = 0; i < 4; i++) {
+    assert.equal(sm.view().handoff!.step, i + 1);
+    sm.advance(2.49);
+    assert.equal(sm.view().handoff!.step, i + 1, "still on step " + (i + 1));
+    sm.advance(0.01);
+  }
+  assert.equal(sm.getMode(), "IDLE");
+  assert.equal(sm.view().logText, "Lines checked · 4 of 4 · 10:42");
+  assert.deepEqual(ev.filter((e) => e.type === "handoffStep").map((e) => (e as { line: number }).line), [1, 2, 3, 4]);
+  assert.equal(ev[ev.length - 1].type, "handoffEnded");
+});
+
+test("handoff: pinching a port mid-check switches to a normal trace; alarm layer is unaffected", () => {
+  const sm = new LumenStateMachine(PORT_POS, fixedClock);
+  sm.debugTriggerAlarm();
+  sm.pinchPole();
+  sm.advance(3);
+  sm.pinchPort("D");
+  assert.equal(sm.getMode(), "TRACE");
+  assert.equal(sm.view().glowLine, 4);
+  assert.ok(sm.view().alarm);
+  sm.advance(20);
+  assert.equal(sm.getMode(), "IDLE", "stale handoff timer must not revive the check");
+  assert.equal(sm.view().logText, null, "an interrupted check is not logged as complete");
+});
+
+test("fuzz: handoff never coexists with a held syringe and always walks lines in order", () => {
+  for (let seed = 1; seed <= 100; seed++) {
+    const r = rng(seed * 13);
+    const sm = new LumenStateMachine(PORT_POS, fixedClock);
+    let lastStep = 0;
+    sm.onEvent((e) => {
+      if (e.type === "handoffStarted") lastStep = 0;
+      if (e.type === "handoffStep") { assert.equal(e.index, lastStep); lastStep++; }
+    });
+    for (let i = 0; i < 300; i++) {
+      const k = r();
+      if (k < 0.3) sm.pinchPole();
+      else if (k < 0.45) sm.pinchSyringe(SYRINGE_IDS[Math.floor(r() * 2)]);
+      else if (k < 0.6) sm.pinchPort(PORT_IDS[Math.floor(r() * 4)]);
+      else if (k < 0.65) sm.pinchPush();
+      else sm.advance(r() * 4);
+      assert.deepEqual(invariantViolations(sm.view()), []);
+    }
+  }
 });

@@ -9,6 +9,13 @@ export const PUSH_TEXT = "Push here";
 export const RESOLVED_TEXT = "Resolved";
 export const COMPATIBLE_TEXT = "✓ Compatible";
 export const NOT_IN_TABLE_TEXT = "✕ Not in table — check chart";
+/** Shown on the cart when a red port has no compatible alternative anywhere on the patient. */
+export const NO_SAFE_PORT_TEXT = "No safe port — ask pharmacy";
+
+/** Log line after a shift-handoff line check. */
+export function handoffLogText(checked: number, total: number, hhmm: string): string {
+  return "Lines checked · " + checked + " of " + total + " · " + hhmm;
+}
 
 export function holdingText(s: SyringeId): string {
   return "Holding: " + SYRINGES[s].label;

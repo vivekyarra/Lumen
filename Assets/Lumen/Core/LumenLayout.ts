@@ -49,6 +49,11 @@ export const PATIENT = {
 };
 
 export const POLE = { base: v3(-78, 110, 0), height: 200, radius: 2.5 };
+/**
+ * Pinch target for the shift-handoff line check: the pole and bags ABOVE the pumps (pumps stay not
+ * pinchable, LUMEN_SPEC.md §8.6). Box centre and size (r × f × u).
+ */
+export const POLE_HIT = { center: v3(-78, 110, 180), size: v3(64, 24, 44) };
 
 export interface PumpLayout {
   id: PumpId;

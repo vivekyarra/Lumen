@@ -2,7 +2,7 @@
 // what is actually drawn (visibility, text, screen-space overlaps in the SPECS FOV, distances, colours).
 import { test, expect } from "./fixtures";
 
-const IDS = ["DC1", "DC2", "DC3", "DC4", "DC5", "DC6", "DC7", "DC8"];
+const IDS = ["DC1", "DC2", "DC3", "DC4", "DC5", "DC6", "DC7", "DC8", "DC9", "DC10"];
 
 for (const id of IDS) {
   test(`${id} passes in the rendered preview`, async ({ lens }) => {

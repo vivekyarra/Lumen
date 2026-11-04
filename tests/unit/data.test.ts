@@ -57,7 +57,7 @@ test("log line format", () => {
 
 test("labels respect the 6-word limit (the spec's own 7-word hint is the one exemption)", () => {
   assert.equal(S.wordCount(S.HINT_TEXT), 7);
-  const all = [DEMO_DATA_LABEL, S.COMPATIBLE_TEXT, S.NOT_IN_TABLE_TEXT, S.PUSH_TEXT, S.RESOLVED_TEXT,
+  const all = [S.NO_SAFE_PORT_TEXT, S.handoffLogText(4, 4, "10:42"), DEMO_DATA_LABEL, S.COMPATIBLE_TEXT, S.NOT_IN_TABLE_TEXT, S.PUSH_TEXT, S.RESOLVED_TEXT,
     ...PORT_IDS.map(S.redFocusText), ...PORT_IDS.map(S.useText), ...PORT_IDS.map(S.portLabel),
     ...LINE_IDS.map(S.pumpLabel), "Downstream occlusion", "Check here: kinked line",
     S.holdingText("S1"), S.holdingText("S2"), S.logText("S1", "A", "10:42")];

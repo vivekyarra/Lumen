@@ -69,6 +69,8 @@ function onEvent(e: LumenEvent): void {
     case "alarmStarted": alarmActiveSince = lensTime; break;
     case "alarmBeep": cue("alarm", L.PUMPS[e.pump].center); break;
     case "alarmResolved": alarmActiveSince = -1; cue("resolved", L.KINK_POS); break;
+    case "handoffStep": cue("tick", L.PUMPS[e.line].center); break;
+    case "handoffEnded": if (e.reason === "done") cue("markers", L.CART_TEXT.log.anchor); break;
     default: break;
   }
   if (e.type !== "alarmBeep") eventLog.push(`${lensTime.toFixed(2)} ${e.type}`);
@@ -192,6 +194,7 @@ function pinchAt(clientX: number, clientY: number): string {
     case "push": sm.pinchPush(); return "push";
     case "resolved": sm.pinchResolved(); return "resolved";
     case "chip": sm.pinchChip(); return "chip";
+    case "pole": sm.pinchPole(); return "pole";
   }
 }
 
@@ -305,6 +308,7 @@ const probe: SceneProbe = {
     if (key.startsWith("pump.")) return pick(world.pumpLabels[Number(key.slice(5)) as 1]);
     if (key === "chip") return pick(world.chip);
     if (key === "log") return pick(world.log);
+    if (key === "notice") return sm.view().noticeText ? pick(world.hint) : null;
     if (key === "kink") return pick(world.kinkLabel);
     if (key === "pumpAlarm") return pick(world.alarmText);
     if (key === "redirect") {
@@ -355,12 +359,10 @@ const probe: SceneProbe = {
 
 // ---------------- test / automation API ----------------
 function step(sec: number): void {
-  const dt = 1 / 30;
-  let left = sec;
-  while (left > 1e-9) {
-    const d = Math.min(dt, left);
-    lensTime += d;
-    left -= d;
+  // Step in 1/30 s frames but land exactly on start + sec (summing 1/30 drifts below timer deadlines).
+  const end = lensTime + sec;
+  while (lensTime < end) {
+    lensTime = Math.min(lensTime + 1 / 30, end);
     sm.update(lensTime);
   }
   frame();
@@ -373,6 +375,7 @@ const driver: Driver = {
   pinchPush: () => { sm.pinchPush(); frame(); },
   pinchResolved: () => { sm.pinchResolved(); frame(); },
   pinchEmpty: () => { sm.pinchEmpty(); frame(); },
+  pinchPole: () => { sm.pinchPole(); frame(); },
   triggerAlarm: () => { sm.debugTriggerAlarm(); frame(); },
   wait: (s: number) => step(s),
   view: () => sm.view(),

@@ -19,7 +19,8 @@ type Hit =
   | { kind: "port"; id: PortId }
   | { kind: "push" }
   | { kind: "resolved" }
-  | { kind: "chip" };
+  | { kind: "chip" }
+  | { kind: "pole" };
 
 function lit(color: number, opacity?: number): THREE.MeshLambertMaterial {
   const m = new THREE.MeshLambertMaterial({ color: color });
@@ -235,6 +236,9 @@ export class LumenWorld {
       num.object.position.copy(toThree(v3(pump.center.r + 7, front - 0.8, pump.center.u - 0.2)));
       this.scenery.add(num.object);
     }
+    const poleHit = new THREE.Mesh(worldGeometry(M.box(L.POLE_HIT.center, L.POLE_HIT.size)));
+    this.scenery.add(poleHit);
+    this.addHit(poleHit, { kind: "pole" });
     // Cart.
     const cart = L.CART;
     this.add(M.box(v3(cart.center.r, cart.center.f, cart.top - 1.5), v3(cart.sizeR, cart.sizeF, 3)), lit(COLORS.cart));
@@ -397,7 +401,8 @@ export class LumenWorld {
     // Cart texts
     this.chip.setText(view.chipText, CSS.white);
     this.log.setText(view.logText, CSS.green);
-    this.hint.setText(view.hintText, CSS.white);
+    if (view.noticeText) this.hint.setText(view.noticeText, CSS.red);
+    else this.hint.setText(view.hintText, CSS.white);
     // Push button
     this.push.visible = view.pushButtonPort !== null;
     if (view.pushButtonPort) this.push.position.copy(toThree(L.PUSH_BUTTON_POS[view.pushButtonPort]));
@@ -516,6 +521,7 @@ export class LumenWorld {
     else if (target.startsWith("syringe.")) p = L.SYRINGE_LAYOUT[target.slice(8) as SyringeId].center;
     else if (target === "push") p = fromThree(this.push.getWorldPosition(new THREE.Vector3()));
     else if (target === "resolved") p = L.RESOLVED_BUTTON_POS;
+    else if (target === "pole") p = L.POLE_HIT.center;
     if (!p) return null;
     const v = toThree(p).project(camera);
     if (v.z > 1) return null;

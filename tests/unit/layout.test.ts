@@ -166,9 +166,12 @@ test("hit areas do not overlap: ports, push buttons and syringes", () => {
 test("label wrapping keeps exact words and splits at the dash", () => {
   assert.deepEqual(wrapLabel(S.redFocusText("B"), L.LABEL_WRAP_CHARS), ["✕ Midazolam", "— do not push here"]);
   assert.deepEqual(wrapLabel("short", 20), ["short"]);
+  assert.deepEqual(wrapLabel(S.pumpLabel(2), 20), ["Dobutamine", "5 mcg/kg/min · Pump 2"]);
+  assert.deepEqual(wrapLabel(S.portLabel("C"), 20), ["Port C", "CVC Proximal"]);
+  assert.deepEqual(wrapLabel(S.handoffLogText(4, 4, "07:02"), 20), ["Lines checked", "4 of 4 · 07:02"]);
   assert.deepEqual(wrapLabel(S.logText("S1", "A", "10:42"), 20), ["Furosemide 40 mg", "→ CVC Distal · 10:42"]);
   for (const t of [S.useText("A"), S.HINT_TEXT, DEMO_DATA_LABEL, S.logText("S1", "A", "10:42")]) {
-    assert.equal(wrapLabel(t, 20).join(" "), t);
+    if (!t.includes(" · ")) assert.equal(wrapLabel(t, 20).join(" "), t);
     assert.ok(wrapLabel(t, 20).length <= 2);
   }
 });
@@ -193,4 +196,11 @@ test("DC7/DC8: kink ring, reason and Resolved button never overlap when you look
     assert.deepEqual(overlappingPairs([ring, btn, text]), [], JSON.stringify(eye));
     assert.ok(distance(L.RESOLVED_BUTTON_POS, L.KINK_POS) >= ringR + L.BUTTON_HIT.w / 2 - 1);
   }
+});
+
+test("the handoff pole target sits above the pumps (pumps stay not pinchable) and clear of every other target", () => {
+  const lo = L.POLE_HIT.center.u - L.POLE_HIT.size.u / 2;
+  for (const p of [1, 2, 3, 4] as const) assert.ok(L.PUMPS[p].center.u + L.PUMPS[p].size.u / 2 < lo, "pump " + p);
+  for (const q of PORT_IDS) assert.ok(distance(L.POLE_HIT.center, L.PORT_POS[q]) > 80);
+  assert.ok(distance(L.START_EYE, L.POLE_HIT.center) >= L.MIN_UI_DISTANCE_CM);
 });

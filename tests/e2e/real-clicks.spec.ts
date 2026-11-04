@@ -49,7 +49,7 @@ test("each CVC port is hit precisely despite overlapping 6 cm targets", async ({
 
 test("alarm: Resolved button works by click; clicking empty space changes nothing", async ({ lens }) => {
   await lens.evaluate(() => (window as any).lumen.driver.triggerAlarm());
-  await lens.evaluate(() => (window as any).lumen.lookAt({ r: -15, f: 22.5, u: 108 }));
+  await lens.evaluate(() => (window as any).lumen.lookAt({ r: -4, f: 22.5, u: 102 }));
   const before = await view(lens);
   await lens.mouse.click(30, 30);
   expect(await view(lens)).toEqual(before);
@@ -65,4 +65,16 @@ test("dragging to look is not a pinch", async ({ lens }) => {
   await lens.mouse.move(p.x + 60, p.y + 10, { steps: 5 });
   await lens.mouse.up();
   expect((await view(lens)).mode).toBe("IDLE");
+});
+
+test("shift-handoff: clicking the IV pole walks every line, then goes quiet with a log", async ({ lens }) => {
+  await lens.evaluate(() => (window as any).lumen.lookAt({ r: -70, f: 100, u: 160 }));
+  await click(lens, "pole");
+  let v = await view(lens);
+  expect(v.mode).toBe("HANDOFF");
+  expect(v.glowLine).toBe(1);
+  await lens.evaluate(() => (window as any).lumen.step(10.1));
+  v = await view(lens);
+  expect(v.mode).toBe("IDLE");
+  expect(v.logText).toMatch(/^Lines checked · 4 of 4 · \d\d:\d\d$/);
 });

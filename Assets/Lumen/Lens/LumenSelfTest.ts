@@ -58,6 +58,7 @@ function makeProbe(lens: LumenLens): SceneProbe {
       }
       if (key === "chip") return lens.tray.raw.chip;
       if (key === "log") return lens.tray.raw.log;
+      if (key === "notice") return lens.tray.raw.notice;
       const v = lens.sm.view();
       if (key === "kink") return v.alarm && lens.alarm.active ? v.alarm.kinkText : null;
       if (key === "pumpAlarm") return v.alarm && lens.alarm.active ? v.alarm.text : null;
@@ -75,7 +76,7 @@ function makeProbe(lens: LumenLens): SceneProbe {
       }
       boxes.push(labelBox("chip", lens.tray.raw.chip, L.CART_TEXT.chip.anchor, "center", L.TEXT_CAP.small));
       boxes.push(labelBox("log", lens.tray.raw.log, L.CART_TEXT.log.anchor, "center", L.TEXT_CAP.small));
-      boxes.push(labelBox("hint", lens.tray.raw.hint, L.CART_TEXT.hint.anchor, "center", L.TEXT_CAP.small));
+      boxes.push(labelBox("hint", lens.tray.raw.notice || lens.tray.raw.hint, L.CART_TEXT.hint.anchor, "center", L.TEXT_CAP.small));
       boxes.push(labelBox("demo", DEMO_DATA_LABEL, L.CART_TEXT.demoLabel.anchor, "center", L.TEXT_CAP.small));
       const v = lens.sm.view();
       if (v.pushButtonPort) boxes.push(labelBox("push", S.PUSH_TEXT, L.PUSH_BUTTON_POS[v.pushButtonPort], "center", L.TEXT_CAP.small));
@@ -104,12 +105,10 @@ function makeProbe(lens: LumenLens): SceneProbe {
 
 function makeDriver(lens: LumenLens): Driver {
   const step = function (sec: number): void {
-    const dt = 1 / 30;
-    let left = sec;
-    while (left > 1e-9) {
-      const d = Math.min(dt, left);
-      lens.lensTime += d;
-      left -= d;
+    // Step in 1/30 s frames but land exactly on start + sec (summing 1/30 drifts below timer deadlines).
+    const end = lens.lensTime + sec;
+    while (lens.lensTime < end) {
+      lens.lensTime = Math.min(lens.lensTime + 1 / 30, end);
       lens.sm.update(lens.lensTime);
     }
     lens.renderNow();
@@ -121,6 +120,7 @@ function makeDriver(lens: LumenLens): Driver {
     pinchPush: function () { lens.sm.pinchPush(); lens.renderNow(); },
     pinchResolved: function () { lens.sm.pinchResolved(); lens.renderNow(); },
     pinchEmpty: function () { lens.sm.pinchEmpty(); },
+    pinchPole: function () { lens.sm.pinchPole(); lens.renderNow(); },
     triggerAlarm: function () { lens.sm.debugTriggerAlarm(); lens.renderNow(); },
     wait: step,
     view: function () { return lens.sm.view(); },

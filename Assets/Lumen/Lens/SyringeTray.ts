@@ -16,7 +16,7 @@ export class SyringeTray {
   readonly log: Text;
   readonly hint: Text;
   readonly demo: Text;
-  readonly raw: { chip: string | null; log: string | null; hint: string | null } = { chip: null, log: null, hint: null };
+  readonly raw: { chip: string | null; log: string | null; hint: string | null; notice: string | null } = { chip: null, log: null, hint: null, notice: null };
 
   constructor(ctx: LensContext, onSyringe: (id: SyringeId) => void, onChip: () => void) {
     const opts = function (align: "left" | "center" | "right", hex: number) {
@@ -49,9 +49,12 @@ export class SyringeTray {
     this.raw.chip = view.chipText;
     this.raw.log = view.logText;
     this.raw.hint = view.hintText;
+    this.raw.notice = view.noticeText;
     const w = function (s: string | null) { return s === null ? null : wrapLabel(s, L.LABEL_WRAP_CHARS).join("\n"); };
     setText(this.chip, w(view.chipText));
     setText(this.log, w(view.logText));
-    setText(this.hint, w(view.hintText));
+    // The hint slot doubles as the safety-notice slot (they never coexist: the hint ends at the first pick-up).
+    if (view.noticeText) setText(this.hint, w(view.noticeText), rgba(HEX.red, 1));
+    else setText(this.hint, w(view.hintText), rgba(HEX.white, 1));
   }
 }
