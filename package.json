@@ -14,7 +14,8 @@
     "serve:web": "npm run build:web && http-server preview-web -p 5173 -c-1",
     "test:e2e": "playwright test",
     "screenshots": "node tools/screenshots.mjs",
-    "verify": "npm test && npx playwright test"
+    "verify": "npm test && npx playwright test",
+    "record:demo": "node tools/record-demo.mjs"
   },
   "devDependencies": {
     "@fontsource/inter": "^5.3.0",

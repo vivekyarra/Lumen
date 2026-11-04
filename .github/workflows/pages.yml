@@ -1,0 +1,55 @@
+name: Web preview on GitHub Pages
+
+# Publishes the web preview (with "Play the story") so judges can open Lumen from a link.
+# One-time setup by the repo owner: Settings → Pages → Source: "GitHub Actions",
+# and Settings → General → Default branch: main. Until then this workflow only builds.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build:web
+      - id: pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+      - if: steps.pages.outcome == 'success'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: preview-web
+      - if: steps.pages.outcome != 'success'
+        run: |
+          echo "### GitHub Pages is not enabled yet" >> "$GITHUB_STEP_SUMMARY"
+          echo "Settings → Pages → Source: GitHub Actions (and make main the default branch), then re-run." >> "$GITHUB_STEP_SUMMARY"
+    outputs:
+      enabled: ${{ steps.pages.outcome == 'success' }}
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

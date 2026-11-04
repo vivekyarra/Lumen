@@ -8,9 +8,23 @@
 
 ## Demo video
 
-▶ **YouTube:** _add the public link here after upload_ (script: [`devpost/LUMEN_SPEC.md` §13](devpost/LUMEN_SPEC.md))
+![Lumen teaser: pick up furosemide, ports turn green or red, the Midazolam line lights to its pump, an arrow points to the safe port](devpost/demo/lumen-teaser.gif)
+
+- ▶ **Full demo (1:44, with sound):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4) — rendered frame-by-frame from the
+  web preview's story mode (`npm run record:demo`). Public YouTube link: _add after upload_.
+- 🌐 **Try it in your browser:** https://vivekyarra.github.io/Lumen/ — press **▶ Play the story**, or click around yourself
+  (click = pinch). *(Live once GitHub Pages is enabled — see [`.github/workflows/pages.yml`](.github/workflows/pages.yml).)*
 
 ![Holding furosemide: the Medial port is red because Midazolam runs in it; Lumen lights that line to its pump and points to the safe Distal port](devpost/screenshots/03-red-port-redirect.png)
+
+## How Lumen meets the judging criteria
+
+| Criterion | What Lumen shows | Where to check |
+|---|---|---|
+| **Design** — a complete, coherent product | One real user (an ICU nurse) and one real workflow, done end to end: quiet → pick up → check → trace → redirect → push → quiet, plus an out-of-view pump alarm and a one-pinch shift-handoff line check. Pinch only, big targets, information on the thing it's about, silent when not needed. | Demo video · [story mode](https://vivekyarra.github.io/Lumen/?story) |
+| **Technical implementation** | One shared TypeScript core (the only data file, state machine, layout, meshes, sounds) drives Lens Studio, a browser twin and the tests. DC1–DC10 run on three runners; fuzzing (≈100k random inputs), real-click and stress tests; CI on every PR. | [`leaf-results.md`](devpost/leaf-results.md) · [`build-log.md`](devpost/build-log.md) · Actions tab |
+| **Innovation** | Clinical line safety on glasses: answers *which tube is this* by lighting the real tube, and *is it safe* by marking the real port — using all three SPECS strengths (shares your view, draws in the world, keeps hands free). Fail-safe by design. | [Why glasses](#why-glasses) |
+| **Presentation** | 15-second hook, one story, honest stand-ins, disclaimer card, < 3 min. | [`devpost/VIDEO.md`](devpost/VIDEO.md) |
 
 ## The problem
 
@@ -120,7 +134,8 @@ npm ci
 npm run serve:web
 ```
 
-Then open http://localhost:5173 — drag to look, **click = pinch**, F = SPECS 37° × 32° view, M = mute.
+Then open http://localhost:5173 — **▶ Play the story** (or press P), or explore: drag to look,
+**click = pinch**, pinch the IV pole for a handoff check, F = SPECS 37° × 32° view, M = mute.
 
 **Tests:**
 
@@ -167,4 +182,6 @@ All drug data in this repo is invented for a demo and has not been checked for c
 | `devpost/design-brief.md` from **your own** `plan-lens` interview | ⏳ you — run `plan-lens` (spec §10 step 2) |
 | Lens Studio project files (`.esproj`, scene) + scene wiring | ⏳ you — [LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md) steps 1–2 (or via CLAD, step 6) |
 | DC1–DC8 in the Lens Studio preview | ⏳ you — setup step 5, paste the table into `devpost/leaf-results.md` |
-| Demo video (public YouTube, < 3:00) + Devpost form | ⏳ you — script in spec §13, text in [`devpost/submission.md`](devpost/submission.md) |
+| Demo video | ✅ 1:44 cut rendered ([`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4)) · ⏳ you — add voice-over + 20 s of plan-lens/CLAD/LEAF footage, upload public ([`devpost/VIDEO.md`](devpost/VIDEO.md)) |
+| Web preview link for judges | ⏳ you — Settings → Pages → Source: GitHub Actions; Settings → Default branch: `main` |
+| Devpost form | ⏳ you — text in [`devpost/submission.md`](devpost/submission.md) |
