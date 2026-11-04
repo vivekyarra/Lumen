@@ -166,6 +166,7 @@ test("hit areas do not overlap: ports, push buttons and syringes", () => {
 test("label wrapping keeps exact words and splits at the dash", () => {
   assert.deepEqual(wrapLabel(S.redFocusText("B"), 20), ["✕ Midazolam", "— do not push here"]);
   assert.deepEqual(wrapLabel("short", 20), ["short"]);
+  assert.deepEqual(wrapLabel(S.logText("S1", "A", "10:42"), 20), ["Furosemide 40 mg", "→ CVC Distal · 10:42"]);
   for (const t of [S.useText("A"), S.HINT_TEXT, DEMO_DATA_LABEL, S.logText("S1", "A", "10:42")]) {
     assert.equal(wrapLabel(t, 20).join(" "), t);
     assert.ok(wrapLabel(t, 20).length <= 2);

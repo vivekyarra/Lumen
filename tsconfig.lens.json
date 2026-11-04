@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": true,
+    "lib": ["ES2019"],
+    "types": []
+  },
+  "include": ["Assets/Lumen/**/*.ts", "types/lens-studio-shim.d.ts"]
+}
