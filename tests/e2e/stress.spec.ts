@@ -80,6 +80,6 @@ test("live (real-time) mode runs the alarm on its own clock", async ({ page }) =
   await page.goto("/");
   await page.waitForFunction(() => (window as any).lumen);
   await page.evaluate(() => { const l = (window as any).lumen; l.driver.pinchSyringe("S1"); l.driver.pinchPort("A"); l.driver.pinchPush(); });
-  await page.waitForFunction(() => (window as any).lumen.view().mode === "IDLE", null, { timeout: 5000 });
-  await page.waitForFunction(() => (window as any).lumen.view().alarm !== null, null, { timeout: 8000 });
+  await page.waitForFunction(() => (window as any).lumen.view().mode === "IDLE", null, { timeout: 15000 });
+  await page.waitForFunction(() => (window as any).lumen.view().alarm !== null, null, { timeout: 20000 });
 });

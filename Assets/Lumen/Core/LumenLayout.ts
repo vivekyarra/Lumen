@@ -219,11 +219,15 @@ export const PUMP_LABEL_ANCHOR: { [K in PumpId]: V3 } = {
   4: v3(-66.5, 94, 99),
 };
 
-/** Printed syringe barrel labels, at the user-side end of each syringe. */
-export const SYRINGE_LABEL_ANCHOR: { [K in SyringeId]: V3 } = {
-  S1: v3(-33, -6, 95.5),
-  S2: v3(-33, 9, 95.5),
+/**
+ * Printed syringe barrel labels, at the user-side end of each syringe. Seen from the start position the
+ * cart is to the left, so +f is screen-right: S1's label runs left, S2's runs right — they never touch.
+ */
+export const SYRINGE_LABEL_SLOT: { [K in SyringeId]: LabelSlot } = {
+  S1: { anchor: v3(-33, -4, 95.5), align: "right" },
+  S2: { anchor: v3(-33, 7, 95.5), align: "left" },
 };
+export const SYRINGE_LABEL_CAP = 1.2;
 
 /**
  * Two natural look targets from the start position (SPECS sees only ~37° × 32°, so the hub and

@@ -12,6 +12,13 @@ import { LumenWorld } from "./world";
 import { SpatialAudio } from "./audio";
 import { luminance } from "./palette";
 
+// Deterministic text metrics on every machine: wait for the bundled Inter before drawing any label.
+try {
+  await document.fonts.load('600 40px "Inter"');
+} catch {
+  // fall back to system fonts
+}
+
 const params = new URLSearchParams(location.search);
 const TEST_MODE = params.has("test");
 
@@ -220,11 +227,13 @@ function frame(): void {
 
 function loop(): void {
   const now = performance.now() / 1000;
-  const dt = Math.min(0.1, now - lastReal);
+  const real = now - lastReal;
   lastReal = now;
   if (!TEST_MODE) {
-    lensTime += dt;
-    moveCamera(dt);
+    // Lens time follows the wall clock even on slow GPUs (the state machine handles big steps);
+    // only camera motion is clamped so a hitch never teleports the viewer.
+    lensTime += Math.min(real, 2);
+    moveCamera(Math.min(real, 0.1));
     sm.update(lensTime);
   }
   frame();

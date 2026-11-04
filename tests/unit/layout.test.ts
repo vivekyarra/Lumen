@@ -106,6 +106,12 @@ test("DC8: cart texts never overlap and the cart fits the SPECS view when lookin
     box(cartPose, "log", S.logText("S1", "A", "10:42"), L.CART_TEXT.log),
     box(cartPose, "demo", DEMO_DATA_LABEL, L.CART_TEXT.demoLabel),
   ];
+  const tag = (s: "S1" | "S2") => {
+    const z = labelSizeCm(s === "S1" ? "Furosemide 40 mg" : "Morphine 2 mg", L.SYRINGE_LABEL_CAP, 99);
+    // 25 % wider than estimated: fallback fonts on CI machines run wide.
+    return labelScreenBox("syringe." + s, cartPose, L.SYRINGE_LABEL_SLOT[s].anchor, z.w * 1.25, z.h, L.SYRINGE_LABEL_SLOT[s].align, SPECS_FOV);
+  };
+  boxes.push(tag("S1"), tag("S2"));
   assert.deepEqual(overlappingPairs(boxes), []);
   const hintBoxes = [box(cartPose, "hint", S.HINT_TEXT, L.CART_TEXT.hint), boxes[2]];
   assert.deepEqual(overlappingPairs(hintBoxes), []);
