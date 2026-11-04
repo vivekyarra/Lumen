@@ -29,6 +29,9 @@ test("600 random clicks / poses / waits never break an invariant or throw", asyn
 });
 
 test("targeted clicks on real targets in random order keep the scene consistent with the state", async ({ lens }) => {
+  // 160 real clicks with software WebGL: ~10 s locally, but a busy 2-core CI runner running the other
+  // stress tests in parallel has needed over 2 min. The workload is fixed, so give it room instead of flaking.
+  test.setTimeout(360_000);
   const r = rng(7);
   const targets = ["syringe.S1", "syringe.S2", "port.A", "port.B", "port.C", "port.D", "push", "resolved", "pole"];
   for (let i = 0; i < 160; i++) {
