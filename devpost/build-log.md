@@ -72,10 +72,42 @@ together", "choose what the preview can clearly show") conflict with its example
   new geometry test from three standing positions.
 - Chip pinch target sat on the scaled text object → separate unscaled target.
 
-## Still to do in Lens Studio (needs the app)
+## Nov 4 — in Lens Studio 5.24.1 (Claude Code + Lens Studio MCP, local session)
 
-1. Create the SPECS Base Template project in this folder and wire `LumenLens` (LENS_STUDIO_SETUP.md
-   steps 1–2, or through CLAD + MCP, step 6). Record what CLAD changed here.
-2. Calibrate text size once (step 4). Run the self-test (step 5) and fill the Lens Studio column of
-   `leaf-results.md`.
-3. Run `plan-lens` yourself and commit `devpost/design-brief.md` with `status: approved`.
+| PR | What |
+|---|---|
+| #14 | Lens code checked against Snap's CLAD references. Five fixes: Text size is em-square (size / 43.886 cm), so the calibration went from 0.05 to 0.0228; overflow so zero-width rects don't wrap per glyph; collider `fitVisual` set after `shape`; LowLatency audio; hit-point fallback. Added the LEAF suite. |
+| #15 | The repo becomes the Lens Studio project; LEAF 10/10 in the preview; the demo film. |
+
+What happened in Lens Studio, through the MCP (`RecompileTypeScriptTool`, `scene-graphql`, `asset-graphql`,
+`InstallLensStudioPackage`, `run_leaf_scenario`, `MovePreviewCamera`, `CapturePanelScreenshotTool`):
+- **First compile in real Lens Studio:** all of `Assets/Lumen/Core` and `Assets/Lumen/Lens` compiled with **zero errors**.
+  The only errors were the LEAF imports before LEAF was installed.
+- **LEAF version:** LEAF 4.0 imports `InteractionKit.lspkg`, the SPECS 27-era kit for Lens Studio 5.25. The 5.24 Base Template
+  ships SIK 2.0 (`SpectaclesInteractionKit.lspkg`), so LEAF **2.0.2** is the matching version.
+- **Scene wiring via GraphQL:** a `Lumen` object with `LumenLens`, plus Unlit and Simple PBR materials, the camera and 7 sounds;
+  a `LeafIndex` object.
+- **Found in the preview, fixed:**
+  - the PBR preset has no `baseColor`, so everything was grey. Switched to Simple PBR.
+  - The default base texture is a centimetre grid, which made the tubes look dashed (their UVs run in cm). A cleared texture
+    renders magenta, so a 4×4 white texture replaced it.
+  - Template lights overexposed the whites: ambient lowered to 0.35, directional to 0.85.
+  - White text on a white bedside was hard to read: Lens text now has a near-black outline. Black is transparent on the
+    additive display, so on glasses the outline disappears. The stand-in cart became steel grey and the bed less white.
+  - The on-cart demo-data label is gone (the README keeps a disclaimer).
+- **LEAF:** all 10 scenarios pass in the preview, and the in-preview self-test prints `10/10 pass`. LEAF's IK avatar
+  found a real layout fact: the cart is 94° off-axis, a body turn rather than a head turn (see `leaf-results.md`).
+- **Lens Studio tooling notes:**
+  - The MCP runtime-inspect tool auto-installs a helper package built for InteractionKit 4.0, which broke compilation.
+    It was removed.
+  - Lens Studio rewrites `tsconfig.json` and `.gitattributes` (LFS rules). CI now uses `tsconfig.core.json`, and
+    `.gitattributes` overrides LFS, so clones and CI need nothing extra.
+- **CLAD:** the `ls-clad` plugin is enabled for the project. A separate Claude Code run used CLAD's LEAF workflow and
+  verify-preview against the open project; its report is `devpost/clad-verification.md`.
+- **Demo film:** recorded in the real preview, with only the Lens Studio window captured. The pinches are a LEAF scenario
+  through the real SIK interactables, and the camera is driven by `MovePreviewCamera`. The cut is described in `VIDEO.md`.
+
+## Still to do (needs you)
+
+1. Run `plan-lens` yourself and commit `devpost/design-brief.md` with `status: approved`.
+2. Upload `devpost/demo/lumen-demo.mp4` to YouTube (Public), then put the link in the README and on Devpost.

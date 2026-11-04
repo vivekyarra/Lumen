@@ -5,7 +5,7 @@
  * `update(nowSec)` once per frame; visuals render `view()` and play sounds from emitted events.
  * Visuals never decide logic.
  */
-import { ALARM, LINES, LINE_IDS, PORT_IDS, PortId, SyringeId, LineId, TIMING, lineForPort, PumpId, DEMO_DATA_LABEL } from "./LumenData";
+import { ALARM, LINES, LINE_IDS, PORT_IDS, PortId, SyringeId, LineId, TIMING, lineForPort, PumpId } from "./LumenData";
 import { CheckResult, Verdict, checkAll, nearestCompatible } from "./CompatibilityEngine";
 import { V3 } from "./Vec";
 import * as S from "./Strings";
@@ -66,7 +66,6 @@ export interface LumenView {
   noticeText: string | null;
   /** Shift-handoff progress (1-based step), or null. */
   handoff: { step: number; total: number } | null;
-  demoLabel: string;
   ports: { [K in PortId]: PortView };
   /** Line glowing cyan (trace / focus), and the label shown on its pump. */
   glowLine: LineId | null;
@@ -500,7 +499,6 @@ export class LumenStateMachine {
       hintText: this.hint ? S.HINT_TEXT : null,
       noticeText: noSafePort ? S.NO_SAFE_PORT_TEXT : null,
       handoff: mode === "HANDOFF" ? { step: this.handoffIndex + 1, total: LINE_IDS.length } : null,
-      demoLabel: DEMO_DATA_LABEL,
       ports: ports,
       glowLine: glowLine,
       pumpLabel: glowLine ? S.pumpLabel(glowLine) : null,

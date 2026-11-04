@@ -15,6 +15,5 @@ export class DC1_IdleIsQuiet extends Scenario {
     expect(glowingLines().length).toBe(0);
     expect(shown(lens.push.root)).toBe(false);
     expect(shown(lens.alarm.resolved.root)).toBe(false);
-    expect(shown(lens.tray.demo.getSceneObject())).toBe(true);
   }
 }

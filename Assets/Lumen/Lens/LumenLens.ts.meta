@@ -1,0 +1,85 @@
+- !<AssetImportMetadata/d6d34165-3fd0-48b9-bae2-b6e9ab5b8727>
+  ImportedAssetIds:
+    TypeScriptAsset: !<reference> 04c53b8e-aae1-4c04-a1d6-8ffd54d48c04
+  ImporterName: TypeScriptAssetImporter
+  PrimaryAsset: !<reference> 04c53b8e-aae1-4c04-a1d6-8ffd54d48c04
+  PackageType: NotAPackage
+  LegacyPackagePolicy: ~
+  ExtraData:
+    {}
+  AssetDataMap:
+    TypeScriptAsset: !<own> dd5ecf5b-8279-4be5-b8d2-9662cae22bb4
+  DependentFiles:
+    []
+  ImporterSettings: !<AssetImporterSettings>
+    {}
+  CompressionSettings: !<own> 00000000-0000-0000-0000-000000000000
+- !<TypeScriptAssetData/dd5ecf5b-8279-4be5-b8d2-9662cae22bb4>
+  SvgIcon: ""
+  SetupScript:
+    code: ""
+  Description: ""
+  VersionMajor: 0
+  VersionMinor: 0
+  VersionPatch: 0
+  VersionPrerelease: ""
+  UpdateOrder: 0
+  ComponentUid: 5da727e2-89b1-4813-9060-eb889542dbfd
+  ExportUid: 00000000-0000-0000-0000-000000000000
+  PackagePolicy: CanBeUnpacked
+  ScriptInputsHidden:
+    camera: false
+    eyeHeightCm: false
+    font: false
+    litMaterial: false
+    runSelfTestOnStart: false
+    soundAlarm: false
+    soundConfirm: false
+    soundGreen: false
+    soundMarkers: false
+    soundRed: false
+    soundResolved: false
+    soundTick: false
+    textCmPerPoint: false
+    unlitMaterial: false
+  ScriptTypesHidden:
+    {}
+  ReadMe: !<reference> 00000000-0000-0000-0000-000000000000
+  DeclarationFile: !<reference> 00000000-0000-0000-0000-000000000000
+  Tags:
+    []
+  Attachments:
+    []
+  DefaultScriptInputs:
+    - camera: !<reference.SceneObject> 00000000-0000-0000-0000-000000000000
+      unlitMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      litMaterial: !<reference.Material> 00000000-0000-0000-0000-000000000000
+      font: !<reference.Font> 00000000-0000-0000-0000-000000000000
+      textCmPerPoint: 0.022800
+      eyeHeightCm: !<float> 165.000000
+      soundTick: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundMarkers: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundRed: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundGreen: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundConfirm: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundAlarm: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      soundResolved: !<reference.AudioTrackAsset> 00000000-0000-0000-0000-000000000000
+      runSelfTestOnStart: false
+  ScriptTypes:
+    -
+      {}
+  InputLines:
+    - "// @input SceneObject camera {\"hint\":\"The scene's main Camera object (SPECS Base Template: 'Camera Object').\"}"
+    - '// @input Asset.Material unlitMaterial {"hint":"An Unlit material (Lumen recolours clones of it)."}'
+    - '// @input Asset.Material litMaterial {"hint":"A lit (PBR / Simple) material for the virtual bedside."}'
+    - // @input Asset.Font font
+    - '// @input float textCmPerPoint = 0.0228 {"hint":"World-space text calibration: centimetres per text point (Text.size em-square cm = size / 43.886). Tune once if text looks too big/small."}'
+    - "// @input float eyeHeightCm = 165 {\"hint\":\"Height of the wearer's eyes above the floor at start (cm).\"}"
+    - // @input Asset.AudioTrackAsset soundTick
+    - // @input Asset.AudioTrackAsset soundMarkers
+    - // @input Asset.AudioTrackAsset soundRed
+    - // @input Asset.AudioTrackAsset soundGreen
+    - // @input Asset.AudioTrackAsset soundConfirm
+    - // @input Asset.AudioTrackAsset soundAlarm
+    - // @input Asset.AudioTrackAsset soundResolved
+    - '// @input bool runSelfTestOnStart {"hint":"Runs DC1–DC8 inside the preview on start and prints PASS/FAIL to the Logger. Never shown on screen."}'

@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import * as L from "../../Assets/Lumen/Core/LumenLayout";
 import * as S from "../../Assets/Lumen/Core/Strings";
-import { DEMO_DATA_LABEL, LINE_IDS, LINES, PORT_IDS, SYRINGE_IDS } from "../../Assets/Lumen/Core/LumenData";
+import { LINE_IDS, LINES, PORT_IDS, SYRINGE_IDS } from "../../Assets/Lumen/Core/LumenData";
 import { crossings2D, minDistance, pointAtLength, sampleCurve, slice } from "../../Assets/Lumen/Core/Curves";
 import { distance, v3 } from "../../Assets/Lumen/Core/Vec";
 import {
@@ -104,7 +104,6 @@ test("DC8: cart texts never overlap and the cart fits the SPECS view when lookin
   const boxes = [
     box(cartPose, "chip", S.holdingText("S1"), L.CART_TEXT.chip),
     box(cartPose, "log", S.logText("S1", "A", "10:42"), L.CART_TEXT.log),
-    box(cartPose, "demo", DEMO_DATA_LABEL, L.CART_TEXT.demoLabel),
   ];
   const tag = (s: "S1" | "S2") => {
     const z = labelSizeCm(s === "S1" ? "Furosemide 40 mg" : "Morphine 2 mg", L.SYRINGE_LABEL_CAP, 99);
@@ -170,7 +169,7 @@ test("label wrapping keeps exact words and splits at the dash", () => {
   assert.deepEqual(wrapLabel(S.portLabel("C"), 20), ["Port C", "CVC Proximal"]);
   assert.deepEqual(wrapLabel(S.handoffLogText(4, 4, "07:02"), 20), ["Lines checked", "4 of 4 · 07:02"]);
   assert.deepEqual(wrapLabel(S.logText("S1", "A", "10:42"), 20), ["Furosemide 40 mg", "→ CVC Distal · 10:42"]);
-  for (const t of [S.useText("A"), S.HINT_TEXT, DEMO_DATA_LABEL, S.logText("S1", "A", "10:42")]) {
+  for (const t of [S.useText("A"), S.HINT_TEXT, S.logText("S1", "A", "10:42")]) {
     if (!t.includes(" · ")) assert.equal(wrapLabel(t, 20).join(" "), t);
     assert.ok(wrapLabel(t, 20).length <= 2);
   }

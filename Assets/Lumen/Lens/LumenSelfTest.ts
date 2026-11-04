@@ -8,7 +8,6 @@ import { LINE_IDS, LINES, LineId, PORT_IDS, PortId, ALARM } from "../Core/LumenD
 import { Driver, ProbeKey, SceneProbe, ScenarioResult, runScenarios } from "../Core/Scenarios";
 import { SPECS_FOV, labelScreenBox, labelSizeCm, lookAt, overlappingPairs, LabelBox, Align } from "../Core/ViewMath";
 import { distance } from "../Core/Vec";
-import { DEMO_DATA_LABEL } from "../Core/LumenData";
 import type { LumenLens } from "./LumenLens";
 import * as S from "../Core/Strings";
 import { darkPaletteEntries } from "./Palette";
@@ -42,7 +41,6 @@ function makeProbe(lens: LumenLens): SceneProbe {
         case "edgeArrow": return on(lens.alarm.edge.obj);
         case "chip": return lens.tray.raw.chip !== null;
         case "log": return lens.tray.raw.log !== null;
-        case "demoLabel": return on(lens.tray.demo.getSceneObject());
       }
       return false;
     },
@@ -77,7 +75,6 @@ function makeProbe(lens: LumenLens): SceneProbe {
       boxes.push(labelBox("chip", lens.tray.raw.chip, L.CART_TEXT.chip.anchor, "center", L.TEXT_CAP.small));
       boxes.push(labelBox("log", lens.tray.raw.log, L.CART_TEXT.log.anchor, "center", L.TEXT_CAP.small));
       boxes.push(labelBox("hint", lens.tray.raw.notice || lens.tray.raw.hint, L.CART_TEXT.hint.anchor, "center", L.TEXT_CAP.small));
-      boxes.push(labelBox("demo", DEMO_DATA_LABEL, L.CART_TEXT.demoLabel.anchor, "center", L.TEXT_CAP.small));
       const v = lens.sm.view();
       if (v.pushButtonPort) boxes.push(labelBox("push", S.PUSH_TEXT, L.PUSH_BUTTON_POS[v.pushButtonPort], "center", L.TEXT_CAP.small));
       const real: LabelBox[] = [];
@@ -88,7 +85,7 @@ function makeProbe(lens: LumenLens): SceneProbe {
       // Measured from the start eye, like DC8 asks ("from the start position").
       let min = Infinity;
       const pts = [L.PORT_POS.A, L.PORT_POS.B, L.PORT_POS.C, L.PORT_POS.D, L.CART_TEXT.chip.anchor, L.CART_TEXT.log.anchor,
-        L.CART_TEXT.hint.anchor, L.CART_TEXT.demoLabel.anchor, L.KINK_POS, L.RESOLVED_BUTTON_POS, L.PUSH_BUTTON_POS.A, L.PUSH_BUTTON_POS.D];
+        L.CART_TEXT.hint.anchor, L.KINK_POS, L.RESOLVED_BUTTON_POS, L.PUSH_BUTTON_POS.A, L.PUSH_BUTTON_POS.D];
       for (let i = 0; i < pts.length; i++) min = Math.min(min, distance(L.START_EYE, pts[i]));
       return Math.min(min, 100); // edge arrow sits at 1 m
     },

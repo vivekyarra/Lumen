@@ -137,7 +137,7 @@ export class LumenLens extends BaseScriptComponent {
       view: function () { return self.sm.view(); },
       runSelfTest: function () { return runLensSelfTest(self); },
     };
-    print("[Lumen] ready · Demo data — not for clinical use");
+    print("[Lumen] ready");
     if (this.runSelfTestOnStart) {
       runLensSelfTest(this);
     }

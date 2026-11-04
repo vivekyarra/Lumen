@@ -368,7 +368,6 @@ const probe: SceneProbe = {
       case "edgeArrow": return shown(world.edgeArrowMesh);
       case "chip": return shown(world.chip.object);
       case "log": return shown(world.log.object);
-      case "demoLabel": return shown(world.demo.object);
     }
   },
   text(key) {

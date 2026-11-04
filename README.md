@@ -2,29 +2,29 @@
 
 **Lumen: an AR Lens for SPECS that shows ICU nurses which IV port is safe for the drug in their hand, and lights any line from port to pump.**
 
-> **Hackathon prototype. Demo data only. Not a medical device. Not for clinical use.**
-
-*Learn AR with SPECS (Devpost Learn) · Lens Studio 5.23.2 · TypeScript*
+*Learn AR with SPECS (Devpost Learn) · Lens Studio 5.24.1 · SPECS 27 · TypeScript · LEAF 10/10 in the Lens Studio preview*
 
 ## Demo video
 
-![Lumen teaser: pick up furosemide, ports turn green or red, the Midazolam line lights to its pump, an arrow points to the safe port](devpost/demo/lumen-teaser.gif)
+![Lumen in the Lens Studio preview: pick up furosemide, every port turns green or red, the Midazolam line lights to its pump](devpost/demo/lumen-teaser.gif)
 
-- ▶ **Full demo (1:44, with sound):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4) — rendered frame-by-frame from the
-  web preview's story mode (`npm run record:demo`). Public YouTube link: _add after upload_.
+- ▶ **Demo film (2:23, with voice-over):** [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4). The demo is
+  **real Lens Studio 5.24.1 footage** of this repo's project: the whole app first, then a zoom into the SPECS view, with the
+  pinches driven by a LEAF scenario through the Lens's real SIK interactables. The 3D opening shots use the Lens's own bedside
+  models. How it was made: [`devpost/VIDEO.md`](devpost/VIDEO.md). YouTube: _link after upload_.
 - 🌐 **Try it in your browser:** https://vivekyarra.github.io/Lumen/ — press **▶ Play the story**, or click around yourself
   (click = pinch). Deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) on every merge to `main`.
 
-![Holding furosemide: the Medial port is red because Midazolam runs in it; Lumen lights that line to its pump and points to the safe Distal port](devpost/screenshots/03-red-port-redirect.png)
+![Lens Studio 5.24.1, SPECS 27 preview: holding furosemide, the Medial port is red because Midazolam runs in it; Lumen lights that line and points to the safe Distal port](devpost/screenshots/ls-03-red-port-redirect.png)
 
 ## How Lumen meets the judging criteria
 
 | Criterion | What Lumen shows | Where to check |
 |---|---|---|
 | **Design** — a complete, coherent product | One real user (an ICU nurse) and one real workflow, done end to end: quiet → pick up → check → trace → redirect → push → quiet, plus an out-of-view pump alarm and a one-pinch shift-handoff line check. Pinch only, big targets, information on the thing it's about, silent when not needed. | Demo video · [story mode](https://vivekyarra.github.io/Lumen/?story) |
-| **Technical implementation** | One shared TypeScript core (the only data file, state machine, layout, meshes, sounds) drives Lens Studio, a browser twin and the tests. DC1–DC10 run on three runners; fuzzing (≈100k random inputs), real-click and stress tests; CI on every PR. | [`leaf-results.md`](devpost/leaf-results.md) · [`build-log.md`](devpost/build-log.md) · Actions tab |
+| **Technical implementation** | A real Lens Studio 5.24.1 SPECS project, wired and tested through the **Lens Studio MCP** with Snap's **CLAD** plugin. **10/10 LEAF scenarios pass in the Lens Studio preview**: they pinch the Lens's real SIK interactables. One shared TypeScript core (the only data file, state machine, layout, meshes, sounds) drives the Lens, a browser twin and the tests. The same DC1–DC10 run on three runners, with fuzzing (≈100k random inputs), real-click and stress tests, and CI on every PR. | [`leaf-results.md`](devpost/leaf-results.md) · [`clad-verification.md`](devpost/clad-verification.md) · [`build-log.md`](devpost/build-log.md) · Actions tab |
 | **Innovation** | Clinical line safety on glasses: answers *which tube is this* by lighting the real tube, and *is it safe* by marking the real port — using all three SPECS strengths (shares your view, draws in the world, keeps hands free). Fail-safe by design. | [Why glasses](#why-glasses) |
-| **Presentation** | 15-second hook, one story, honest stand-ins, disclaimer card, < 3 min. | [`devpost/VIDEO.md`](devpost/VIDEO.md) |
+| **Presentation** | 10-second hook, one nurse's story, the real app on screen, the design reasons, proof (LEAF run), 2:23. | [`devpost/VIDEO.md`](devpost/VIDEO.md) |
 
 ## The problem
 
@@ -61,12 +61,16 @@ rate and port name, 2.5 s each — then goes quiet and logs *“Lines checked ·
 chart”), and if no port on the patient is safe, Lumen draws no arrow to nowhere: it says
 *“No safe port — ask pharmacy”*.
 
-| | |
-|---|---|
-| ![Quiet idle](devpost/screenshots/01-quiet-idle.png) | ![Holding furosemide](devpost/screenshots/02-holding-furosemide.png) |
-| ![Green port, Push here](devpost/screenshots/04-green-port-push-here.png) | ![Alarm: edge arrow, amber line to the kink](devpost/screenshots/06-alarm-edge-arrow.png) |
-| ![Pump 2 alarm](devpost/screenshots/07-alarm-pump-and-kink.png) | ![Morphine: all green](devpost/screenshots/08-morphine-all-green.png) |
-| ![Shift-handoff line check](devpost/screenshots/10-handoff-line-check.png) | ![Trace the PIV line](devpost/screenshots/09-trace-piv-line.png) |
+In the Lens Studio 5.24.1 preview (SPECS 27 view):
+
+| | | |
+|---|---|---|
+| ![Holding furosemide](devpost/screenshots/ls-02-holding-furosemide.png) | ![Trace to the pump](devpost/screenshots/ls-04-trace-to-pump.png) | ![Green port, Push here](devpost/screenshots/ls-05-push-here.png) |
+| ![Pushed and logged](devpost/screenshots/ls-06-logged.png) | ![Pump 2 alarm](devpost/screenshots/ls-07-pump-alarm.png) | ![Kink, Resolved](devpost/screenshots/ls-08-kink-resolved.png) |
+
+![The whole Lens Studio window with Lumen running](devpost/screenshots/ls-01-lens-studio-window.png)
+
+The web twin (same Core, Three.js) is in [`devpost/screenshots/`](devpost/screenshots/) and live at https://vivekyarra.github.io/Lumen/.
 
 ## Why glasses
 
@@ -86,21 +90,26 @@ Assets/Lumen/Core/   engine-agnostic: LumenData (the ONLY data file) · Compatib
                      (state machine) · LumenLayout · Curves · ViewMath · MeshGen · SoundSynth · Scenarios (DC1–DC8)
 Assets/Lumen/Lens/   Lens Studio: LumenLens (the one @component) · SceneBuilder · PortMarker · LineTracer ·
                      SyringeTray · PushButton · RedirectArrow · AlarmController · EdgeArrow · AudioCues · LumenSelfTest
+Assets/Lumen/Leaf/   LEAF scenarios (one per done criterion, IK reach, in-preview DC1–DC10) + LeafIndex + Demo_Story
 Assets/Lumen/Audio/  7 spatial sound cues, synthesised in code (tools/gen-audio.ts)
+Assets/Scene.scene   the SPECS scene: Camera, SIK, Lumen (LumenLens), LeafIndex · Lumen.esproj at the repo root
 preview-web/         a browser twin of the Lens Studio preview, rendering the same Core with Three.js
 tests/               unit (Node), e2e (Playwright) — all run in GitHub Actions on every PR
-devpost/             spec, LEAF results, build log, screenshots
+tools/               recorders for the real Lens Studio preview + the film pipeline (tools/video)
+devpost/             spec, LEAF + CLAD results, build log, screenshots, demo film
 ```
 
 - **Plan:** Devpost Learn skill pack, `plan-lens` → `devpost/design-brief.md` (see checklist below).
-- **Build:** Claude Code. Everything in the Lens is generated at runtime from the shared Core
-  (procedural meshes via `MeshBuilder`, SIK pinch targets, spatial audio) by one component, `LumenLens`,
-  so the scene setup is: add one component, assign two materials and seven sounds
-  ([LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md)). The hackathon asks for the build to go through
-  **CLAD + Lens Studio MCP**; the setup guide has the CLAD prompt for wiring and LEAF-testing it.
-- **Visuals never decide logic:** every engine renders `LumenState.view()`. The same DC1–DC8 scenarios
+- **Build:** Claude Code with Snap's **CLAD** plugin (`ls-clad`, enabled for this project in `.claude/settings.json`) and
+  the **Lens Studio MCP**. Through the MCP the agent created the SPECS project, installed LEAF, wired `LumenLens` and
+  `LeafIndex` into the scene, set the materials, lights and sounds, compiled, and ran every LEAF scenario. A separate
+  Claude Code run used CLAD's own LEAF workflow against the open project: 10/10 passed
+  ([`devpost/clad-verification.md`](devpost/clad-verification.md)).
+  Everything in the Lens is generated at runtime from the shared Core by one component, `LumenLens`: procedural
+  meshes via `MeshBuilder`, SIK pinch targets and spatial audio.
+- **Visuals never decide logic:** every engine renders `LumenState.view()`. The same DC1–DC10 scenarios
   run against the state machine, the rendered web preview, and inside the Lens Studio preview.
-- **Lens Studio 5.23.2**, SPECS Base Template, Spectacles Interaction Kit, TypeScript.
+- **Lens Studio 5.24.1**, SPECS Base Template (SPECS 27), Spectacles Interaction Kit 2.0, LEAF 2.0.2, TypeScript.
 
 ## Stand-ins (what is faked in the preview)
 
@@ -117,15 +126,19 @@ devpost/             spec, LEAF results, build log, screenshots
 See [`devpost/leaf-results.md`](devpost/leaf-results.md). **10 / 10 scenarios** — the spec's DC1–DC8 plus
 DC9 (handoff) and DC10 (fail-safe) — pass on the state machine and in the rendered web preview on every PR,
 alongside ~100k fuzzed inputs, real-click and stress tests and a full story-mode playthrough (65 unit +
-21 browser tests). For Lens Studio there is a real **LEAF** suite in [`Assets/Lumen/Leaf/`](Assets/Lumen/Leaf/): one scenario per
-done criterion that pinches the Lens's actual SIK interactables (`Syringe_S1_Hit`, `Port_B_Hit`, `PushHereButton`, …),
-an IK reachability scenario, and one that runs all ten shared scenarios inside the preview.
+21 browser tests). **In the Lens Studio 5.24.1 preview, all 10 LEAF scenarios pass**
+([`Assets/Lumen/Leaf/`](Assets/Lumen/Leaf/)):
+- one scenario per done criterion, each pinching the Lens's real SIK interactables (`Syringe_S1_Hit`, `Port_B_Hit`,
+  `PushHereButton`, …);
+- an IK reachability scenario;
+- one that runs all ten shared scenarios inside the preview (`[Lumen self-test] 10/10 pass`).
 
 ## How to open
 
-**Lens Studio:** clone, open the `.esproj` in **Lens Studio 5.23.2**, press **Preview**
-(first time: follow [LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md)). Controls: WASD move, Q/E down/up,
-mouse look, **click = pinch**.
+**Lens Studio:** clone and open `Lumen.esproj` in **Lens Studio 5.24.1**. The scene is already wired, so press
+**Preview**, look down-left at the central line and the cart, and turn left for the pumps. Controls: WASD move,
+Q/E down/up, mouse look, **click = pinch**. To run the tests, open the LEAF panel and run any `test_*` scenario
+([LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md)).
 
 **Web preview (no Lens Studio needed):**
 
@@ -171,8 +184,7 @@ _Draft — rewrite in your own words before submitting:_
 
 ## Disclaimer
 
-Hackathon prototype. Demo data only. Not a medical device. Not for clinical use.
-All drug data in this repo is invented for a demo and has not been checked for clinical use.
+Hackathon prototype, not a medical device. The drug data in this repo was made up for the demo.
 
 ---
 
@@ -180,11 +192,11 @@ All drug data in this repo is invented for a demo and has not been checked for c
 
 | Item | Status |
 |---|---|
-| Lens code, data, layout, sounds, tests, CI | ✅ in this repo |
-| DC1–DC8 (+ DC9 handoff, DC10 fail-safe) on state machine + rendered web preview | ✅ green in CI |
-| `devpost/design-brief.md` from **your own** `plan-lens` interview | ⏳ you — run `plan-lens` (spec §10 step 2) |
-| Lens Studio project files (`.esproj`, scene) + scene wiring | ⏳ you — [LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md) steps 1–2 (or via CLAD, step 6) |
-| DC1–DC8 in the Lens Studio preview | ⏳ you — setup step 5, paste the table into `devpost/leaf-results.md` |
-| Demo video | ✅ 1:44 cut rendered ([`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4)) · ⏳ you — add voice-over + 20 s of plan-lens/CLAD/LEAF footage, upload public ([`devpost/VIDEO.md`](devpost/VIDEO.md)) |
+| Lens Studio 5.24.1 SPECS project, scene wired through the Lens Studio MCP | ✅ `Lumen.esproj` + `Assets/Scene.scene` |
+| CLAD plugin + Lens Studio MCP | ✅ `.claude/settings.json` · [`devpost/clad-verification.md`](devpost/clad-verification.md) |
+| DC1–DC10 in the Lens Studio preview (LEAF) | ✅ 10/10 · [`devpost/leaf-results.md`](devpost/leaf-results.md) |
+| DC1–DC10 on the state machine + rendered web preview | ✅ green in CI |
+| Demo film with voice-over, real Lens Studio footage | ✅ [`devpost/demo/lumen-demo.mp4`](devpost/demo/lumen-demo.mp4) · upload to YouTube as Public |
 | Web preview link for judges | ✅ live at https://vivekyarra.github.io/Lumen/ |
-| Devpost form | ⏳ you — text in [`devpost/submission.md`](devpost/submission.md) |
+| `devpost/design-brief.md` from **your own** `plan-lens` interview | ⏳ run `plan-lens` (20–30 min, your answers) |
+| Devpost form | ⏳ text in [`devpost/submission.md`](devpost/submission.md) |
