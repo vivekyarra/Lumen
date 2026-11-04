@@ -206,8 +206,9 @@ export const CURVE_SAMPLES_PER_SEGMENT = 12;
 
 // ---------- Alarm ----------
 export const KINK_RING_DIAMETER = 6;
-export const RESOLVED_BUTTON_POS: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 8);
-export const KINK_TEXT_ANCHOR: V3 = v3(KINK_POS.r, KINK_POS.f, KINK_POS.u + 12);
+/** "Resolved" sits beside the kink ring (toward the user's side), the reason text above it. */
+export const RESOLVED_BUTTON_POS: V3 = v3(KINK_POS.r + 11, KINK_POS.f, KINK_POS.u + 1);
+export const KINK_TEXT_ANCHOR: V3 = v3(KINK_POS.r, KINK_POS.f + 10, KINK_POS.u + 6);
 /** Alarm text sits to the left of Pump 2 (right-aligned) so it never collides with a trace label. */
 export const PUMP_ALARM_TEXT_ANCHOR: V3 = v3(-89.5, 94, 127);
 
