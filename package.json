@@ -11,7 +11,8 @@
     "test": "npm run typecheck && npm run test:unit",
     "gen:audio": "tsx tools/gen-audio.ts",
     "build:web": "esbuild preview-web/src/main.ts --bundle --format=esm --target=es2020 --minify --sourcemap --outfile=preview-web/dist/app.js",
-    "serve:web": "npm run build:web && http-server preview-web -p 5173 -c-1"
+    "serve:web": "npm run build:web && http-server preview-web -p 5173 -c-1",
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

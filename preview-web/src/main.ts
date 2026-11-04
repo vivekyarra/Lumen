@@ -2,7 +2,7 @@
 // Controls: WASD move · Q/E down/up · drag to look · click = pinch · F = SPECS FOV · H = hide help.
 import * as THREE from "three";
 import * as L from "../../Assets/Lumen/Core/LumenLayout";
-import { LumenEvent, LumenStateMachine } from "../../Assets/Lumen/Core/LumenState";
+import { LumenEvent, LumenStateMachine, invariantViolations } from "../../Assets/Lumen/Core/LumenState";
 import { PortId, SyringeId } from "../../Assets/Lumen/Core/LumenData";
 import { CueId } from "../../Assets/Lumen/Core/SoundSynth";
 import { Driver, SCENARIOS, SceneProbe, runScenarios } from "../../Assets/Lumen/Core/Scenarios";
@@ -206,6 +206,12 @@ function moveCamera(dt: number): void {
 }
 
 // ---------------- frame ----------------
+/** Bring the scene graph up to date with the state without drawing (cheap; used by the probe). */
+function sync(): void {
+  world.render(sm.view(), lensTime, camera);
+  scene.updateMatrixWorld(true);
+}
+
 function frame(): void {
   world.render(sm.view(), lensTime, camera);
   audio.updateListener(camera);
@@ -241,7 +247,7 @@ function shown(o: THREE.Object3D): boolean {
 }
 
 function labelBoxes(): LabelBox[] {
-  frame();
+  sync();
   const c = specsCamera();
   const out: LabelBox[] = [];
   for (const { id, label } of world.uiLabels) {
@@ -266,7 +272,7 @@ function labelBoxes(): LabelBox[] {
 
 const probe: SceneProbe = {
   visible(key, index) {
-    frame();
+    sync();
     switch (key) {
       case "port.idleDot": return shown(world.ports[index as PortId].dot);
       case "port.ring": return shown(world.ports[index as PortId].ring);
@@ -284,7 +290,7 @@ const probe: SceneProbe = {
     }
   },
   text(key) {
-    frame();
+    sync();
     const pick = (l: { text: string | null; object: THREE.Object3D }) => (shown(l.object) ? l.text : null);
     if (key.startsWith("port.")) return pick(world.ports[key.slice(5) as PortId].label);
     if (key.startsWith("pump.")) return pick(world.pumpLabels[Number(key.slice(5)) as 1]);
@@ -298,8 +304,8 @@ const probe: SceneProbe = {
     }
     return null;
   },
-  lookAtHub() { camera.position.copy(eye); setLook(L.HUB_TARGET); frame(); },
-  lookAtCart() { camera.position.copy(eye); setLook(L.CART_TARGET); frame(); },
+  lookAtHub() { camera.position.copy(eye); setLook(L.HUB_TARGET); sync(); },
+  lookAtCart() { camera.position.copy(eye); setLook(L.CART_TARGET); sync(); },
   overlappingLabels() {
     const b = labelBoxes();
     const out: string[] = [];
@@ -307,7 +313,7 @@ const probe: SceneProbe = {
     return out;
   },
   minUiDistanceCm() {
-    frame();
+    sync();
     let min = Infinity;
     const p = new THREE.Vector3();
     world.overlay.traverse((o) => {
@@ -323,7 +329,7 @@ const probe: SceneProbe = {
     return min;
   },
   darkContentCount() {
-    frame();
+    sync();
     let n = 0;
     world.root.traverse((o) => {
       const m = (o as THREE.Mesh).material as THREE.MeshBasicMaterial | undefined;
@@ -398,6 +404,9 @@ const api = {
     return { x: rect.left + vp.x + p.x, y: rect.top + (rect.height - vp.y - vp.w) + p.y };
   },
   runScenarios: (only?: string[]) => runScenarios(driver, only),
+  invariants: () => invariantViolations(sm.view()),
+  pinchAt: (x: number, y: number) => pinchAt(x, y),
+  sceneObjectCount: () => { let n = 0; scene.traverse(() => n++); return n; },
   scenarioIds: SCENARIOS.map((s) => s.id),
   alarmActiveSince: () => alarmActiveSince,
 };
