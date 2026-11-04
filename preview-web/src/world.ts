@@ -464,7 +464,7 @@ export class LumenWorld {
     const x = a.ndcX * Math.tan(((SPECS_FOV.h / 2) * Math.PI) / 180) * d;
     const y = a.ndcY * Math.tan(((SPECS_FOV.v / 2) * Math.PI) / 180) * d;
     this.edgeArrowMesh.position.set(x, y, -d);
-    this.edgeArrowMesh.rotation.set(0, 0, (a.angleDeg * Math.PI) / 180);
+    this.edgeArrowMesh.rotation.set(0, 0, Math.atan2(y, x));
   }
 
   private orientBillboards(camera: THREE.Camera): void {

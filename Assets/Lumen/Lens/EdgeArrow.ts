@@ -23,6 +23,7 @@ export class EdgeArrow {
     const y = a.ndcY * Math.tan(((SPECS_FOV.v / 2) * Math.PI) / 180) * d;
     const t = this.obj.getTransform();
     t.setLocalPosition(new vec3(x, y, -d));
-    t.setLocalRotation(quat.angleAxis((a.angleDeg * Math.PI) / 180, new vec3(0, 0, 1)));
+    // Point along the real direction on the 1 m plane (NDC angles are skewed by the 37° × 32° aspect).
+    t.setLocalRotation(quat.angleAxis(Math.atan2(y, x), new vec3(0, 0, 1)));
   }
 }

@@ -136,6 +136,8 @@ export interface MaterialOptions {
   onTop?: boolean;
   additive?: boolean;
   twoSided?: boolean;
+  /** Alpha will be animated later: needs a blending pass even if it starts opaque. */
+  fade?: boolean;
 }
 
 export function makeMaterial(base: Material, o: MaterialOptions): Material {
@@ -143,7 +145,7 @@ export function makeMaterial(base: Material, o: MaterialOptions): Material {
   const pass = m.mainPass;
   pass.baseColor = o.color;
   safe(function () { pass.twoSided = o.twoSided !== false; });
-  if (o.color.w < 0.999 || o.additive) {
+  if (o.color.w < 0.999 || o.additive || o.fade || o.onTop) {
     safe(function () { pass.blendMode = o.additive ? BlendMode.Add : BlendMode.Normal; });
     safe(function () { pass.depthWrite = false; });
   }
@@ -193,11 +195,13 @@ export function makeText(obj: SceneObject, o: TextOptions): Text {
   if (o.font) t.font = o.font;
   t.horizontalAlignment = o.align === "left" ? HorizontalAlignment.Left : o.align === "right" ? HorizontalAlignment.Right : HorizontalAlignment.Center;
   t.verticalAlignment = VerticalAlignment.Bottom;
+  // World-space text aligns against its layout rect: pin it to the origin so "left"/"right" start/end at the anchor.
+  safe(function () { (t as any).layoutRect = Rect.create(0, 0, 0, 0); });
+  safe(function () { (t as any).worldSpaceRect = Rect.create(0, 0, 0, 0); });
   t.textFill.color = o.color;
-  if (o.onTop) {
-    safe(function () { t.depthTest = false; });
-    safe(function () { t.setRenderOrder(30); });
-  }
+  // Text.depthTest defaults to false: set it explicitly so printed scene text is hidden by geometry.
+  safe(function () { t.depthTest = !o.onTop; });
+  if (o.onTop) safe(function () { t.setRenderOrder(30); });
   t.text = "";
   return t;
 }
@@ -220,6 +224,7 @@ export function makePinchTarget(
   onPinch: (hitWorld: vec3 | null) => void,
 ): Interactable {
   const col = obj.createComponent("Physics.ColliderComponent") as ColliderComponent;
+  safe(function () { col.fitVisual = false; });
   if ("sphere" in shape) {
     const s = Shape.createSphereShape();
     s.radius = shape.sphere;
@@ -229,7 +234,6 @@ export function makePinchTarget(
     b.size = shape.box;
     col.shape = b;
   }
-  safe(function () { col.fitVisual = false; });
   const it = obj.createComponent(Interactable.getTypeName()) as Interactable;
   it.onTriggerEnd.add(function (e: any) {
     let hit: vec3 | null = null;
