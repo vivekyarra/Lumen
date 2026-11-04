@@ -255,9 +255,9 @@ export class LumenWorld {
       g.add(new THREE.Mesh(worldGeometry(M.cylinder(v3(a.r - 1.5, a.f, a.u), a, 0.35, 10)), lit(COLORS.pole)));
       this.scenery.add(g);
       this.syringeGroups[s] = g;
-      const tag = makeLabel(1.2, "center", 30);
+      const tag = makeLabel(L.SYRINGE_LABEL_CAP, L.SYRINGE_LABEL_SLOT[s].align, 30);
       tag.setText(SYRINGES[s].label, CSS.white);
-      tag.object.position.copy(toThree(L.SYRINGE_LABEL_ANCHOR[s]));
+      tag.object.position.copy(toThree(L.SYRINGE_LABEL_SLOT[s].anchor));
       this.overlay.add(tag.object);
       this.billboards.push(tag.object);
       this.uiLabels.push({ id: "syringe." + s, label: tag });
