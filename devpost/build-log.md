@@ -21,6 +21,18 @@ Every change went through its own branch and pull request, CI green before a squ
 | #8 | `claude/lens-components` | Lens Studio components (`LumenLens` + one class per role), self-test, setup guide |
 | #9 | `claude/docs-devpost` | README, LEAF results, screenshots, Devpost text, kink-area layout fix |
 | #10 | `claude/peaceful-ritchie-lrq0fj` | independent Lens Studio API review fixes, license, `npm run verify` |
+| #11 | `claude/handoff-check` | shift-handoff line check (pinch the IV pole), "No safe port — ask pharmacy" fail-safe, DC9 + DC10 |
+| #12 | `claude/story-mode` | story mode (hands-free demo with captions), frame-perfect demo video + teaser GIF with mixed sound, GitHub Pages workflow, rubric map |
+
+## Why the two additions (and nothing more)
+
+Each idea was checked against the spec's rule 19 ("Does this help the core moment? Less on screen.").
+- **Handoff line check** — tracing every line bag-to-patient is a real handover ritual; Lumen does it with
+  one pinch, no new panel, and goes quiet. It reuses the trace glow and labels, so it adds a capability
+  without adding UI.
+- **No-safe-port fail-safe** — the one case the demo data never shows but a real product must get right:
+  never draw an arrow to nowhere.
+- Rejected: dose calculators, menus, a lines dashboard, voice — all crowd the view or break pinch-only.
 
 ## Independent review of the Lens Studio code (it can't run in CI)
 

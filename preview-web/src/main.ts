@@ -11,6 +11,7 @@ import { toThree } from "./coords";
 import { LumenWorld } from "./world";
 import { SpatialAudio } from "./audio";
 import { luminance } from "./palette";
+import { STORY_LENGTH, StoryAction, TITLE, captionAt, cuesBetween, lookAtTime } from "./story";
 
 // Deterministic text metrics on every machine: wait for the bundled Inter before drawing any label.
 try {
@@ -173,7 +174,8 @@ window.addEventListener("keydown", (e) => {
   if (k === "a" && e.shiftKey) sm.debugTriggerAlarm(); // hidden debug trigger (spec: key A); Shift avoids clashing with WASD
   if (k === "f") { specsFov = !specsFov; resize(); }
   if (k === "h") document.body.classList.toggle("clean");
-  if (k === "r") api.reset();
+  if (k === "r") { storyStart = -1; document.body.classList.remove("story"); api.reset(); }
+  if (k === "p") startStory();
   if (k === "m") audio.muted = !audio.muted;
 });
 window.addEventListener("keyup", (e) => keys.delete(e.key.toLowerCase()));
@@ -222,6 +224,73 @@ function sync(): void {
   scene.updateMatrixWorld(true);
 }
 
+// ---------------- story mode ----------------
+let storyStart = -1;
+let storyT = -1;
+const captionEl = document.getElementById("caption")!;
+const titleEl = document.getElementById("title-card")!;
+const pinchEl = document.getElementById("pinch")!;
+
+function storyDo(a: StoryAction): void {
+  const target = a.kind === "syringe" ? "syringe." + a.id : a.kind === "port" ? "port." + a.id : a.kind;
+  switch (a.kind) {
+    case "syringe": sm.pinchSyringe(a.id); break;
+    case "port": sm.pinchPort(a.id); break;
+    case "push": sm.pinchPush(); break;
+    case "resolved": sm.pinchResolved(); break;
+    case "pole": sm.pinchPole(); break;
+  }
+  // Show where the pinch landed (story mode only), animated in story time so recordings are exact.
+  pinchTarget = target;
+  pinchStartedAt = lensTime;
+}
+
+let pinchTarget = "";
+let pinchStartedAt = -1;
+function updatePinchRing(): void {
+  const k = pinchStartedAt < 0 ? 1 : (lensTime - pinchStartedAt) / 0.7;
+  if (k >= 1 || !pinchTarget) {
+    pinchEl.style.opacity = "0";
+    return;
+  }
+  const p = api.screenPoint(pinchTarget);
+  if (!p) return;
+  const scale = k < 0.4 ? 1.4 - (k / 0.4) * 0.85 : 0.55 + ((k - 0.4) / 0.6) * 0.35;
+  pinchEl.style.left = p.x + "px";
+  pinchEl.style.top = p.y + "px";
+  pinchEl.style.opacity = String(k < 0.4 ? 1 : 1 - (k - 0.4) / 0.6);
+  pinchEl.style.transform = "scale(" + scale + ")";
+}
+
+function startStory(): void {
+  api.reset();
+  audio.unlock();
+  storyStart = lensTime;
+  storyT = 0;
+  document.body.classList.add("clean", "story");
+}
+
+function updateStory(): void {
+  if (storyStart < 0) return;
+  const t = lensTime - storyStart;
+  const due = cuesBetween(storyT, t);
+  storyT = t;
+  for (const a of due) storyDo(a);
+  camera.position.copy(eye);
+  setLook(lookAtTime(t));
+  const cap = captionAt(t);
+  captionEl.textContent = cap || "";
+  captionEl.style.opacity = cap ? "1" : "0";
+  updatePinchRing();
+  titleEl.style.opacity = t >= TITLE.from ? String(Math.min(1, (t - TITLE.from) / 0.8)) : "0";
+  if (t > STORY_LENGTH) {
+    storyStart = -1;
+    titleEl.style.opacity = "0";
+    captionEl.style.opacity = "0";
+    document.body.classList.remove("story");
+  }
+}
+
 function frame(): void {
   world.render(sm.view(), lensTime, camera);
   audio.updateListener(camera);
@@ -236,8 +305,9 @@ function loop(): void {
     // Lens time follows the wall clock even on slow GPUs (the state machine handles big steps);
     // only camera motion is clamped so a hitch never teleports the viewer.
     lensTime += Math.min(real, 2);
-    moveCamera(Math.min(real, 0.1));
+    if (storyStart < 0) moveCamera(Math.min(real, 0.1));
     sm.update(lensTime);
+    updateStory();
   }
   frame();
   requestAnimationFrame(loop);
@@ -383,6 +453,21 @@ const driver: Driver = {
 };
 
 const api = {
+  /** Story mode: start (deterministic), and advance one recording frame. */
+  startStory: () => startStory(),
+  storyFrame: (dt: number) => {
+    const end = lensTime + dt;
+    while (lensTime < end) {
+      lensTime = Math.min(lensTime + 1 / 120, end);
+      sm.update(lensTime);
+      updateStory();
+    }
+    frame();
+    return storyStart >= 0 ? lensTime - storyStart : -1;
+  },
+  storyLength: STORY_LENGTH,
+  storyStartTime: () => storyStart,
+  cueLog: () => audio.cueLog.slice(),
   reset(): void {
     lensTime += 100; // new session, fresh timers
     sm = makeMachine();
@@ -425,5 +510,7 @@ const api = {
 (window as unknown as { lumen: typeof api }).lumen = api;
 
 if (TEST_MODE) document.body.classList.add("clean");
+if (params.has("story") && !TEST_MODE) startStory();
+document.getElementById("play")!.addEventListener("click", (e) => { e.stopPropagation(); startStory(); });
 frame();
 requestAnimationFrame(loop);

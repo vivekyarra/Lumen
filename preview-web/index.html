@@ -13,12 +13,29 @@
     #help { position: absolute; left: 16px; bottom: 14px; color: rgba(255,255,255,0.78); font-size: 13px; line-height: 1.5; background: rgba(20,24,28,0.55); padding: 8px 12px; border-radius: 8px; pointer-events: none; }
     #help b { color: #3FE0FF; font-weight: 600; }
     body.clean #help, body.clean #specs-frame { display: none; }
+    #caption { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: min(78%, 980px); text-align: center;
+      color: #fff; font: 600 clamp(15px, 1.9vw, 24px)/1.35 "Inter", system-ui, sans-serif; background: rgba(16,20,24,0.72);
+      padding: 0.45em 0.9em; border-radius: 12px; opacity: 0; pointer-events: none; }
+    #title-card { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #14181c; color: #fff; opacity: 0; pointer-events: none; font-family: "Inter", system-ui, sans-serif; text-align: center; padding: 16px; }
+    #title-card h1 { margin: 0; font-size: clamp(40px, 7vw, 96px); letter-spacing: .02em; color: #3FE0FF; }
+    #title-card p { margin: .4em 0 0; font-size: clamp(18px, 2.6vw, 34px); font-weight: 600; }
+    #title-card small { margin-top: 2.2em; font-size: clamp(13px, 1.5vw, 20px); color: #FFB020; font-weight: 600; }
+    #pinch { position: absolute; width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 3px solid #fff; border-radius: 50%;
+      opacity: 0; pointer-events: none; }
+    #play { position: absolute; right: 16px; bottom: 14px; font: 600 14px "Inter", system-ui, sans-serif; color: #14181c; background: #3FE0FF;
+      border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+    body.clean #play { display: none; }
   </style>
 </head>
 <body>
   <div id="app"></div>
   <div id="specs-frame"><span>SPECS view (37° × 32°)</span></div>
-  <div id="help"><b>Lumen</b> web preview · drag to look · WASD move · Q/E down/up · <b>click = pinch</b> · F SPECS FOV · M mute · R reset · H hide</div>
+  <div id="caption"></div>
+  <div id="pinch"></div>
+  <div id="title-card"><h1>Lumen</h1><p>The right line, the safe port, where you look.</p><small>Demo data — not for clinical use</small></div>
+  <button id="play" type="button">▶ Play the story</button>
+  <div id="help"><b>Lumen</b> web preview · drag to look · WASD move · Q/E down/up · <b>click = pinch</b> · pinch the IV pole for a handoff check · P story · F SPECS FOV · M mute · R reset · H hide</div>
   <script type="module" src="./dist/app.js"></script>
 </body>
 </html>

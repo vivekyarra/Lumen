@@ -7,6 +7,9 @@ export class SpatialAudio {
   private buffers = new Map<CueId, AudioBuffer>();
   private lastPlayed = new Map<CueId, number>();
   muted = false;
+  /** Every cue played, with its stereo pan as heard from the camera (for the recorded demo's soundtrack). */
+  readonly cueLog: { id: CueId; t: number; pan: number; gain: number }[] = [];
+  private camera: THREE.Camera | null = null;
 
   /** Must be called from a user gesture (browser autoplay rules). */
   unlock(): void {
@@ -26,6 +29,7 @@ export class SpatialAudio {
   }
 
   updateListener(camera: THREE.Camera): void {
+    this.camera = camera;
     if (!this.ctx) return;
     const l = this.ctx.listener;
     const p = new THREE.Vector3();
@@ -50,6 +54,11 @@ export class SpatialAudio {
   /** Records the cue (for tests) and plays it from `at` if audio is unlocked. */
   play(id: CueId, at: THREE.Vector3, now: number): void {
     this.lastPlayed.set(id, now);
+    if (this.camera) {
+      const local = at.clone().applyMatrix4(this.camera.matrixWorldInverse);
+      const dist = Math.max(30, local.length());
+      this.cueLog.push({ id: id, t: now, pan: Math.max(-1, Math.min(1, local.x / dist)), gain: Math.min(1, 100 / dist) });
+    }
     if (!this.ctx || this.muted) return;
     const buf = this.buffers.get(id);
     if (!buf) return;
@@ -73,5 +82,6 @@ export class SpatialAudio {
 
   reset(): void {
     this.lastPlayed.clear();
+    this.cueLog.length = 0;
   }
 }
