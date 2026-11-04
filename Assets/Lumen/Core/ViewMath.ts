@@ -147,12 +147,15 @@ export function billboardAxes(eye: V3, anchor: V3): { right: V3; up: V3; normal:
   return { right: right, up: up, normal: normal };
 }
 
-/** Wraps text to at most two lines, preferring to break before " — " or at a space. */
+/** Wraps text to at most two lines, preferring to break before " — " or " → ", else at a space. */
 export function wrapLabel(text: string, maxChars: number): string[] {
   if (text.length <= maxChars) return [text];
-  const dash = text.indexOf(" — ");
-  if (dash > 0 && dash <= maxChars + 4) {
-    return [text.substring(0, dash), text.substring(dash + 1)];
+  const seps = [" — ", " → "];
+  for (let i = 0; i < seps.length; i++) {
+    const at = text.indexOf(seps[i]);
+    if (at > 0 && at <= maxChars + 4) {
+      return [text.substring(0, at), text.substring(at + 1)];
+    }
   }
   let cut = text.lastIndexOf(" ", maxChars);
   if (cut <= 0) cut = text.indexOf(" ");
