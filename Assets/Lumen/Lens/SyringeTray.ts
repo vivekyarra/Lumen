@@ -1,7 +1,7 @@
 /**
- * SyringeTray — the cart's Lens content: pinch targets for the two syringes (stand-in for a barcode scan),
+ * SyringeTray — the cart's Lens content: pinch targets for the two syringes (preview input for a barcode scan),
  * printed barrel labels, the "Holding: …" chip (pinch = put down), the push log line and the first-time hint
- * (LUMEN_SPEC.md §8.4, §8.5).
+ *.
  */
 import * as L from "../Core/LumenLayout";
 import { SYRINGE_IDS, SYRINGES, SyringeId } from "../Core/LumenData";

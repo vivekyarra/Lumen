@@ -61,3 +61,11 @@ leaf_plugin_settings.json
 Plugins/
 # Rejected demo takes (the final video is built by tools/compose-lens-studio-video.mjs)
 devpost/demo/lumen-lens-studio.mp4
+
+# Lens Studio-generated agent docs (recreated on open)
+AGENTS.md
+CLAUDE.md
+# Installed skill copies (see skills-lock.json)
+agent/
+.agents/
+.claude/skills/

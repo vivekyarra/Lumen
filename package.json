@@ -13,9 +13,7 @@
     "build:web": "esbuild preview-web/src/main.ts --bundle --format=esm --target=es2022 --minify --sourcemap --outfile=preview-web/dist/app.js",
     "serve:web": "npm run build:web && http-server preview-web -p 5173 -c-1",
     "test:e2e": "playwright test",
-    "screenshots": "node tools/screenshots.mjs",
-    "verify": "npm test && npx playwright test",
-    "record:demo": "node tools/record-demo.mjs"
+    "verify": "npm test && npx playwright test"
   },
   "devDependencies": {
     "@fontsource/inter": "^5.3.0",

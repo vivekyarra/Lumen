@@ -4,7 +4,7 @@
  */
 import { V3, add, cross, dot, length, normalize, scale, sub, v3 } from "./Vec";
 
-/** SPECS display field of view (LUMEN_SPEC.md §8.2). */
+/** SPECS display field of view. */
 export const SPECS_FOV = { h: 37, v: 32 };
 
 export interface Pose {
@@ -77,7 +77,7 @@ export interface EdgeArrow {
 }
 
 /**
- * Where to show the amber edge chevron for an out-of-view target (LUMEN_SPEC.md §8.4 ALARM).
+ * Where to show the amber edge chevron for an out-of-view target.
  * Hidden while the target is inside the view (with a small hysteresis-free margin).
  */
 export function edgeArrow(pose: Pose, target: V3, fov: { h: number; v: number }, inset: number): EdgeArrow {
@@ -137,7 +137,7 @@ export function estimateTextHeightCm(capHeightCm: number): number {
 
 /**
  * Billboard axes for a label at `anchor` facing `eye`: the label turns to face the eye
- * (yaw and pitch) but never rolls, so text stays upright (LUMEN_SPEC.md §8.6).
+ * (yaw and pitch) but never rolls, so text stays upright.
  */
 export function billboardAxes(eye: V3, anchor: V3): { right: V3; up: V3; normal: V3 } {
   const normal = normalize(sub(eye, anchor));

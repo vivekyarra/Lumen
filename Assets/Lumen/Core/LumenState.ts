@@ -1,5 +1,5 @@
 /**
- * LumenState — the single source of truth (LUMEN_SPEC.md §8.4, §8.5, §8.9).
+ * LumenState — the single source of truth.
  *
  * Engine-agnostic: no Lens Studio or DOM APIs. Engines call the pinch methods on input and
  * `update(nowSec)` once per frame; visuals render `view()` and play sounds from emitted events.
@@ -396,7 +396,7 @@ export class LumenStateMachine {
     this.emit({ type: "handoffEnded", reason: reason, checked: this.handoffIndex });
   }
 
-  /** Pinch on empty space: nothing happens (LUMEN_SPEC.md §8.5). */
+  /** Pinch on empty space: nothing happens. */
   pinchEmpty(): void {
     // Intentionally no state change.
   }

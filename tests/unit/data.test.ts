@@ -7,7 +7,7 @@ import * as S from "../../Assets/Lumen/Core/Strings";
 import { check, checkAll, nearestCompatible } from "../../Assets/Lumen/Core/CompatibilityEngine";
 import { v3 } from "../../Assets/Lumen/Core/Vec";
 
-// Exact strings from LUMEN_SPEC.md §8.8.
+// Exact strings from the design brief
 const SPEC_STRINGS = [
   "Pick up a syringe to check ports.",
   "Holding: Furosemide 40 mg",

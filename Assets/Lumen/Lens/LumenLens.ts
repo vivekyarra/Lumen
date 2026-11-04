@@ -3,7 +3,7 @@
  *
  * It builds the virtual ICU bedside and every piece of Lumen's Lens content at runtime from the shared
  * Core (data, layout, state machine, meshes), wires pinch input through the Spectacles Interaction Kit,
- * and renders LumenState's view model every frame. Visuals never decide logic (LUMEN_SPEC.md §9.2).
+ * and renders LumenState's view model every frame. Visuals never decide logic.
  *
  * Setup: see LENS_STUDIO_SETUP.md.
  */

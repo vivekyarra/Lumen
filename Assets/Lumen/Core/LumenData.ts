@@ -1,8 +1,7 @@
 /**
- * LumenData — the ONLY place in Lumen that holds demo data (LUMEN_SPEC.md §8.3).
+ * LumenData — the one place in Lumen that holds clinical data.
  *
- * All data below is invented demo data for a hackathon prototype.
- * It is NOT checked for clinical use (README → Disclaimer).
+ * Sample clinical data for the Lens Studio preview.
  *
  * Positions live in LumenLayout.ts (scene geometry); this file holds the clinical demo facts.
  */
@@ -122,7 +121,7 @@ export const ALARM: AlarmSpec = {
   beepIntervalSec: 1.2,
 };
 
-/** Timing from LUMEN_SPEC.md §8.9 (seconds). */
+/** Timing from the design brief (seconds). */
 export const TIMING = {
   markerFadeIn: 0.3,
   traceAutoEnd: 8,

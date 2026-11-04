@@ -1,4 +1,4 @@
-// Camera-facing text labels drawn to canvas textures. Sizes follow LUMEN_SPEC.md §8.6.
+// Camera-facing text labels drawn to canvas textures. Sizes follow the design brief
 import * as THREE from "three";
 import { wrapLabel, Align } from "../../Assets/Lumen/Core/ViewMath";
 

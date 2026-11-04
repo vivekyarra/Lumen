@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import * as M from "../../Assets/Lumen/Core/MeshGen";
 import { v3 } from "../../Assets/Lumen/Core/Vec";
-import { CUE_IDS, PEAK, SAMPLE_RATE, cueDuration, encodeWav, renderCue } from "../../Assets/Lumen/Core/SoundSynth";
+import { CUE_IDS, PEAK, SAMPLE_RATE, cueDuration, encodeWav, renderCue } from "../../Assets/Lumen/Core/SoundGen";
 import { LINE_LAYOUT, CURVE_SAMPLES_PER_SEGMENT, GLOW_RADIUS } from "../../Assets/Lumen/Core/LumenLayout";
 import { sampleCurve } from "../../Assets/Lumen/Core/Curves";
 

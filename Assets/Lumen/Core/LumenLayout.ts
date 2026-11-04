@@ -1,7 +1,7 @@
 /**
  * LumenLayout — scene geometry in spec space (cm; r = right, f = forward, u = up; floor = 0).
  *
- * Relative layout follows LUMEN_SPEC.md §8.2. The bed group is shifted (+45 r, −47 f) from the
+ * Relative layout follows the design brief The bed group is shifted (+45 r, −47 f) from the
  * spec's example numbers so that, per the spec's own priority rule, the central-line ports sit
  * ~1.0 m from the eyes and below eye level, and the cart moves to the head end of the bed so the
  * hub and cart share one glance. See devpost/build-log.md, "Layout decisions".
@@ -51,7 +51,7 @@ export const PATIENT = {
 export const POLE = { base: v3(-78, 110, 0), height: 200, radius: 2.5 };
 /**
  * Pinch target for the shift-handoff line check: the pole and bags ABOVE the pumps (pumps stay not
- * pinchable, LUMEN_SPEC.md §8.6). Box centre and size (r × f × u).
+ * pinchable, the design brief). Box centre and size (r × f × u).
  */
 export const POLE_HIT = { center: v3(-78, 110, 180), size: v3(64, 24, 44) };
 

@@ -1,5 +1,5 @@
 /**
- * CompatibilityEngine — pure logic, no visuals (LUMEN_SPEC.md §9.2).
+ * CompatibilityEngine — pure logic, no visuals.
  *
  * Safety rule: anything not explicitly "compatible" in the demo table is NOT green.
  * A missing table entry returns verdict "unknown", which the Lens renders as red ✕ with a "check chart" reason.
@@ -45,7 +45,7 @@ export function checkAll(syringe: SyringeId): { [K in PortId]: CheckResult } {
 export const TIE_EPSILON_CM = 0.5;
 
 /**
- * Nearest compatible port to `from` for `syringe` (LUMEN_SPEC.md §8.3):
+ * Nearest compatible port to `from` for `syringe`:
  * shortest straight-line distance; ties prefer the same catheter; then alphabetical for determinism.
  * Returns null when no other port is compatible.
  */

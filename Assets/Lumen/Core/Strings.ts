@@ -1,6 +1,6 @@
 /**
  * Every user-facing string in Lumen is built here, from LumenData, so wording matches
- * LUMEN_SPEC.md §8.8 exactly and never drifts between engines.
+ * the design brief exactly and never drifts between engines.
  */
 import { DRUGS, LINES, PORTS, SYRINGES, lineForPort, LineId, PortId, SyringeId } from "./LumenData";
 
@@ -61,7 +61,7 @@ export function logText(s: SyringeId, port: PortId, hhmm: string): string {
   return SYRINGES[s].label + " → " + PORTS[port].logName + " · " + hhmm;
 }
 
-/** Word count used by the "max 6 words per label" rule (LUMEN_SPEC.md §8.6). Symbols are not words. */
+/** Word count used by the "max 6 words per label" rule. Symbols are not words. */
 export function wordCount(text: string): number {
   const parts = text.split(/\s+/);
   let n = 0;

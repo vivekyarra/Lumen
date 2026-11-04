@@ -1,4 +1,4 @@
-// Story mode: the spatial moment from LUMEN_SPEC.md §6 / §13 played hands-free, with captions.
+// Story mode: the spatial moment from the design brief played hands-free, with captions.
 // Deterministic in Lens time, so tools/record-demo.mjs can render it frame-perfect to a video.
 import { V3, v3 } from "../../Assets/Lumen/Core/Vec";
 import * as L from "../../Assets/Lumen/Core/LumenLayout";

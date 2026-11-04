@@ -1,6 +1,6 @@
-// Spatial sound cues (LUMEN_SPEC.md §8.7) with WebAudio HRTF panners, using the shared synth.
+// Spatial sound cues with WebAudio HRTF panners, using the shared synth.
 import * as THREE from "three";
-import { CUE_IDS, CueId, renderCue } from "../../Assets/Lumen/Core/SoundSynth";
+import { CUE_IDS, CueId, renderCue } from "../../Assets/Lumen/Core/SoundGen";
 
 export class SpatialAudio {
   private ctx: AudioContext | null = null;
