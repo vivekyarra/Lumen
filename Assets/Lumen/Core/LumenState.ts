@@ -5,12 +5,12 @@
  * `update(nowSec)` once per frame; visuals render `view()` and play sounds from emitted events.
  * Visuals never decide logic.
  */
-import { ALARM, LINES, PORT_IDS, PortId, SyringeId, LineId, TIMING, lineForPort, PumpId, DEMO_DATA_LABEL } from "./LumenData";
+import { ALARM, LINES, LINE_IDS, PORT_IDS, PortId, SyringeId, LineId, TIMING, lineForPort, PumpId, DEMO_DATA_LABEL } from "./LumenData";
 import { CheckResult, Verdict, checkAll, nearestCompatible } from "./CompatibilityEngine";
 import { V3 } from "./Vec";
 import * as S from "./Strings";
 
-export type Mode = "IDLE" | "TRACE" | "HOLDING" | "PORT_FOCUS" | "CONFIRMED";
+export type Mode = "IDLE" | "TRACE" | "HOLDING" | "PORT_FOCUS" | "CONFIRMED" | "HANDOFF";
 
 export type LumenEvent =
   | { type: "syringePicked"; syringe: SyringeId }
@@ -28,6 +28,9 @@ export type LumenEvent =
   | { type: "alarmStarted"; pump: PumpId; source: "timer" | "debug" }
   | { type: "alarmBeep"; pump: PumpId }
   | { type: "alarmResolved"; pump: PumpId }
+  | { type: "handoffStarted" }
+  | { type: "handoffStep"; line: LineId; index: number; total: number }
+  | { type: "handoffEnded"; reason: "done" | "toggle" | "interrupted"; checked: number }
   | { type: "ignored"; action: string; reason: string };
 
 export type MarkerKind = "idle" | Verdict;
@@ -59,6 +62,10 @@ export interface LumenView {
   held: SyringeId | null;
   chipText: string | null;
   hintText: string | null;
+  /** Safety notice shown on the cart while holding (e.g. no compatible port anywhere). */
+  noticeText: string | null;
+  /** Shift-handoff progress (1-based step), or null. */
+  handoff: { step: number; total: number } | null;
   demoLabel: string;
   ports: { [K in PortId]: PortView };
   /** Line glowing cyan (trace / focus), and the label shown on its pump. */
@@ -85,7 +92,7 @@ export const SYSTEM_CLOCK: Clock = {
 
 interface Timer {
   at: number;
-  kind: "trace" | "confirmIdle" | "log" | "hint" | "alarm" | "beep";
+  kind: "trace" | "confirmIdle" | "log" | "hint" | "alarm" | "beep" | "handoff";
 }
 
 export class LumenStateMachine {
@@ -103,6 +110,7 @@ export class LumenStateMachine {
   private firstPushDone = false;
   private alarmTimerUsed = false;
   private alarmActive = false;
+  private handoffIndex = 0;
   private timers: Timer[] = [];
   private listeners: ((e: LumenEvent) => void)[] = [];
   private readonly positions: { [K in PortId]: V3 };
@@ -201,6 +209,9 @@ export class LumenStateMachine {
       case "alarm":
         this.startAlarm("timer");
         return;
+      case "handoff":
+        if (this.mode === "HANDOFF") this.handoffNext();
+        return;
       case "beep":
         if (this.alarmActive) {
           this.emit({ type: "alarmBeep", pump: ALARM.pump });
@@ -219,6 +230,7 @@ export class LumenStateMachine {
       return;
     }
     this.hideHint();
+    this.stopHandoff("interrupted");
     if (this.mode === "TRACE" && this.focused) {
       const p = this.focused;
       this.cancel("trace");
@@ -259,7 +271,8 @@ export class LumenStateMachine {
       return;
     }
     if (!this.held) {
-      // IDLE / TRACE
+      // IDLE / TRACE / HANDOFF
+      this.stopHandoff("interrupted");
       if (this.mode === "TRACE" && this.focused === port) {
         this.cancel("trace");
         this.focused = null;
@@ -330,6 +343,60 @@ export class LumenStateMachine {
     this.emit({ type: "alarmResolved", pump: ALARM.pump });
   }
 
+  /**
+   * Pinch the IV pole (above the pumps): shift-handoff line check. Each line lights in turn from bag
+   * through pump to port with its labels, then the Lens goes quiet and logs "Lines checked · 4 of 4".
+   * Pinch the pole again to stop. Not while holding a syringe (one task at a time).
+   */
+  pinchPole(): void {
+    if (this.held || this.mode === "CONFIRMED") {
+      this.emit({ type: "ignored", action: "pole", reason: this.held ? "syringe held" : "confirm fade in progress" });
+      return;
+    }
+    if (this.mode === "HANDOFF") {
+      this.stopHandoff("toggle");
+      return;
+    }
+    if (this.mode === "TRACE" && this.focused) {
+      this.cancel("trace");
+      this.emit({ type: "traceEnded", port: this.focused, reason: "replaced" });
+    }
+    this.hideHint();
+    this.mode = "HANDOFF";
+    this.handoffIndex = 0;
+    this.emit({ type: "handoffStarted" });
+    this.showHandoffStep();
+  }
+
+  private showHandoffStep(): void {
+    const line = LINE_IDS[this.handoffIndex];
+    this.focused = LINES[line].port;
+    this.schedule("handoff", TIMING.handoffStep);
+    this.emit({ type: "handoffStep", line: line, index: this.handoffIndex, total: LINE_IDS.length });
+  }
+
+  private handoffNext(): void {
+    this.handoffIndex++;
+    if (this.handoffIndex < LINE_IDS.length) {
+      this.showHandoffStep();
+      return;
+    }
+    const t = this.clock.wallClock();
+    this.log = S.handoffLogText(LINE_IDS.length, LINE_IDS.length, S.formatClock(t.h, t.m));
+    this.schedule("log", TIMING.logLineStays);
+    this.mode = "IDLE";
+    this.focused = null;
+    this.emit({ type: "handoffEnded", reason: "done", checked: LINE_IDS.length });
+  }
+
+  private stopHandoff(reason: "toggle" | "interrupted"): void {
+    if (this.mode !== "HANDOFF") return;
+    this.cancel("handoff");
+    this.mode = "IDLE";
+    this.focused = null;
+    this.emit({ type: "handoffEnded", reason: reason, checked: this.handoffIndex });
+  }
+
   /** Pinch on empty space: nothing happens (LUMEN_SPEC.md §8.5). */
   pinchEmpty(): void {
     // Intentionally no state change.
@@ -396,8 +463,8 @@ export class LumenStateMachine {
       const marker: MarkerKind = v ? v.verdict : "idle";
       let label: string | null = null;
       let role: PortView["labelRole"] = null;
-      const focused = this.focused === p && (mode === "PORT_FOCUS" || mode === "TRACE");
-      if (mode === "TRACE" && focused) {
+      const focused = this.focused === p && (mode === "PORT_FOCUS" || mode === "TRACE" || mode === "HANDOFF");
+      if ((mode === "TRACE" || mode === "HANDOFF") && focused) {
         label = S.portLabel(p);
         role = "neutral";
       } else if (v && (mode === "HOLDING" || mode === "PORT_FOCUS")) {
@@ -423,13 +490,16 @@ export class LumenStateMachine {
         pulse: mode === "CONFIRMED" && this.confirmedPort === p,
       };
     }
-    const glowLine = (mode === "TRACE" || mode === "PORT_FOCUS") && this.focused ? lineForPort(this.focused).id : null;
+    const glowLine = (mode === "TRACE" || mode === "PORT_FOCUS" || mode === "HANDOFF") && this.focused ? lineForPort(this.focused).id : null;
+    const noSafePort = mode === "PORT_FOCUS" && !!this.focused && !!verdicts && !verdicts[this.focused].safe && redirect === null;
     const pushPort = mode === "PORT_FOCUS" && this.focused && verdicts && verdicts[this.focused].safe ? this.focused : null;
     return {
       mode: mode,
       held: this.held,
       chipText: this.held ? S.holdingText(this.held) : null,
       hintText: this.hint ? S.HINT_TEXT : null,
+      noticeText: noSafePort ? S.NO_SAFE_PORT_TEXT : null,
+      handoff: mode === "HANDOFF" ? { step: this.handoffIndex + 1, total: LINE_IDS.length } : null,
       demoLabel: DEMO_DATA_LABEL,
       ports: ports,
       glowLine: glowLine,
@@ -475,6 +545,12 @@ export function invariantViolations(v: LumenView): string[] {
   if ((v.mode === "HOLDING" || v.mode === "PORT_FOCUS") && !v.held) out.push(v.mode + " without syringe");
   if ((v.mode === "HOLDING" || v.mode === "PORT_FOCUS") && !v.chipText) out.push("holding without chip");
   if (v.mode === "TRACE" && v.held) out.push("TRACE while holding");
+  if (v.mode === "HANDOFF") {
+    if (v.held) out.push("HANDOFF while holding");
+    if (!v.handoff || v.glowLine !== LINE_IDS[v.handoff.step - 1]) out.push("handoff glows the wrong line");
+    if (v.pushButtonPort || v.redirect) out.push("handoff shows push/redirect");
+  } else if (v.handoff) out.push("handoff progress outside HANDOFF");
+  if (v.noticeText && v.mode !== "PORT_FOCUS") out.push("notice outside PORT_FOCUS");
   if (v.glowLine !== null) {
     const fp = focusedPorts[0];
     if (!fp || LINES[v.glowLine].port !== fp) out.push("glowing line does not match the focused port");

@@ -24,4 +24,5 @@ await shot("06-alarm-edge-arrow", () => { lumen.step(4); lumen.lookAt({ r: -27, 
 await shot("07-alarm-pump-and-kink", () => { lumen.lookAt({ r: -50, f: 60, u: 112 }); });
 await shot("08-morphine-all-green", () => { lumen.driver.pinchResolved(); lumen.step(8); lumen.driver.pinchSyringe("S2"); lumen.step(0.4); lumen.lookAt({ r: -33, f: 42, u: 94 }); });
 await shot("09-trace-piv-line", () => { lumen.driver.pinchSyringe("S2"); lumen.driver.pinchPort("D"); lumen.lookAt({ r: -20, f: 85, u: 100 }); });
+await shot("10-handoff-line-check", () => { lumen.step(9); lumen.driver.pinchPole(); lumen.step(2.6); lumen.lookAt({ r: -55, f: 70, u: 120 }); });
 await browser.close();

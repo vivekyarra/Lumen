@@ -30,14 +30,15 @@ test("600 random clicks / poses / waits never break an invariant or throw", asyn
 
 test("targeted clicks on real targets in random order keep the scene consistent with the state", async ({ lens }) => {
   const r = rng(7);
-  const targets = ["syringe.S1", "syringe.S2", "port.A", "port.B", "port.C", "port.D", "push", "resolved"];
+  const targets = ["syringe.S1", "syringe.S2", "port.A", "port.B", "port.C", "port.D", "push", "resolved", "pole"];
   for (let i = 0; i < 160; i++) {
     const t = targets[Math.floor(r() * targets.length)];
     await lens.evaluate((t) => {
       const l = (window as any).lumen;
       if (t.startsWith("syringe")) l.probe.lookAtCart();
       else if (t === "port.D") l.lookAt({ r: 15, f: 95, u: 80 });
-      else if (t === "resolved") l.lookAt({ r: -15, f: 22.5, u: 108 });
+      else if (t === "resolved") l.lookAt({ r: -4, f: 22.5, u: 102 });
+      else if (t === "pole") l.lookAt({ r: -70, f: 100, u: 160 });
       else l.probe.lookAtHub();
     }, t);
     const p = await lens.evaluate((t) => (window as any).lumen.screenPoint(t), t);

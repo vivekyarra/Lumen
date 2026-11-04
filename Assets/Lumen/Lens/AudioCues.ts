@@ -56,6 +56,8 @@ export class AudioCues {
       case "pushConfirmed": this.play("confirm", L.PORT_POS[e.port], now); break;
       case "alarmBeep": this.play("alarm", L.PUMPS[e.pump].center, now); break;
       case "alarmResolved": this.stop("alarm"); this.play("resolved", L.KINK_POS, now); break;
+      case "handoffStep": this.play("tick", L.PUMPS[e.line].center, now); break;
+      case "handoffEnded": if (e.reason === "done") this.play("markers", L.CART_TEXT.log.anchor, now); break;
       default: break;
     }
   }

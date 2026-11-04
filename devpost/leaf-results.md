@@ -19,6 +19,8 @@ Each done criterion (LUMEN_SPEC.md §11) is one scenario in
 | 6 | Push and quiet | test_push_logs_and_goes_quiet | PASS | PASS | _run setup step 5_ | Nov 4 |
 | 7 | Alarm | test_alarm_and_resolve | PASS | PASS | _run setup step 5_ | Nov 4 |
 | 8 | Placement and comfort | test_placement_and_comfort | PASS¹ | PASS | _run setup step 5_ | Nov 4 |
+| 9 | *Extension:* shift-handoff line check | test_handoff_line_check | PASS | PASS | _run setup step 5_ | Nov 4 |
+| 10 | *Extension:* fail-safe, no safe port | test_no_safe_port_fail_safe | PASS | PASS | _run setup step 5_ | Nov 4 |
 
 ¹ The state runner has no scene, so DC8's geometry is checked by `tests/unit/layout.test.ts`
 (no label overlaps per state at the hub and the cart in the 37° × 32° view, all UI ≥ 40 cm, ports

@@ -39,11 +39,20 @@ goes quiet. Seconds later Pump 2 alarms out of view: a two-tone sound and an **a
 her to it, and Line 2 glows amber down to the **kinked** tube at the bed rail. “Resolved.” With
 **morphine**, all four ports are green — the colours come from data, not fixed art.
 
+**Shift handoff, one pinch.** At every handover ICU nurses trace each line from bag to patient. Pinch the
+IV pole and Lumen walks the lines for you — each one lights from bag through pump to port with its drug,
+rate and port name, 2.5 s each — then goes quiet and logs *“Lines checked · 4 of 4 · 07:02”*.
+
+**Fail-safe by design.** A drug pair missing from the table is never green (“✕ Not in table — check
+chart”), and if no port on the patient is safe, Lumen draws no arrow to nowhere: it says
+*“No safe port — ask pharmacy”*.
+
 | | |
 |---|---|
 | ![Quiet idle](devpost/screenshots/01-quiet-idle.png) | ![Holding furosemide](devpost/screenshots/02-holding-furosemide.png) |
 | ![Green port, Push here](devpost/screenshots/04-green-port-push-here.png) | ![Alarm: edge arrow, amber line to the kink](devpost/screenshots/06-alarm-edge-arrow.png) |
 | ![Pump 2 alarm](devpost/screenshots/07-alarm-pump-and-kink.png) | ![Morphine: all green](devpost/screenshots/08-morphine-all-green.png) |
+| ![Shift-handoff line check](devpost/screenshots/10-handoff-line-check.png) | ![Trace the PIV line](devpost/screenshots/09-trace-piv-line.png) |
 
 ## Why glasses
 
@@ -154,7 +163,7 @@ All drug data in this repo is invented for a demo and has not been checked for c
 | Item | Status |
 |---|---|
 | Lens code, data, layout, sounds, tests, CI | ✅ in this repo |
-| DC1–DC8 on state machine + rendered web preview | ✅ green in CI |
+| DC1–DC8 (+ DC9 handoff, DC10 fail-safe) on state machine + rendered web preview | ✅ green in CI |
 | `devpost/design-brief.md` from **your own** `plan-lens` interview | ⏳ you — run `plan-lens` (spec §10 step 2) |
 | Lens Studio project files (`.esproj`, scene) + scene wiring | ⏳ you — [LENS_STUDIO_SETUP.md](LENS_STUDIO_SETUP.md) steps 1–2 (or via CLAD, step 6) |
 | DC1–DC8 in the Lens Studio preview | ⏳ you — setup step 5, paste the table into `devpost/leaf-results.md` |

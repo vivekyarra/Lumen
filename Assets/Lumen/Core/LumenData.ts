@@ -135,6 +135,8 @@ export const TIMING = {
   alarmBeepInterval: ALARM.beepIntervalSec,
   /** Visual flow-dot loop along a traced line. */
   flowDotLoop: 1.5,
+  /** Shift-handoff line check: seconds each line stays lit. */
+  handoffStep: 2.5,
 };
 
 export function lineForPort(port: PortId): Line {
