@@ -13,7 +13,7 @@ test("every component named in spec §9.2 exists", () => {
   }
 });
 
-test("Lens code holds no demo data (one data file rule)", () => {
+test("Lens code holds no sample data (one data file rule)", () => {
   const drugWords = /Midazolam|Dobutamine|Heparin|Furosemide|Morphine|mL\/h|mcg\/kg/;
   for (const f of files) assert.ok(!drugWords.test(src(f)), `${f} must read data from Core/LumenData`);
 });

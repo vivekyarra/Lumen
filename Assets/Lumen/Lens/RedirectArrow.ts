@@ -1,4 +1,4 @@
-/** RedirectArrow — cyan curved arrow from a focused red port to the nearest green port (LUMEN_SPEC.md §8.4). */
+/** RedirectArrow — cyan curved arrow from a focused red port to the nearest green port. */
 import * as L from "../Core/LumenLayout";
 import * as M from "../Core/MeshGen";
 import { PortId } from "../Core/LumenData";

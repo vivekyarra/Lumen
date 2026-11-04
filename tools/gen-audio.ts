@@ -1,6 +1,6 @@
 // Renders Lumen's sound cues to WAV files for Lens Studio: npm run gen:audio
 import { mkdirSync, writeFileSync } from "node:fs";
-import { CUE_IDS, encodeWav, renderCue } from "../Assets/Lumen/Core/SoundSynth";
+import { CUE_IDS, encodeWav, renderCue } from "../Assets/Lumen/Core/SoundGen";
 
 const dir = "Assets/Lumen/Audio";
 mkdirSync(dir, { recursive: true });

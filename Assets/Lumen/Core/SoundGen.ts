@@ -1,5 +1,5 @@
 /**
- * Lumen's sound cues (LUMEN_SPEC.md §8.7), synthesised from code so every engine plays the same sounds.
+ * Lumen's sound cues, generated from code so every engine plays the same sounds.
  * tools/gen-audio.ts renders them to WAV for Lens Studio; the web preview renders them to AudioBuffers.
  * All short and soft: peak amplitude ≤ 0.4.
  */

@@ -1,7 +1,7 @@
 /**
  * Tiny engine-agnostic 3D vector helpers.
  *
- * Coordinates in Lumen's core are "spec space" (LUMEN_SPEC.md §8.1), in centimetres,
+ * Coordinates in Lumen's core are "spec space", in centimetres,
  * measured from the user's start point on the floor:
  *   r = right (+ to the user's right), f = forward (+ away from the user), u = up (+ up from the floor).
  * Engine adapters (Lens Studio, web preview) convert to their own axes.

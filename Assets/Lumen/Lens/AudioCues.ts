@@ -1,8 +1,8 @@
-/** AudioCues — the spatial sounds from LUMEN_SPEC.md §8.7, each played from its object's position. */
+/** AudioCues — the spatial sounds from the design brief, each played from its object's position. */
 import * as L from "../Core/LumenLayout";
 import { LumenEvent } from "../Core/LumenState";
 import { V3 } from "../Core/Vec";
-import { CueId } from "../Core/SoundSynth";
+import { CueId } from "../Core/SoundGen";
 import { LensContext, local, placeAt } from "./LensContext";
 import { makeAudio } from "./LensAdapters";
 

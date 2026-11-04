@@ -4,7 +4,7 @@ import * as THREE from "three";
 import * as L from "../../Assets/Lumen/Core/LumenLayout";
 import { LumenEvent, LumenStateMachine, invariantViolations } from "../../Assets/Lumen/Core/LumenState";
 import { PortId, SyringeId } from "../../Assets/Lumen/Core/LumenData";
-import { CueId } from "../../Assets/Lumen/Core/SoundSynth";
+import { CueId } from "../../Assets/Lumen/Core/SoundGen";
 import { Driver, SCENARIOS, SceneProbe, runScenarios } from "../../Assets/Lumen/Core/Scenarios";
 import { SPECS_FOV, boxesOverlap, LabelBox } from "../../Assets/Lumen/Core/ViewMath";
 import { toThree } from "./coords";
@@ -38,7 +38,7 @@ scene.add(new THREE.HemisphereLight(0xffffff, 0x8090a0, 2.2));
 const sun = new THREE.DirectionalLight(0xffffff, 1.2);
 sun.position.set(-100, 300, 150);
 scene.add(sun);
-// "Real room" stand-in (not Lens content): floor grid.
+// "Real room" preview input (not Lens content): floor grid.
 const grid = new THREE.GridHelper(800, 40, 0x56606b, 0x3d454e);
 scene.add(grid);
 

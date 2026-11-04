@@ -1,4 +1,4 @@
-/** Lumen colours (LUMEN_SPEC.md §8.6). Additive display: bright on transparent, never dark. */
+/** Lumen colours. Additive display: bright on transparent, never dark. */
 export const HEX = {
   cyan: 0x3fe0ff,
   green: 0x3dff7a,

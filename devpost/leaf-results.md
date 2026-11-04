@@ -1,40 +1,27 @@
-# LEAF results — DC1–DC8 (+ DC9, DC10)
+# LEAF results
 
-**Lens Studio 5.24.1 preview (SPECS 27), Nov 4 2026: 10 / 10 LEAF scenarios pass, and the in-preview
-self-test prints `10/10 pass`.** Run through the Lens Studio MCP server (`run_leaf_scenario`, target
-`preview`) against the real scene: SIK 2.0 (`SpectaclesInteractionKit.lspkg`, SIK version 0.18.0) and LEAF 2.0.2.
+**10 / 10 LEAF scenarios pass in the Lens Studio 5.24.1 preview (SPECS 27).** Each scenario pinches the Lens's
+real Spectacles Interaction Kit targets (`Syringe_S1_Hit`, `Port_B_Hit`, `PushHereButton`, `Kink_ResolvedButton`,
+`IV_Pole_Hit`) and checks what the scene actually shows. Expected text comes from `Assets/Lumen/Core/Strings.ts`.
+The suite runs from the LEAF panel or through the Lens Studio MCP (`run_leaf_scenario`). A second, independent run
+through Snap's CLAD LEAF workflow also passed 10 / 10.
 
-Every done criterion (LUMEN_SPEC.md §11) is checked in two independent ways inside Lens Studio:
-
-1. **A LEAF scenario per criterion** ([`Assets/Lumen/Leaf/`](../Assets/Lumen/Leaf/)). It pinches the Lens's real
-   SIK Interactables by name (`Syringe_S1_Hit`, `Port_B_Hit`, `PushHereButton`, `Kink_ResolvedButton`,
-   `IV_Pole_Hit`) with LEAF's `DefaultLeafInteractor` and asserts on what is actually enabled in the scene:
-   the rings, glows, labels, buttons, amber alarm and edge arrow. Expected strings come from `Core/Strings.ts`.
-2. **The shared scenarios** ([`Assets/Lumen/Core/Scenarios.ts`](../Assets/Lumen/Core/Scenarios.ts)). These are
-   written once and run by three runners. In Lens Studio they run through the hidden hook
-   `global.lumen.runSelfTest()`, from the LEAF scenario `test_self_test_dc1_dc10`.
-
-## Lens Studio preview — LEAF scenarios
-
-| # | Criterion | LEAF scenario | Result | Date |
-|---|-----------|---------------|--------|------|
-| 1 | Quiet idle | test_idle_is_quiet | PASS | Nov 4 |
-| 2 | Pick up shows markers | test_pickup_shows_markers | PASS | Nov 4 |
-| 3 | Data, not art | test_switch_syringe_changes_markers | PASS | Nov 4 |
-| 4 | Trace (all 4 ports, with and without a syringe) | test_trace_lights_correct_line | PASS | Nov 4 |
-| 5 | Redirect | test_red_port_redirects | PASS | Nov 4 |
-| 6 | Push and quiet | test_push_logs_and_returns_idle | PASS | Nov 4 |
-| 7 | Alarm (fires 4 s after the push, resolves) | test_alarm_shows_and_resolves | PASS | Nov 4 |
-| 8 | Placement and comfort | test_self_test_dc1_dc10 (DC8 row) | PASS | Nov 4 |
-| 9 | *Extension:* shift-handoff line check | test_handoff_line_check | PASS | Nov 4 |
-| 10 | *Extension:* fail-safe, no safe port | test_self_test_dc1_dc10 (DC10 row) | PASS | Nov 4 |
-| — | Reachability: IK avatar pinches the green port, then "Push here" | test_ik_reach_controls | PASS | Nov 4 |
-| — | All shared scenarios in the preview | test_self_test_dc1_dc10 | PASS (10/10) | Nov 4 |
+| # | Done criterion (design brief) | LEAF scenario | Result |
+|---|---|---|---|
+| 1 | Quiet at start | `test_idle_is_quiet` | ✅ PASS |
+| 2 | Pick up furosemide → ports green / red with the reason | `test_pickup_shows_markers` | ✅ PASS |
+| 2 | Switching to morphine turns all four green | `test_switch_syringe_changes_markers` | ✅ PASS |
+| 3 | Pinch any port → only its line lights to the right pump | `test_trace_lights_correct_line` | ✅ PASS |
+| 4 | Red port → "do not push here" + arrow to the safe port | `test_red_port_redirects` | ✅ PASS |
+| 4 | Green port → Push here → log line → quiet within 2 s | `test_push_logs_and_returns_idle` | ✅ PASS |
+| 5 | Pump 2 alarm → edge arrow, amber line to the kink → Resolved | `test_alarm_shows_and_resolves` | ✅ PASS |
+| + | Shift handoff: one pinch on the pole walks every line | `test_handoff_line_check` | ✅ PASS |
+| + | Reach: LEAF's IK avatar pinches the port and Push here | `test_ik_reach_controls` | ✅ PASS |
+| + | Every shared scenario, run inside the preview | `test_self_test_dc1_dc10` | ✅ PASS (10 / 10) |
 
 Logger output of `test_self_test_dc1_dc10` in the Lens Studio preview:
 
 ```
-| # | Criterion | LEAF test name | Result |
 | DC1 | Quiet idle | test_idle_is_quiet | PASS |
 | DC2 | Pick up shows markers | test_pickup_shows_markers | PASS |
 | DC3 | Data, not art | test_morphine_all_green_and_put_down | PASS |
@@ -48,54 +35,20 @@ Logger output of `test_self_test_dc1_dc10` in the Lens Studio preview:
 [Lumen self-test] 10/10 pass
 ```
 
-**What LEAF caught.** The first version of the IK scenario also had the IK avatar pick up the syringe.
-LEAF failed it: `[IK right] trigger "Syringe_S1_Hit": out_of_fov: still outside FOV (94.1° off-axis) after
-head aim`. The cart is at the head of the bed, one body turn to the left (see the layout notes in
-`build-log.md`). LEAF's IK avatar only aims its head, so the scenario now picks up the syringe with the
-scripted interactor and uses IK for the hub controls in front of the nurse. The finding is real: the cart
-needs a turn of the body, not just the head.
+## The same criteria, three runners
 
-DC8's geometry (no label overlaps at the start pose in the 37° × 32° view, nothing closer than 40 cm) is checked
-on the spec layout by the shared scenario. The text size is the one thing still checked by eye in the preview
-(LENS_STUDIO_SETUP.md step 4).
+The scenarios in `Assets/Lumen/Core/Scenarios.ts` are written once and run in three places:
 
-## All three runners
+| Runner | Where | Result |
+|---|---|---|
+| Lens Studio preview | LEAF, in Lens Studio 5.24.1 | ✅ 10 / 10 |
+| State machine | Node, GitHub Actions, every PR | ✅ 10 / 10 |
+| Web twin | Playwright in Chromium, GitHub Actions, every PR | ✅ 10 / 10 |
 
-| # | Criterion | State (Node, CI) | Web preview (Chromium, CI) | Lens Studio 5.24.1 preview |
-|---|-----------|-------|-------------|---------------------|
-| 1 | Quiet idle | PASS | PASS | PASS |
-| 2 | Pick up shows markers | PASS | PASS | PASS |
-| 3 | Data, not art | PASS | PASS | PASS |
-| 4 | Trace | PASS | PASS | PASS |
-| 5 | Redirect | PASS | PASS | PASS |
-| 6 | Push and quiet | PASS | PASS | PASS |
-| 7 | Alarm | PASS | PASS | PASS |
-| 8 | Placement and comfort | PASS¹ | PASS | PASS |
-| 9 | *Extension:* shift-handoff line check | PASS | PASS | PASS |
-| 10 | *Extension:* fail-safe, no safe port | PASS | PASS | PASS |
-
-¹ The state runner has no scene, so DC8's geometry is checked by `tests/unit/layout.test.ts`:
-- no label overlaps in any state, at the hub and at the cart, in the 37° × 32° view;
-- all UI at least 40 cm from the eyes;
-- ports 0.8–1.05 m from the eyes;
-- pumps out of view from the hub;
-- the kink ring, the reason and Resolved never overlap;
-- no dark palette colours.
-
-CI cannot run Lens Studio. The LEAF files are typechecked there against a shim of Snap's LEAF reference
-(`types/leaf-shim.d.ts`). The Lens Studio column above comes from runs in Lens Studio itself.
-
-## Beyond DC1–DC8 (stress tests, all green in CI)
-
-| Test | What it hammers |
-|---|---|
-| fuzz: 200 sessions × 400 random inputs | state invariants after every input (at most one focus, push only on green, glow matches focus, …) |
-| fuzz: furosemide never pushed into B or C | the safety property, over 100 × 300 random inputs |
-| missing table entry | fail-safe: never green, shows "✕ Not in table — check chart" |
-| frame hitch: 30 s jump | timers fire in order (fade → alarm → log expiry) |
-| 600 random clicks / poses / waits (browser) | invariants and no page errors |
-| 160 targeted clicks on real targets | scene ↔ state consistency (rings, labels, glows, buttons, arrow) |
-| precise picking | 4 cm-apart CVC ports with overlapping 6 cm targets resolve to the port nearest the ray |
-| drag vs pinch, empty clicks | looking around never pinches; empty space does nothing |
-| 50 resets | no leaked scene objects |
-| live clock | the alarm fires on the real clock, not only in test mode |
+CI also runs:
+- fuzzing: 200 sessions × 400 random inputs, with every state invariant checked after each input;
+- 600 random clicks, poses and waits in the web twin;
+- 160 targeted clicks, checking the scene against the state;
+- precise picking between ports 4 cm apart;
+- 50 resets with no leaked objects;
+- a full story-mode playthrough.

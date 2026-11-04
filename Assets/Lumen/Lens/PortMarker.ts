@@ -1,6 +1,6 @@
 /**
  * PortMarker — one per port: faint idle dot, green ✓ / red ✕ ring, focus scale, confirm pulse,
- * the port's label slot, and the forgiving 6 cm pinch target (LUMEN_SPEC.md §8.4, §8.6).
+ * the port's label slot, and the forgiving 6 cm pinch target.
  */
 import * as L from "../Core/LumenLayout";
 import * as M from "../Core/MeshGen";

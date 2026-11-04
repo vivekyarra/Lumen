@@ -1,5 +1,5 @@
 /**
- * Done-criteria scenarios DC1–DC8 (LUMEN_SPEC.md §11), written once and run by three runners:
+ * Done-criteria scenarios DC1–DC8, written once and run by three runners:
  *   - Node unit tests against the pure state machine (tests/unit),
  *   - Playwright against the web preview twin (tests/e2e),
  *   - LumenSelfTest inside the Lens Studio preview (Assets/Lumen/Lens/LumenSelfTest.ts).

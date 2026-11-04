@@ -184,7 +184,7 @@ export interface TextOptions {
   onTop: boolean;
 }
 
-/** World-space text whose origin is the bottom edge of the block (LUMEN_SPEC.md §8.6 sizes). */
+/** World-space text whose origin is the bottom edge of the block. */
 export function makeText(obj: SceneObject, o: TextOptions): Text {
   const t = obj.createComponent("Component.Text") as Text;
   const pointSize = 48;

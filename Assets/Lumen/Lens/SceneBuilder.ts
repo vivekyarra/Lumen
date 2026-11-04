@@ -1,6 +1,6 @@
 /**
  * SceneBuilder — the virtual ICU bedside (bed, mannequin, IV pole, bags, pumps, cart, syringes, catheters)
- * from procedural meshes (LUMEN_SPEC.md §7.1, §8.2). Abstract mannequin, no face.
+ * from procedural meshes. Abstract mannequin, no face.
  */
 import * as L from "../Core/LumenLayout";
 import * as M from "../Core/MeshGen";

@@ -1,5 +1,5 @@
 /**
- * AlarmController — the pump-alarm layer (LUMEN_SPEC.md §8.4 ALARM): amber Pump 2 shell + "Downstream
+ * AlarmController — the pump-alarm layer: amber Pump 2 shell + "Downstream
  * occlusion", pulsing 6 cm ring at the kink with "Check here: kinked line", the "Resolved" button and the
  * out-of-view edge arrow. The amber line glow lives in LineTracer. Timing and the debug trigger live in
  * LumenState (alarm 4 s after the first push; hidden test hook).
