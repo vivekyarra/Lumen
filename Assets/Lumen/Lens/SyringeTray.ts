@@ -34,7 +34,9 @@ export class SyringeTray {
     }
     const chipObj = placeAt(ctx, "Cart_HoldingChip", L.CART_TEXT.chip.anchor, true);
     this.chip = makeText(chipObj, opts("center", HEX.white));
-    makePinchTarget(chipObj, { box: new vec3(28, 5, 2) }, onChip);
+    // The pinch target is a sibling, not the (scaled) text object, so text calibration never resizes it.
+    const chipHit = placeAt(ctx, "Cart_HoldingChip_Hit", { r: L.CART_TEXT.chip.anchor.r, f: L.CART_TEXT.chip.anchor.f, u: L.CART_TEXT.chip.anchor.u + 1.5 }, true);
+    makePinchTarget(chipHit, { box: new vec3(28, 5, 2) }, onChip);
     this.log = makeText(placeAt(ctx, "Cart_LogLine", L.CART_TEXT.log.anchor, true), opts("center", HEX.green));
     this.hint = makeText(placeAt(ctx, "Cart_Hint", L.CART_TEXT.hint.anchor, true), opts("center", HEX.white));
     this.demo = makeText(placeAt(ctx, "Cart_DemoDataLabel", L.CART_TEXT.demoLabel.anchor, true), opts("center", HEX.amber));
