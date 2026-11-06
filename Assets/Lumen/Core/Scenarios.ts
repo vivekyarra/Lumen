@@ -10,6 +10,10 @@
 import { COMPATIBILITY, LINE_IDS, LineId, PORT_IDS, PortId, SyringeId, LINES, TIMING } from "./LumenData";
 import { LumenView } from "./LumenState";
 import * as S from "./Strings";
+import * as L from "./LumenLayout";
+import { ATTENTION, applyAttention, attend, NO_ATTENTION } from "./Attention";
+import { V3, distance } from "./Vec";
+import { lookAt } from "./ViewMath";
 
 /** Keys of scene objects a probe can report on. */
 export type ProbeKey =
@@ -34,6 +38,8 @@ export interface SceneProbe {
   /** Aim the camera at the CVC hub from the start position. */
   lookAtHub(): Promise<void> | void;
   lookAtCart(): Promise<void> | void;
+  /** Put the head at `eye` (spec cm) looking at `target`. Detail on the ports follows this pose. */
+  lookFrom(eye: V3, target: V3): Promise<void> | void;
   /** Ids of overlapping visible label pairs in screen space at the current pose. */
   overlappingLabels(): string[];
   /** Smallest distance from the camera to any visible UI element (cm). */
@@ -147,10 +153,13 @@ export const SCENARIOS: Scenario[] = [
       await d.wait(TIMING.markerFadeIn + 0.05);
       eq(d.view().ports.B.opacity, 1, "markers fully in after 0.3 s");
       if (d.probe) {
+        // Leaning in over the hub: every red port says why.
+        await d.probe.lookFrom(L.LEAN_IN_EYE, L.HUB_TARGET);
         for (let i = 0; i < PORT_IDS.length; i++) ok(d.probe.visible("port.ring", PORT_IDS[i]), "ring on " + PORT_IDS[i]);
         eq(d.probe.text("chip"), "Holding: Furosemide 40 mg", "rendered chip");
         eq(d.probe.text("port.B"), "✕ Midazolam", "rendered B reason");
         eq(d.probe.text("port.C"), "✕ Dobutamine", "rendered C reason");
+        await d.probe.lookAtHub();
       }
     },
   },
@@ -238,12 +247,12 @@ export const SCENARIOS: Scenario[] = [
       eq(v.pushButtonPort, null, "no Push on red");
       ok(v.redirect !== null, "redirect shown");
       eq(v.redirect ? v.redirect.to : null, "A", "arrow target");
-      eq(v.redirect ? v.redirect.label : null, "Use: Distal (Heparin) — compatible", "arrow label");
+      eq(v.redirect ? v.redirect.label : null, "Use Distal ✓", "arrow label");
       eq(v.glowLine, 1, "B's line (Midazolam) glows");
       if (d.probe) {
         ok(!d.probe.visible("button.push"), "Push hidden");
         ok(d.probe.visible("redirect.arrow"), "arrow visible");
-        eq(d.probe.text("redirect"), "Use: Distal (Heparin) — compatible", "rendered redirect label");
+        eq(d.probe.text("redirect"), "Use Distal ✓", "rendered redirect label");
         eq(d.probe.text("port.B"), "✕ Midazolam — do not push here", "rendered B reason");
       }
       await d.pinchPort("C");
@@ -438,6 +447,57 @@ SCENARIOS.push(
         row.nacl = saved.nacl;
         await d.reset();
       }
+    },
+  },
+  {
+    id: "DC11",
+    title: "Detail follows attention",
+    leafName: "test_detail_follows_attention",
+    run: async function (d) {
+      await freshQuiet(d);
+      await d.pinchSyringe("S1");
+      await d.wait(TIMING.markerFadeIn + 0.05);
+      const v = d.view();
+      // The pure rule, checked by every runner (no scene needed).
+      const far = attend(lookAt(L.START_EYE, L.CART_TARGET), L.PORT_POS, NO_ATTENTION);
+      eq(far.near || far.gazed !== null, false, "looking at the cart: no port has her attention");
+      eq(applyAttention(v, far).ports.B.label, null, "glance: B shows only its cross");
+      eq(applyAttention(v, far).ports.B.marker, "incompatible", "glance: B is still red");
+      const atC = attend(lookAt(L.START_EYE, L.PORT_POS.C), L.PORT_POS, NO_ATTENTION);
+      eq(atC.gazed, "C", "looking at C");
+      eq(applyAttention(v, atC).ports.C.label, "✕ Dobutamine", "look: C says why");
+      eq(applyAttention(v, atC).ports.B.label, null, "look: B stays quiet");
+      const close = attend(lookAt(L.LEAN_IN_EYE, L.HUB_TARGET), L.PORT_POS, NO_ATTENTION);
+      ok(close.near, "leaning in is near (" + distance(L.LEAN_IN_EYE, L.PORT_POS.B).toFixed(0) + " cm)");
+      const stepBack = attend(lookAt(L.START_EYE, L.CART_TARGET), L.PORT_POS, close);
+      ok(!stepBack.near && stepBack.nearestCm > ATTENTION.nearExitCm, "stepping back goes quiet again");
+      const across = { r: L.PORT_POS.B.r, f: L.PORT_POS.B.f - 170, u: L.EYE_HEIGHT };
+      eq(attend(lookAt(across, L.PORT_POS.B), L.PORT_POS, NO_ATTENTION).gazed, null, "far: too far to read B");
+      const pr = d.probe;
+      if (pr) {
+        await pr.lookFrom(across, L.PORT_POS.B);
+        eq(pr.text("port.B"), null, "far: no words on B even when looking at it");
+        ok(pr.visible("port.ring", "B"), "far: B still shows its ✕");
+        await pr.lookFrom(L.START_EYE, L.CART_TARGET);
+        for (let i = 0; i < PORT_IDS.length; i++) ok(pr.visible("port.ring", PORT_IDS[i]), "glance: ring on " + PORT_IDS[i]);
+        eq(pr.text("port.B"), null, "glance: no words on B");
+        eq(pr.text("port.C"), null, "glance: no words on C");
+        await pr.lookFrom(L.START_EYE, L.PORT_POS.B);
+        eq(pr.text("port.B"), "✕ Midazolam", "look at B: B says why");
+        eq(pr.text("port.C"), null, "look at B: C stays quiet");
+        await pr.lookFrom(L.START_EYE, L.PORT_POS.C);
+        eq(pr.text("port.C"), "✕ Dobutamine", "look at C: C says why");
+        eq(pr.text("port.B"), null, "look at C: B goes quiet");
+        await pr.lookFrom(L.LEAN_IN_EYE, L.HUB_TARGET);
+        eq(pr.text("port.B"), "✕ Midazolam", "lean in: B says why");
+        eq(pr.text("port.C"), "✕ Dobutamine", "lean in: C says why");
+        await pr.lookFrom(L.START_EYE, L.CART_TARGET);
+        await d.pinchPort("B");
+        eq(pr.text("port.B"), "✕ Midazolam — do not push here", "pinch: the full answer, wherever she looks");
+        eq(pr.text("redirect"), S.useText("A"), "pinch: the way to the safe port");
+        await pr.lookAtHub();
+      }
+      await d.reset();
     },
   },
 );

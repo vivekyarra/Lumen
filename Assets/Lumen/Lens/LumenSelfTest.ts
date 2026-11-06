@@ -63,8 +63,9 @@ function makeProbe(lens: LumenLens): SceneProbe {
       if (key === "redirect") return v.redirect && lens.redirect.visible() ? lens.ports[v.redirect.to].rawLabel : null;
       return null;
     },
-    lookAtHub(): void { pose = lookAt(L.START_EYE, L.HUB_TARGET); },
-    lookAtCart(): void { pose = lookAt(L.START_EYE, L.CART_TARGET); },
+    lookAtHub(): void { pose = lookAt(L.START_EYE, L.HUB_TARGET); lens.attention.overridePose = pose; lens.renderNow(); },
+    lookAtCart(): void { pose = lookAt(L.START_EYE, L.CART_TARGET); lens.attention.overridePose = pose; lens.renderNow(); },
+    lookFrom(eye, target): void { pose = lookAt(eye, target); lens.attention.overridePose = pose; lens.renderNow(); },
     overlappingLabels(): string[] {
       lens.renderNow();
       const boxes: (LabelBox | null)[] = [];
@@ -111,7 +112,7 @@ function makeDriver(lens: LumenLens): Driver {
     lens.renderNow();
   };
   return {
-    reset: function () { lens.lensTime += 100; lens.resetSession(); },
+    reset: function () { lens.lensTime += 100; lens.resetSession(); lens.attention.overridePose = lookAt(L.START_EYE, L.HUB_TARGET); },
     pinchSyringe: function (id) { lens.sm.pinchSyringe(id); lens.renderNow(); },
     pinchPort: function (id) { lens.sm.pinchPort(id); lens.renderNow(); },
     pinchPush: function () { lens.sm.pinchPush(); lens.renderNow(); },
@@ -125,11 +126,12 @@ function makeDriver(lens: LumenLens): Driver {
   };
 }
 
-/** Runs DC1–DC8 on a virtual clock (fast, deterministic), restores live mode, and logs the table. */
+/** Runs DC1–DC11 on a virtual clock (fast, deterministic), restores live mode, and logs the table. */
 export function runLensSelfTest(lens: LumenLens): Promise<ScenarioResult[]> {
   lens.manualClock = true;
   return runScenarios(makeDriver(lens)).then(function (results) {
     lens.manualClock = false;
+    lens.attention.overridePose = null;
     lens.lensTime = getTime();
     lens.resetSession();
     print("| # | Criterion | LEAF test name | Result |");

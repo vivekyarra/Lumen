@@ -242,5 +242,7 @@ export const HUB_TARGET: V3 = v3(-27, 56, 88);
 export const CART_TARGET: V3 = v3(-46, 2, 107);
 /** Start-of-demo look target: the hub, with the chip area at the left edge. */
 export const WORK_TARGET: V3 = HUB_TARGET;
+/** Where the eyes are when she leans in over the central line (~74 cm from port B). */
+export const LEAN_IN_EYE: V3 = v3(-16, 24, 148);
 
 export const MIN_UI_DISTANCE_CM = 40;

@@ -13,6 +13,7 @@ import { V3, add, normalize, sub, v3 } from "../../Assets/Lumen/Core/Vec";
 import { billboardGeometry, fromThree, toThree, worldGeometry } from "./coords";
 import { COLORS, CSS } from "./palette";
 import { Label, makeLabel } from "./labels";
+import { AttentionTracker } from "../../Assets/Lumen/Core/Attention";
 
 type Hit =
   | { kind: "syringe"; id: SyringeId }
@@ -103,6 +104,10 @@ export class LumenWorld {
   private pulseStart = -1;
   /** All on-screen Lens labels/buttons (for overlap and distance checks). */
   readonly uiLabels: { id: string; label: Label }[] = [];
+  /** Detail on the ports follows where the camera looks and how close it is (recomputed every frame). */
+  readonly attention = new AttentionTracker();
+  /** The view as drawn on the last frame (after attention). */
+  drawn: LumenView | null = null;
 
   constructor(camera: THREE.Camera) {
     this.root.add(this.scenery, this.overlay);
@@ -349,7 +354,10 @@ export class LumenWorld {
 
   // ---------------- per-frame rendering of the view model ----------------
 
-  render(view: LumenView, t: number, camera: THREE.PerspectiveCamera): void {
+  render(state: LumenView, t: number, camera: THREE.PerspectiveCamera): void {
+    // What is true comes from the state machine; how much of it to say comes from the head pose.
+    const view = this.attention.update(state, this.cameraPose(camera), L.PORT_POS, t);
+    this.drawn = view;
     // Ports
     for (const p of PORT_IDS) {
       const pv = view.ports[p];
@@ -368,6 +376,7 @@ export class LumenWorld {
       vis.ring.scale.setScalar(s);
       const color = pv.labelRole === "incompatible" ? CSS.red : pv.labelRole === "compatible" ? CSS.green : pv.labelRole === "redirect" ? CSS.cyan : CSS.white;
       vis.label.setText(pv.label, color);
+      vis.label.object.scale.setScalar(this.attention.labelScale(p, t));
       if (pv.pulse) {
         if (this.pulseStart < 0) this.pulseStart = t;
         const k = Math.min(1, (t - this.pulseStart) / TIMING.confirmToIdle);

@@ -25,6 +25,7 @@ import { AudioCues } from "./AudioCues";
 import { HEX } from "./Palette";
 import * as S from "../Core/Strings";
 import { runLensSelfTest } from "./LumenSelfTest";
+import { AttentionTracker } from "../Core/Attention";
 
 @component
 export class LumenLens extends BaseScriptComponent {
@@ -74,6 +75,8 @@ export class LumenLens extends BaseScriptComponent {
   redirect!: RedirectArrow;
   alarm!: AlarmController;
   audio!: AudioCues;
+  /** Detail on the ports follows where she looks and how close she is (recomputed every frame). */
+  attention = new AttentionTracker();
   /** When true, the self-test drives time instead of the frame clock. */
   manualClock = false;
   lensTime = 0;
@@ -147,6 +150,7 @@ export class LumenLens extends BaseScriptComponent {
     this.sm = new LumenStateMachine(L.PORT_POS, undefined, this.lensTime);
     const self = this;
     this.sm.onEvent(function (e) { self.audio.onEvent(e, self.lensTime); });
+    this.attention.reset();
     this.renderNow();
   }
 
@@ -189,14 +193,19 @@ export class LumenLens extends BaseScriptComponent {
   }
 
   renderNow(): void {
-    const view = this.sm.view();
     const t = this.lensTime;
-    for (let i = 0; i < PORT_IDS.length; i++) this.ports[PORT_IDS[i]].render(view.ports[PORT_IDS[i]], t);
+    const pose = this.cameraPose();
+    // What is true comes from the state machine; how much of it to say comes from her head pose.
+    const view = this.attention.update(this.sm.view(), pose, L.PORT_POS, t);
+    for (let i = 0; i < PORT_IDS.length; i++) {
+      const p = PORT_IDS[i];
+      this.ports[p].render(view.ports[p], t, this.attention.labelScale(p, t));
+    }
     for (let i = 0; i < LINE_IDS.length; i++) this.lines[LINE_IDS[i]].render(view, t);
     this.tray.render(view);
     this.push.show(view.pushButtonPort ? L.PUSH_BUTTON_POS[view.pushButtonPort] : null);
     this.redirect.render(view);
-    this.alarm.render(view, t, this.cameraPose());
+    this.alarm.render(view, t, pose);
     const eye = this.camera.getTransform().getWorldPosition();
     const b = this.ctx.billboards;
     for (let i = 0; i < b.length; i++) {

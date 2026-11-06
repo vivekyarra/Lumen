@@ -22,7 +22,7 @@ export interface Drug {
 export interface Port {
   id: PortId;
   catheter: CatheterId;
-  /** Lumen name used in "Use: <shortName> (<drug>)" — e.g. "Distal". */
+  /** Lumen name used in "Use <shortName> ✓" — e.g. "Distal". */
   shortName: string;
   /** Name used in the push log line — e.g. "CVC Distal". */
   logName: string;

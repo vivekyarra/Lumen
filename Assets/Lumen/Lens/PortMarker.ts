@@ -25,6 +25,8 @@ export class PortMarker {
   private readonly check: SceneObject;
   private readonly cross: SceneObject;
   private pulseStart = -1;
+  /** Text calibration scale set by makeText; the pop-in multiplies it. */
+  private labelBase: vec3;
 
   constructor(ctx: LensContext, port: PortId, onPinch: (port: PortId, hitWorld: vec3 | null) => void) {
     this.port = port;
@@ -52,6 +54,7 @@ export class PortMarker {
     const labelObj = placeAt(ctx, "Port_" + port + "_Label", slot.anchor, true);
     this.label = makeText(labelObj, { capCm: L.TEXT_CAP.small, align: slot.align, color: rgba(HEX.white, 1), cmPerPoint: ctx.cmPerPoint, font: ctx.font, onTop: true });
     setText(this.label, null);
+    this.labelBase = labelObj.getTransform().getLocalScale();
 
     this.hit = placeAt(ctx, "Port_" + port + "_Hit", pos, false);
     const self = this;
@@ -61,7 +64,7 @@ export class PortMarker {
   /** Unwrapped text currently shown in the label slot (null when hidden). */
   rawLabel: string | null = null;
 
-  render(pv: PortView, t: number): void {
+  render(pv: PortView, t: number, labelScale?: number): void {
     this.rawLabel = pv.label;
     const labelText = pv.label === null ? null : wrapLabel(pv.label, L.LABEL_WRAP_CHARS).join("\n");
     const showRing = pv.marker !== "idle" && pv.opacity > 0.001;
@@ -77,6 +80,9 @@ export class PortMarker {
     this.ring.getTransform().setLocalScale(new vec3(s, s, s));
     const color = pv.labelRole === "incompatible" ? HEX.red : pv.labelRole === "compatible" ? HEX.green : pv.labelRole === "redirect" ? HEX.cyan : HEX.white;
     setText(this.label, labelText, rgba(color, 1));
+    // Words pop in when she looks at the port, then settle.
+    const ls = labelScale === undefined ? 1 : labelScale;
+    this.label.getSceneObject().getTransform().setLocalScale(this.labelBase.uniformScale(ls));
     if (pv.pulse) {
       if (this.pulseStart < 0) this.pulseStart = t;
       const k = Math.min(1, (t - this.pulseStart) / TIMING.confirmToIdle);

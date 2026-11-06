@@ -56,7 +56,10 @@ test("targeted clicks on real targets in random order keep the scene consistent 
       if (pr.visible("button.resolved") !== (v.alarm !== null)) issues.push("resolved visibility");
       if (pr.visible("redirect.arrow") !== (v.redirect !== null)) issues.push("arrow visibility");
       for (const p of ["A", "B", "C", "D"]) {
-        if (pr.text("port." + p) !== v.ports[p].label) issues.push("label " + p);
+        const drawn = l.drawnView().ports[p].label;
+        if (pr.text("port." + p) !== drawn) issues.push("label " + p);
+        // Attention may only hold words back, never change them.
+        if (drawn !== null && drawn !== v.ports[p].label) issues.push("attention changed label " + p);
         const ring = v.ports[p].marker !== "idle" && v.ports[p].opacity > 0.001;
         if (pr.visible("port.ring", p) !== ring) issues.push("ring " + p);
       }

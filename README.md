@@ -5,7 +5,7 @@
 **Lumen is an AR Lens for Snap SPECS that shows ICU nurses which IV port is safe for the drug in their hand, and lights any line from port to pump.**
 
 ![Lens Studio](https://img.shields.io/badge/Lens%20Studio-5.24.1-FFFC00?logo=snapchat&logoColor=black)
-![LEAF](https://img.shields.io/badge/LEAF-10%2F10%20pass-3DFF7A)
+![LEAF](https://img.shields.io/badge/LEAF-11%2F11%20pass-3DFF7A)
 ![Built with](https://img.shields.io/badge/built%20with-Claude%20Code%20%2B%20Snap%20CLAD-D97757)
 ![CI](https://github.com/vivekyarra/Lumen/actions/workflows/ci.yml/badge.svg)
 
@@ -42,11 +42,15 @@ and new-graduate nurses who meet a patient's lines for the first time.
 | | |
 |---|---|
 | ![Holding furosemide](devpost/screenshots/ls-02-holding-furosemide.png) | **1 · Pick up the syringe.** Lumen reads the drug in her hand: *Holding: Furosemide 40 mg*. |
-| ![Red port, redirect](devpost/screenshots/ls-03-red-port-redirect.png) | **2 · Every port answers.** Green ✓ is safe. Red ✕ says why, right on the port: *✕ Midazolam: do not push here*, with an arrow to the safe port. |
+| ![Red port, redirect](devpost/screenshots/ls-03-red-port-redirect.png) | **2 · Every port answers.** Green ✓ is safe. Red ✕ says why, right on the port: *✕ Midazolam: do not push here*, with an arrow to the safe port: *Use Distal ✓*. |
 | ![Trace to the pump](devpost/screenshots/ls-04-trace-to-pump.png) | **3 · Pinch a port, see its line.** That one tube lights through the tangle, all the way to its pump: *Midazolam · 3 mL/h · Pump 1*. |
 | ![Push here](devpost/screenshots/ls-05-push-here.png) | **4 · Push here.** On the safe port, one pinch confirms. Lumen logs *Furosemide 40 mg → CVC Distal* and goes quiet. |
 | ![Pump alarm](devpost/screenshots/ls-07-pump-alarm.png) | **5 · An alarm she can't see.** Pump 2 alarms behind her. A chime and an edge arrow turn her head, and the line glows amber to the exact kink. |
 | ![Kink, Resolved](devpost/screenshots/ls-08-kink-resolved.png) | **6 · Resolved.** One pinch clears it. At shift change, one pinch on the IV pole walks every line, bag to pump to port. |
+
+**Detail follows her eyes:** the words on the ports are recomputed every frame from where she stands and looks.
+From across the room she sees only ✓ and ✕. At the bed, the port she looks at says why, for example *Midazolam*, and
+its neighbours 4 cm away stay quiet. Lean in and every red port says why. Pinch, and she gets the full answer.
 
 **Quiet by design:** at rest, Lumen shows only faint dots on the ports. It speaks up when a syringe is in her hand
 or a pump needs her, and then gets out of the way. **Safe by default:** a drug pair Lumen doesn't know is never shown
@@ -67,7 +71,7 @@ flowchart LR
   D["LumenData<br/>drugs · lines · compatibility"] --> S["LumenState<br/>state machine"]
   S -->|view| LS["Lens Studio Lens<br/>LumenLens + SIK"]
   S -->|view| W["Web twin<br/>Three.js"]
-  S --> T["Scenarios<br/>DC1–DC10"]
+  S --> T["Scenarios<br/>DC1–DC11"]
   T --> LEAF["LEAF<br/>Lens Studio preview"]
   T --> CI["CI<br/>Node + Playwright"]
 ```
@@ -77,7 +81,7 @@ flowchart LR
 - **One Lens Studio component** (`LumenLens`) builds the whole bedside at runtime: procedural meshes,
   Spectacles Interaction Kit pinch targets and spatial audio.
 - **The same done criteria run three ways:** LEAF in the Lens Studio preview, the state machine in Node, and the
-  rendered web twin in Chromium. All three pass 10 / 10.
+  rendered web twin in Chromium. All three pass 11 / 11.
 
 ## Built with Claude Code + Snap CLAD
 
@@ -88,7 +92,7 @@ flowchart LR
    - installed LEAF;
    - wired the scene, materials, lights and sounds;
    - compiled and ran the tests.
-3. **Tested with LEAF:** 10 / 10 scenarios pass in the Lens Studio preview, by pinching the Lens's real interactables
+3. **Tested with LEAF:** 11 / 11 scenarios pass in the Lens Studio preview, by pinching the Lens's real interactables
    ([results](devpost/leaf-results.md)).
 
 Lens Studio 5.24.1 · SPECS 27 · Spectacles Interaction Kit 2.0 · LEAF 2.0.2 · TypeScript · Three.js · Playwright · GitHub Actions

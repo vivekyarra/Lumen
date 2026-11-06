@@ -9,6 +9,7 @@ import { DC5_RedirectFromRedPort } from "./DC5_RedirectFromRedPort";
 import { DC6_PushAndQuiet } from "./DC6_PushAndQuiet";
 import { DC7_PumpAlarm } from "./DC7_PumpAlarm";
 import { DC9_HandoffLineCheck } from "./DC9_HandoffLineCheck";
+import { DC11_DetailFollowsAttention } from "./DC11_DetailFollowsAttention";
 import { IK_ReachTheControls } from "./IK_ReachTheControls";
 import { SelfTest_AllCriteria } from "./SelfTest_AllCriteria";
 import { Demo_Story } from "./Demo_Story";
@@ -25,8 +26,9 @@ export class LeafIndex extends BaseScriptComponent {
     { id: "test_push_logs_and_returns_idle", typename: DC6_PushAndQuiet.getTypeName() },
     { id: "test_alarm_shows_and_resolves", typename: DC7_PumpAlarm.getTypeName() },
     { id: "test_handoff_line_check", typename: DC9_HandoffLineCheck.getTypeName() },
+    { id: "test_detail_follows_attention", typename: DC11_DetailFollowsAttention.getTypeName() },
     { id: "test_ik_reach_controls", typename: IK_ReachTheControls.getTypeName() },
-    { id: "test_self_test_dc1_dc10", typename: SelfTest_AllCriteria.getTypeName() },
+    { id: "test_self_test_dc1_dc11", typename: SelfTest_AllCriteria.getTypeName() },
     // Not a test: the demo-video walkthrough (tools/record-lens-studio.mjs).
     { id: "demo_story", typename: Demo_Story.getTypeName() },
   ];
