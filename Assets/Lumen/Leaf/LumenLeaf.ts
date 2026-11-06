@@ -9,6 +9,8 @@ import { DefaultLeafInteractor } from "Leaf.lspkg/Interactors/interactor/Default
 import { findInteractableByName } from "Leaf.lspkg/Interactors/InteractableUtils";
 import { sleep } from "Leaf.lspkg/Utils/common/Utils";
 import { PortId, PORT_IDS, LINE_IDS } from "../Core/LumenData";
+import { V3 } from "../Core/Vec";
+import { lookAt } from "../Core/ViewMath";
 
 /** Names of the Lens's pinch targets (created at runtime by Assets/Lumen/Lens). */
 export const HIT = {
@@ -40,6 +42,7 @@ export function lumen(): any {
 /** LumenLens builds 0.3 s after start (DelayedCallbackEvent); wait for it, then start a clean session. */
 export async function freshSession(): Promise<void> {
   for (let i = 0; i < 50 && !(global as any).lumen; i++) await sleep(100);
+  lumen().lens.attention.overridePose = null;
   lumen().lens.resetSession();
   await sleep(300);
 }
@@ -64,4 +67,13 @@ export function glowingLines(): number[] {
   const out: number[] = [];
   for (let i = 0; i < LINE_IDS.length; i++) if (shown(lines[LINE_IDS[i]].glow)) out.push(LINE_IDS[i]);
   return out;
+}
+
+/**
+ * Point the Lens's attention at a head pose (eye → target, spec cm) and let it render a few frames.
+ * Only the detail-on-ports tracker reads this pose; everything else keeps following the preview camera.
+ */
+export async function lookFrom(eye: V3, target: V3): Promise<void> {
+  lumen().lens.attention.overridePose = lookAt(eye, target);
+  await sleep(150);
 }

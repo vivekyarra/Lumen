@@ -46,7 +46,13 @@ Second beat (kept on purpose, because it's the only part that shows the edge arr
 - Port dots: always, faint (1 cm, 30% opacity).
 - Green / red markers: show when a syringe is picked up, hide when it's put down or after a confirmed push.
 - Line glow: shows when its port is pinched, hides after 8 s without a syringe, or on the next pinch.
-- Redirect arrow: shows when a red port is pinched, pointing to the nearest green port.
+- Words on the red ports follow her head, recomputed every frame (progressive disclosure):
+  - From across the room: only the ✓ / ✕ rings. No words.
+  - At a working distance: the port nearest the centre of her view adds its reason, for example "Midazolam". Its neighbours 4 cm away stay quiet.
+  - Leaning in, closer than 80 cm: every red port says why.
+  - Pinch: the full answer, "Midazolam — do not push here".
+  New words pop in over 0.18 s. The rings never hide while a syringe is in hand.
+- Redirect arrow: shows when a red port is pinched, pointing to the nearest green port, labelled "Use Distal ✓".
 - "Push here": shows only on a pinched green port.
 - Log line: shows after a confirmed push, for 10 s.
 - First-time hint "Pick up a syringe to check ports.": shows once at start, for 6 s.
@@ -59,6 +65,7 @@ Each one can be checked in Lens Studio's preview.
 3. Pinch any port: only its own line lights up, all the way to the right pump, with the pump's label.
 4. Pinch a red port: "do not push here", no Push button, and an arrow pointing to the safe Distal port. Pinch Distal: "Push here". Pinch that: a log line appears, and the Lens goes quiet within 2 seconds.
 5. Alarm: a few seconds after the push, Pump 2 turns amber. An edge arrow points to it if it's out of view, and the line glows amber to the kink. "Resolved" clears it all.
+6. Detail follows attention: holding furosemide, the red ports show no words from across the room. Looking at B shows "Midazolam" on B only. Looking at C moves the word to C. Leaning in shows both. A pinch shows the full answer wherever she looks.
 
 ## Out of scope
 - Voice commands, two-hand or custom gestures, hand poses.

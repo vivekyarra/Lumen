@@ -388,6 +388,7 @@ const probe: SceneProbe = {
   },
   lookAtHub() { camera.position.copy(eye); setLook(L.HUB_TARGET); sync(); },
   lookAtCart() { camera.position.copy(eye); setLook(L.CART_TARGET); sync(); },
+  lookFrom(from, target) { camera.position.copy(toThree(from)); setLook(target); sync(); },
   overlappingLabels() {
     const b = labelBoxes();
     const out: string[] = [];
@@ -472,6 +473,7 @@ const api = {
     sm = makeMachine();
     audio.reset();
     alarmActiveSince = -1;
+    world.attention.reset();
     eventLog.length = 0;
     resetCamera();
     frame();
@@ -479,6 +481,9 @@ const api = {
   driver,
   probe,
   view: () => sm.view(),
+  /** The view as drawn after attention (what the ports actually say this frame). */
+  drawnView: () => { sync(); return world.drawn; },
+  attention: () => world.attention.state,
   step,
   events: () => eventLog.slice(),
   lookAt: (t: { r: number; f: number; u: number }) => { camera.position.copy(eye); setLook(t); frame(); },

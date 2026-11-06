@@ -15,7 +15,7 @@ const SPEC_STRINGS = [
   "✕ Midazolam — do not push here",
   "✕ Dobutamine — do not push here",
   "✓ Compatible",
-  "Use: Distal (Heparin) — compatible",
+  "Use Distal ✓",
   "Push here",
   "Downstream occlusion",
   "Check here: kinked line",

@@ -1,10 +1,11 @@
 # LEAF results
 
-**10 / 10 LEAF scenarios pass in the Lens Studio 5.24.1 preview (SPECS 27).** Each scenario pinches the Lens's
+**11 / 11 LEAF scenarios pass in the Lens Studio 5.24.1 preview (SPECS 27).** Each scenario pinches the Lens's
 real Spectacles Interaction Kit targets (`Syringe_S1_Hit`, `Port_B_Hit`, `PushHereButton`, `Kink_ResolvedButton`,
-`IV_Pole_Hit`) and checks what the scene actually shows. Expected text comes from `Assets/Lumen/Core/Strings.ts`.
+`IV_Pole_Hit`) and checks what the scene actually shows. DC11 also moves the head pose the Lens reads and checks
+that the words on the ports follow it. Expected text comes from `Assets/Lumen/Core/Strings.ts`.
 The suite runs from the LEAF panel or through the Lens Studio MCP (`run_leaf_scenario`). A second, independent run
-through Snap's CLAD LEAF workflow also passed 10 / 10.
+through Snap's CLAD LEAF workflow also passed.
 
 | # | Done criterion (design brief) | LEAF scenario | Result |
 |---|---|---|---|
@@ -15,11 +16,12 @@ through Snap's CLAD LEAF workflow also passed 10 / 10.
 | 4 | Red port → "do not push here" + arrow to the safe port | `test_red_port_redirects` | ✅ PASS |
 | 4 | Green port → Push here → log line → quiet within 2 s | `test_push_logs_and_returns_idle` | ✅ PASS |
 | 5 | Pump 2 alarm → edge arrow, amber line to the kink → Resolved | `test_alarm_shows_and_resolves` | ✅ PASS |
+| 6 | Detail follows attention: far = rings only, look = one reason, lean in = every reason | `test_detail_follows_attention` | ✅ PASS |
 | + | Shift handoff: one pinch on the pole walks every line | `test_handoff_line_check` | ✅ PASS |
 | + | Reach: LEAF's IK avatar pinches the port and Push here | `test_ik_reach_controls` | ✅ PASS |
-| + | Every shared scenario, run inside the preview | `test_self_test_dc1_dc10` | ✅ PASS (10 / 10) |
+| + | Every shared scenario, run inside the preview | `test_self_test_dc1_dc11` | ✅ PASS (11 / 11) |
 
-Logger output of `test_self_test_dc1_dc10` in the Lens Studio preview:
+Logger output of `test_self_test_dc1_dc11` in the Lens Studio preview:
 
 ```
 | DC1 | Quiet idle | test_idle_is_quiet | PASS |
@@ -32,7 +34,8 @@ Logger output of `test_self_test_dc1_dc10` in the Lens Studio preview:
 | DC8 | Placement and comfort | test_placement_and_comfort | PASS |
 | DC9 | Shift-handoff line check | test_handoff_line_check | PASS |
 | DC10 | Fail-safe: no safe port | test_no_safe_port_fail_safe | PASS |
-[Lumen self-test] 10/10 pass
+| DC11 | Detail follows attention | test_detail_follows_attention | PASS |
+[Lumen self-test] 11/11 pass
 ```
 
 ## The same criteria, three runners
@@ -41,9 +44,9 @@ The scenarios in `Assets/Lumen/Core/Scenarios.ts` are written once and run in th
 
 | Runner | Where | Result |
 |---|---|---|
-| Lens Studio preview | LEAF, in Lens Studio 5.24.1 | ✅ 10 / 10 |
-| State machine | Node, GitHub Actions, every PR | ✅ 10 / 10 |
-| Web twin | Playwright in Chromium, GitHub Actions, every PR | ✅ 10 / 10 |
+| Lens Studio preview | LEAF, in Lens Studio 5.24.1 | ✅ 11 / 11 |
+| State machine | Node, GitHub Actions, every PR | ✅ 11 / 11 |
+| Web twin | Playwright in Chromium, GitHub Actions, every PR | ✅ 11 / 11 |
 
 CI also runs:
 - fuzzing: 200 sessions × 400 random inputs, with every state invariant checked after each input;

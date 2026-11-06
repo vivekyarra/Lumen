@@ -31,9 +31,9 @@ export function redFocusText(port: PortId): string {
   return "✕ " + DRUGS[lineForPort(port).drug].shortName + " — do not push here";
 }
 
-/** Redirect label shown at the nearest compatible port. */
+/** Redirect label shown at the nearest compatible port: two words and a tick. */
 export function useText(port: PortId): string {
-  return "Use: " + PORTS[port].shortName + " (" + DRUGS[lineForPort(port).drug].shortName + ") — compatible";
+  return "Use " + PORTS[port].shortName + " ✓";
 }
 
 export function portLabel(port: PortId): string {
