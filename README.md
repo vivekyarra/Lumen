@@ -9,16 +9,21 @@
 ![Built with](https://img.shields.io/badge/built%20with-Claude%20Code%20%2B%20Snap%20CLAD-D97757)
 ![CI](https://github.com/vivekyarra/Lumen/actions/workflows/ci.yml/badge.svg)
 
-<p align="center"><img src="devpost/demo/lumen-teaser.gif" width="760" alt="Lumen in the Lens Studio preview: pick up furosemide, every port turns green or red, the Midazolam line lights to its pump"></p>
+<p align="center"><img src="devpost/demo/lumen-teaser.gif" width="760" alt="Lumen in the Lens Studio preview: she walks to the bed, the port she looks at says why, she leans in and every red port explains itself, she pinches and the Midazolam line lights"></p>
 
 <p align="center">
-  <a href="https://youtu.be/Ija_HBTAqF8"><b>▶ Watch the demo (2:28)</b></a> &nbsp;·&nbsp;
+  <a href="https://youtu.be/YX1-vsHfvDU"><b>▶ Watch the demo (2:44)</b></a> &nbsp;·&nbsp;
   <a href="https://vivekyarra.github.io/Lumen/"><b>🌐 Try it in your browser</b></a> &nbsp;·&nbsp;
   <a href="devpost/design-brief.md"><b>📐 Design brief</b></a> &nbsp;·&nbsp;
   <a href="devpost/leaf-results.md"><b>✅ LEAF results</b></a>
 </p>
 
-*Built for **Learn AR with SPECS** (Devpost Learn).*
+*Built for **Learn AR with SPECS** (Devpost Learn).* The video has **one unbroken take** of the Lens in the
+Lens Studio preview, 67 seconds, real time, no cuts, from [0:37](https://youtu.be/YX1-vsHfvDU?t=37).
+
+**How it knows, on real SPECS:** the SPECS camera reads the syringe barcode and follows each tube to its pump, and
+the pumps send their drugs, rates and alarms over the hospital network. In the Lens Studio preview the same inputs come
+from a modelled bedside.
 
 ---
 
@@ -41,16 +46,24 @@ and new-graduate nurses who meet a patient's lines for the first time.
 
 | | |
 |---|---|
-| ![Holding furosemide](devpost/screenshots/ls-02-holding-furosemide.png) | **1 · Pick up the syringe.** Lumen reads the drug in her hand: *Holding: Furosemide 40 mg*. |
-| ![Red port, redirect](devpost/screenshots/ls-03-red-port-redirect.png) | **2 · Every port answers.** Green ✓ is safe. Red ✕ says why, right on the port: *✕ Midazolam: do not push here*, with an arrow to the safe port: *Use Distal ✓*. |
-| ![Trace to the pump](devpost/screenshots/ls-04-trace-to-pump.png) | **3 · Pinch a port, see its line.** That one tube lights through the tangle, all the way to its pump: *Midazolam · 3 mL/h · Pump 1*. |
-| ![Push here](devpost/screenshots/ls-05-push-here.png) | **4 · Push here.** On the safe port, one pinch confirms. Lumen logs *Furosemide 40 mg → CVC Distal* and goes quiet. |
-| ![Pump alarm](devpost/screenshots/ls-07-pump-alarm.png) | **5 · An alarm she can't see.** Pump 2 alarms behind her. A chime and an edge arrow turn her head, and the line glows amber to the exact kink. |
-| ![Kink, Resolved](devpost/screenshots/ls-08-kink-resolved.png) | **6 · Resolved.** One pinch clears it. At shift change, one pinch on the IV pole walks every line, bag to pump to port. |
+| ![Holding furosemide](devpost/screenshots/ls-02-holding-furosemide.png) | **1 · Pick up the syringe.** Lumen reads the drug in her hand: *Holding: Furosemide 40 mg*. Every port answers at once: green ✓ is safe, red ✕ is not. |
+| ![Looking at port B](devpost/screenshots/ls-10-detail-look.png) | **2 · The port she looks at says why.** From across the room she sees only ✓ and ✕. At the bed, the port nearest the centre of her view adds one word: *Midazolam*. Its neighbours 4 cm away stay quiet. She looks at the next port, and the word moves with her eyes. |
+| ![Leaning in](devpost/screenshots/ls-12-detail-lean-in.png) | **3 · Lean in, every red port speaks.** Closer than 80 cm, each red port says why. All of it is recomputed every frame from her head pose; nothing is hard-coded. |
+| ![Red port, redirect](devpost/screenshots/ls-03-red-port-redirect.png) | **4 · Pinch the red port.** The full answer: *Midazolam: do not push here*, and an arrow to the safe port: *Use Distal ✓*. |
+| ![Trace to the pump](devpost/screenshots/ls-04-trace-to-pump.png) | **5 · Pinch a port, see its line.** That one tube lights through the tangle, all the way to its pump: *Midazolam · 3 mL/h · Pump 1*. |
+| ![Push here](devpost/screenshots/ls-05-push-here.png) | **6 · Push here.** On the safe port, one pinch confirms. Lumen logs *Furosemide 40 mg → CVC Distal* and goes quiet. |
+| ![Pump alarm](devpost/screenshots/ls-07-pump-alarm.png) | **7 · An alarm she can't see.** Pump 2 alarms behind her. A chime and an edge arrow turn her head, and the line glows amber to the exact kink. |
+| ![Kink, Resolved](devpost/screenshots/ls-08-kink-resolved.png) | **8 · Resolved.** One pinch clears it. At shift change, one pinch on the IV pole walks every line, bag to pump to port. |
+| ![Morphine, all green](devpost/screenshots/ls-13-morphine-all-green.png) | **9 · Data, not art.** She picks up morphine instead, and all four ports turn green at once. The answer comes from the compatibility table, every time. |
 
-**Detail follows her eyes:** the words on the ports are recomputed every frame from where she stands and looks.
-From across the room she sees only ✓ and ✕. At the bed, the port she looks at says why, for example *Midazolam*, and
-its neighbours 4 cm away stay quiet. Lean in and every red port says why. Pinch, and she gets the full answer.
+**Detail follows her eyes:** four levels, from the same rule in [`Core/Attention.ts`](Assets/Lumen/Core/Attention.ts):
+
+| Where she is | What the red ports show |
+|---|---|
+| Across the room (> 1.4 m) | ✓ / ✕ rings only |
+| At the bed, looking at a port | that port's reason, e.g. *Midazolam* |
+| Leaning in (< 80 cm) | every port's reason |
+| Pinch | the full answer, and the way to the safe port |
 
 **Quiet by design:** at rest, Lumen shows only faint dots on the ports. It speaks up when a syringe is in her hand
 or a pump needs her, and then gets out of the way. **Safe by default:** a drug pair Lumen doesn't know is never shown
@@ -82,6 +95,18 @@ flowchart LR
   Spectacles Interaction Kit pinch targets and spatial audio.
 - **The same done criteria run three ways:** LEAF in the Lens Studio preview, the state machine in Node, and the
   rendered web twin in Chromium. All three pass 11 / 11.
+
+## How the skill pack helped
+
+The Devpost Learn `plan-lens` skill interviewed us before any code and wrote [`devpost/design-brief.md`](devpost/design-brief.md).
+It shaped Lumen in three ways:
+- **One spatial moment.** It made us pick a single moment, the check before an IV push, and build everything around it.
+  The pump alarm became the second beat, not a second app.
+- **Where things live and when they show.** The brief fixed every label to a real object (port, pump, cart) and wrote
+  down when each one appears and goes away. That is why Lumen is quiet by default.
+- **Done criteria that became tests.** Each done criterion in the brief is a scenario in `Core/Scenarios.ts`, run by
+  LEAF in Lens Studio and by CI on every pull request. When we added *detail follows attention*, we added it to the
+  brief first, as criterion 6, then as DC11.
 
 ## Built with Claude Code + Snap CLAD
 
